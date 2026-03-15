@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/abeezee_italic</item>
+        <item>@font/aleo_semibold_italic</item>
+        <item>@font/beth_ellen</item>
+        <item>@font/manrope_bold</item>
+        <item>@font/manrope_extrabold</item>
+        <item>@font/manrope_medium</item>
+        <item>@font/margarine</item>
+        <item>@font/over_the_rainbow</item>
+        <item>@font/secular_one</item>
+    </array>
+</resources>
