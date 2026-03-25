@@ -74,8 +74,5 @@ public class LoginActivity extends AppCompatActivity {
             });
         });
 
-        goRegisterBtn.setOnClickListener(v -> {
-            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-        });
     }
 }
