@@ -14,7 +14,7 @@ public class StartOrder extends AppCompatActivity {
 
     Button backtostartBtn, dineinBtn;
 
-    // ✅ Create cart here
+    //  Create cart here
     ArrayList<String> cartList;
 
     @Override
@@ -26,7 +26,7 @@ public class StartOrder extends AppCompatActivity {
         backtostartBtn = findViewById(R.id.backtostartbtn);
         dineinBtn = findViewById(R.id.dineinbtn);
 
-        // ✅ Initialize cart
+        //  Initialize cart
         cartList = new ArrayList<>();
 
         dineinBtn.setOnClickListener(new View.OnClickListener() {
@@ -35,7 +35,7 @@ public class StartOrder extends AppCompatActivity {
 
                 Intent intent = new Intent(StartOrder.this, MainMenu.class);
 
-                // ✅ Pass cart to next screen
+                //  Pass cart to next screen
                 intent.putStringArrayListExtra("cart", cartList);
 
                 startActivity(intent);

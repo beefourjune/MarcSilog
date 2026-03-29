@@ -20,7 +20,7 @@ public class MainMenu extends AppCompatActivity {
     private MaterialButton backBtn, orderNowBtn, cartBtn;
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
 
-    // ✅ GLOBAL CART (single source of truth)
+    //  GLOBAL CART
     public static ArrayList<String> cartList = new ArrayList<>();
 
     @Override
@@ -29,33 +29,32 @@ public class MainMenu extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main_menu);
 
-        // EDGE TO EDGE FIX
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // =========================
+
         // BACK BUTTON
-        // =========================
+
         backBtn = findViewById(R.id.backtostartbtn);
         if (backBtn != null) backBtn.setOnClickListener(v -> finish());
 
-        // =========================
+
         // CART BUTTON
-        // =========================
+
         cartBtn = findViewById(R.id.cartBtn);
         if (cartBtn != null) {
             cartBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(MainMenu.this, CartActivity.class);
-                startActivity(intent); // ✅ Use static cartList in CartActivity
+                startActivity(intent);
             });
         }
 
-        // =========================
-        // CATEGORY BUTTONS (just show toasts for now)
-        // =========================
+
+        // CATEGORY BUTTONS
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -70,9 +69,9 @@ public class MainMenu extends AppCompatActivity {
         if (ssdBtn != null) ssdBtn.setOnClickListener(v -> showToast("SSD clicked"));
         if (drinkBtn != null) drinkBtn.setOnClickListener(v -> showToast("Drinks clicked"));
 
-        // =========================
+
         // ADD TO CART BUTTONS
-        // =========================
+
         setupAddButton(R.id.addBaconBtn, "BaconSilog");
         setupAddButton(R.id.addTapBtn, "TapSilog");
         setupAddButton(R.id.addTosilogBtn, "ToSilog");
@@ -84,9 +83,8 @@ public class MainMenu extends AppCompatActivity {
         setupAddButton(R.id.addDumplingBtn, "Dumpling Rice");
         setupAddButton(R.id.addSiopaoBtn, "Jumbo Siopao");
 
-        // =========================
         // ORDER NOW BUTTON
-        // =========================
+
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
             orderNowBtn.setOnClickListener(v -> {
@@ -101,9 +99,8 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    // =========================
-    // ADD ITEM TO CART (REUSABLE)
-    // =========================
+    // ADD ITEM TO CART
+
     private void setupAddButton(int id, String itemName) {
         MaterialButton btn = findViewById(id);
 
@@ -115,9 +112,8 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    // =========================
+
     // SIMPLE TOAST METHOD
-    // =========================
     private void showToast(String message) {
         Toast.makeText(MainMenu.this, message, Toast.LENGTH_SHORT).show();
     }
