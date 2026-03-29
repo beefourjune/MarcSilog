@@ -3,14 +3,49 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <!-- Back button -->
+    <Button
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"/>
+
+    <!-- Empty cart message -->
     <TextView
-        android:id="@+id/cartText"
+        android:id="@+id/cartEmptyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cart is empty"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:paddingTop="50dp"
+        android:visibility="gone"/>
 
+    <!-- Scrollable container for cart items -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dp">
+
+        <LinearLayout
+            android:id="@+id/cartContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <!-- Order button at the bottom -->
+    <Button
+        android:id="@+id/orderBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Place Order"
+        android:backgroundTint="@android:color/holo_purple"
+        android:textColor="@android:color/white"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 public class MainMenu extends AppCompatActivity {
 
-    MaterialButton backBtn, orderNowBtn, cartBtn;
-    ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
+    private MaterialButton backBtn, orderNowBtn, cartBtn;
+    private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
 
-
+    // ✅ GLOBAL CART (single source of truth)
     public static ArrayList<String> cartList = new ArrayList<>();
 
     @Override
@@ -29,29 +29,33 @@ public class MainMenu extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main_menu);
 
+        // EDGE TO EDGE FIX
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        //  BACK BUTTON
+        // =========================
+        // BACK BUTTON
+        // =========================
         backBtn = findViewById(R.id.backtostartbtn);
-        if (backBtn != null) {
-            backBtn.setOnClickListener(v -> finish());
-        }
+        if (backBtn != null) backBtn.setOnClickListener(v -> finish());
 
-        //  CART BUTTON
+        // =========================
+        // CART BUTTON
+        // =========================
         cartBtn = findViewById(R.id.cartBtn);
         if (cartBtn != null) {
             cartBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(MainMenu.this, CartActivity.class);
-                intent.putStringArrayListExtra("cart", cartList);
-                startActivity(intent);
+                startActivity(intent); // ✅ Use static cartList in CartActivity
             });
         }
 
-        //  CATEGORY BUTTONS
+        // =========================
+        // CATEGORY BUTTONS (just show toasts for now)
+        // =========================
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -66,7 +70,9 @@ public class MainMenu extends AppCompatActivity {
         if (ssdBtn != null) ssdBtn.setOnClickListener(v -> showToast("SSD clicked"));
         if (drinkBtn != null) drinkBtn.setOnClickListener(v -> showToast("Drinks clicked"));
 
-        //  ADD TO CART BUTTONS
+        // =========================
+        // ADD TO CART BUTTONS
+        // =========================
         setupAddButton(R.id.addBaconBtn, "BaconSilog");
         setupAddButton(R.id.addTapBtn, "TapSilog");
         setupAddButton(R.id.addTosilogBtn, "ToSilog");
@@ -76,32 +82,42 @@ public class MainMenu extends AppCompatActivity {
         setupAddButton(R.id.addSiomaiBtn, "Siomai Rice");
         setupAddButton(R.id.addBigSiomaiBtn, "Big Siomai");
         setupAddButton(R.id.addDumplingBtn, "Dumpling Rice");
-        setupAddButton(R.id.addSiopaoBtn, "Siopao");
+        setupAddButton(R.id.addSiopaoBtn, "Jumbo Siopao");
 
-        //  ORDER BUTTON
+        // =========================
+        // ORDER NOW BUTTON
+        // =========================
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    showToast("Proceeding to Order...")
-            );
+            orderNowBtn.setOnClickListener(v -> {
+                if (cartList.isEmpty()) {
+                    showToast("Cart is empty!");
+                } else {
+                    showToast("Proceeding to Cart...");
+                    Intent intent = new Intent(MainMenu.this, CartActivity.class);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
-    //  ADD ITEM TO CART
+    // =========================
+    // ADD ITEM TO CART (REUSABLE)
+    // =========================
     private void setupAddButton(int id, String itemName) {
         MaterialButton btn = findViewById(id);
 
         if (btn != null) {
             btn.setOnClickListener(v -> {
                 cartList.add(itemName);
-                Toast.makeText(MainMenu.this,
-                        itemName + " added to cart (" + cartList.size() + ")",
-                        Toast.LENGTH_SHORT).show();
+                showToast(itemName + " added to cart (" + cartList.size() + ")");
             });
         }
     }
 
-    //
+    // =========================
+    // SIMPLE TOAST METHOD
+    // =========================
     private void showToast(String message) {
         Toast.makeText(MainMenu.this, message, Toast.LENGTH_SHORT).show();
     }
