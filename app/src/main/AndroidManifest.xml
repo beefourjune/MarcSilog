@@ -15,15 +15,11 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainMenu"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".StartOrder"
-            android:exported="false" />
-        <activity
-            android:name=".StartOrder_activity"
-            android:exported="false"
-            android:label="@string/title_activity_start_order"
-            android:theme="@style/Theme.Kiosk" />
+            android:exported="true" />
+
         <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -31,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-      \
 
         <meta-data
             android:name="preloaded_fonts"

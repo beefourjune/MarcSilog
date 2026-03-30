@@ -10,11 +10,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import android.view.View;
-import android.widget.Button;
+import android.widget.*;
+
+import com.google.android.material.button.MaterialButton;
 
 public class StartOrder extends AppCompatActivity {
 
-    Button backtostartBtn, dineinBtn;
+    Button backtostartBtn;
+
+    MaterialButton dineinBtn, takeOutBtn;
 
 
     @Override
@@ -25,6 +29,7 @@ public class StartOrder extends AppCompatActivity {
 
         backtostartBtn = findViewById(R.id.backtostartbtn);
         dineinBtn = findViewById(R.id.dineinbtn);
+        takeOutBtn = findViewById(R.id.takeoutbtn);
 
         dineinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,11 +38,20 @@ public class StartOrder extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        backtostartBtn.setOnClickListener(new View.OnClickListener() {
+        
+        takeOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
-        });
+                Intent intent = new Intent(StartOrder.this, MainMenu.class);
+                startActivity(intent);
+                                          }
+                                      });
+
+                backtostartBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
     }
 }

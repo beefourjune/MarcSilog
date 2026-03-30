@@ -10,8 +10,9 @@
 
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/mainScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fillViewport="true"
         android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,9 +46,8 @@
                         android:id="@+id/backtostartbtn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginBottom="10dp"
                         android:elevation="8dp"
                         android:insetTop="0dp"
@@ -74,6 +74,7 @@
                         android:layout_width="260dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
                         android:background="@drawable/rounded_edittext"
                         android:hint="Search food..."
                         android:padding="10dp"
@@ -86,9 +87,7 @@
                         android:id="@+id/cartBtn"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-
                         android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
                         android:elevation="8dp"
                         android:insetTop="0dp"
@@ -143,17 +142,32 @@
 
         </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/manrope_extrabold"
-                android:text="Category"
-                android:letterSpacing="-0.1"
-                android:textColor="#B73B28"
-                android:textSize="20sp"
-                android:layout_marginLeft="20dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="20dp"
-                />
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:letterSpacing="-0.1"
+                    android:fontFamily="@font/manrope_extrabold"
+                    android:text="Category"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_medium"
+                    android:text="See all"
+                    android:textColor="#B73B28"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
 
             <!-- CATEGORY HORIZONTAL SCROLL -->
             <HorizontalScrollView
@@ -182,7 +196,9 @@
                             android:id="@+id/silogBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -209,7 +225,9 @@
                             android:id="@+id/pastilBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -236,7 +254,9 @@
                             android:layout_width="100dp"
                             android:id="@+id/shawarmaBtn"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -263,7 +283,9 @@
                             android:id="@+id/sizzlingBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -290,7 +312,9 @@
                             android:id="@+id/ssdBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -317,7 +341,9 @@
                             android:id="@+id/drinkBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@mipmap/silog"
+                            android:src="@drawable/baconsilog"
+                            android:backgroundTint="@color/black"
+                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
                             android:scaleType="centerCrop"
                             android:clipToOutline="true"/>
@@ -342,8 +368,8 @@
                 android:fontFamily="@font/manrope_extrabold"
                 android:text="New Budget Meal Treat!"
                 android:textColor="@color/black"
-                android:letterSpacing="-0.1"
                 android:textSize="30sp"
+                android:letterSpacing="-0.1"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 />
@@ -365,7 +391,6 @@
                     <!-- MEAL CARD -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="150dp"
-
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
                         android:background="@color/white"
@@ -401,10 +426,9 @@
                                     android:text="BaconSilog"
                                     android:fontFamily="@font/manrope_bold"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="#fff"
                                     android:textStyle="bold"
-                                    android:textSize="15sp"/>
+                                    android:textSize="19sp"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -419,7 +443,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="₱45"
-                                    android:layout_marginTop="35dp"
+                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
@@ -488,10 +512,9 @@
                                     android:text="TapSilog"
                                     android:fontFamily="@font/manrope_bold"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="#fff"
                                     android:textStyle="bold"
-                                    android:textSize="15sp"/>
+                                    android:textSize="19sp"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -506,7 +529,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="₱45"
-                                    android:layout_marginTop="35dp"
+                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
@@ -574,10 +597,9 @@
                                     android:text="ToSilog"
                                     android:fontFamily="@font/manrope_bold"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="#fff"
                                     android:textStyle="bold"
-                                    android:textSize="15sp"/>
+                                    android:textSize="19sp"/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -592,7 +614,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="₱39"
-                                    android:layout_marginTop="35dp"
+                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
@@ -658,11 +680,11 @@
                                     android:text="Double Burger Steak"
                                     android:fontFamily="@font/manrope_bold"
                                     android:gravity="center"
+                                    android:lineHeight="17dp"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="#fff"
                                     android:textStyle="bold"
-                                    android:textSize="15sp"/>
+                                    android:textSize="19sp"/>
 
 
                                 <TextView
@@ -737,18 +759,18 @@
                                     android:text="Shawarma Cute"
                                     android:fontFamily="@font/manrope_bold"
                                     android:gravity="center"
+                                    android:lineHeight="17dp"
                                     android:layout_gravity="center"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="#fff"
                                     android:textStyle="bold"
-                                    android:textSize="15sp"/>
+                                    android:textSize="19sp"/>
 
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="₱25"
-                                    android:layout_marginTop="55dp"
+                                    android:layout_marginTop="35dp"
                                     android:layout_gravity="center"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"
@@ -809,7 +831,39 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@color/black"/>
+                            app:srcCompat="@drawable/gradient_purple" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            android:paddingStart="20dp">
+
+                            <TextView
+                                android:layout_width="173dp"
+                                android:layout_height="wrap_content"
+                                android:text="GET YOUR FREE SOUP!"
+                                android:fontFamily="@font/manrope_extrabold"
+                                android:textColor="@color/black"
+                                android:textSize="27sp"
+                                android:letterSpacing="-0.1"
+                                android:lineHeight="25dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="170dp"
+                                android:layout_height="wrap_content"
+                                android:text="Buy a meal and enjoy your free soup!"
+                                android:fontFamily="@font/manrope_medium"
+                                android:textColor="#1C1C1C"
+                                android:lineHeight="17dp"
+                                android:textSize="14sp"/>
+
+
+
+                        </LinearLayout>
+
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -823,7 +877,38 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@color/black"/>
+                            app:srcCompat="@drawable/gradient_blackwhite"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            android:paddingStart="20dp">
+
+                            <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:text="UNLIE GRAVY AVAILABLE!"
+                                android:fontFamily="@font/manrope_extrabold"
+                                android:textColor="@color/black"
+                                android:textSize="27sp"
+                                android:letterSpacing="-0.1"
+                                android:lineHeight="25dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="170dp"
+                                android:layout_height="wrap_content"
+                                android:text="Look for meals that comes with unli gravy!"
+                                android:fontFamily="@font/manrope_medium"
+                                android:textColor="@color/black"
+                                android:lineHeight="17dp"
+                                android:textSize="14sp"/>
+
+
+
+                        </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -837,7 +922,39 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@color/black"/>
+                            app:srcCompat="@drawable/gradient_yelloworange"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            android:paddingStart="20dp">
+
+                            <TextView
+                                android:layout_width="180dp"
+                                android:layout_height="wrap_content"
+                                android:text="UNLIE GRAVY AVAILABLE!"
+                                android:fontFamily="@font/manrope_extrabold"
+                                android:textColor="@color/black"
+                                android:textSize="27sp"
+                                android:letterSpacing="-0.1"
+                                android:lineHeight="25dp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="170dp"
+                                android:layout_height="wrap_content"
+                                android:text="Look for meals that comes with unli gravy!"
+                                android:fontFamily="@font/manrope_medium"
+                                android:textColor="@color/black"
+                                android:lineHeight="25dp"
+                                android:textSize="14sp"/>
+
+
+
+                        </LinearLayout>
+
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -1301,6 +1418,52 @@
 
         </LinearLayout>
 </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cartPanel"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="20dp"
+        android:visibility="gone"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#908AE2"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <!-- Cart info -->
+            <TextView
+                android:id="@+id/cartInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0 items - ₱0"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"/>
+
+            <!-- View Cart Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewCartBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Cart"
+                android:backgroundTint="@color/white"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/manrope_extrabold"
+                android:layout_marginStart="16dp"/>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- CART BUTTON (FLOATING TOP RIGHT) -->
 </androidx.constraintlayout.widget.ConstraintLayout>
