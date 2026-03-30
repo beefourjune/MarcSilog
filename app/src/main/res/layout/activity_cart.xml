@@ -38,6 +38,18 @@
             android:orientation="vertical"/>
     </ScrollView>
 
+    <!-- Total price -->
+    <TextView
+        android:id="@+id/cartTotalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total: ₱0.00"
+        android:textSize="18sp"
+        android:gravity="end"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone"/>
+
     <!-- Order button at the bottom -->
     <Button
         android:id="@+id/orderBtn"
@@ -47,5 +59,6 @@
         android:backgroundTint="@android:color/holo_purple"
         android:textColor="@android:color/white"
         android:padding="16dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="8dp"
+        android:visibility="gone"/>
 </LinearLayout>

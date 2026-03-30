@@ -1440,7 +1440,6 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
-            <!-- Cart info -->
             <TextView
                 android:id="@+id/cartInfo"
                 android:layout_width="0dp"
@@ -1448,21 +1447,19 @@
                 android:layout_weight="1"
                 android:text="0 items - ₱0"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textSize="16sp"/>
 
-            <!-- View Cart Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/viewCartBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View Cart"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@android:color/white"
                 android:textColor="@android:color/black"
                 android:fontFamily="@font/manrope_extrabold"
                 android:layout_marginStart="16dp"/>
-
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
     <!-- CART BUTTON (FLOATING TOP RIGHT) -->
