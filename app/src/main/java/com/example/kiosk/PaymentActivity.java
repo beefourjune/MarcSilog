@@ -1,9 +1,9 @@
 package com.example.kiosk;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +42,17 @@ public class PaymentActivity extends AppCompatActivity {
         // Handle Pay Now button click
         payNowBtn.setOnClickListener(v -> {
             Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
-            // Optional: close PaymentActivity after payment
-            finish();
+
+            // --- Clear the cart ---
+            MainMenu.cartList.clear();
+            // If you have totals in MainMenu, reset them too
+            // MainMenu.resetTotals();  // Uncomment if you implement resetTotals()
+
+            // --- Return to MainMenu and clear back stack ---
+            Intent intent = new Intent(PaymentActivity.this, MainMenu.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish(); // Close PaymentActivity
         });
     }
 }
