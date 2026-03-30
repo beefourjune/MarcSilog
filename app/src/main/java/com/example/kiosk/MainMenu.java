@@ -10,11 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.button.MaterialButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -24,26 +19,9 @@ public class MainMenu extends AppCompatActivity {
 
     MaterialButton backBtn, orderNowBtn, cartBtn;
     ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
-    MaterialButton addBaconBtn, addTapBtn, addTosilogBtn;
-    MaterialCardView cartPanel;
-    TextView cartInfo;
 
-    int totalItems = 0;
-    int totalPrice = 0;
+
     public static ArrayList<String> cartList = new ArrayList<>();
-    public void addItemToCart(String itemName, int price) {
-        // Show cart panel if hidden
-        if (cartPanel.getVisibility() == View.GONE) {
-            cartPanel.setVisibility(View.VISIBLE);
-        }
-
-        // Update totals
-        totalItems++;
-        totalPrice += price;
-
-        // Update cart info TextView
-        cartInfo.setText(totalItems + " items - ₱" + totalPrice);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +34,6 @@ public class MainMenu extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        cartPanel = findViewById(R.id.cartPanel);
-        cartInfo = findViewById(R.id.cartInfo);
-        addBaconBtn = findViewById(R.id.addBaconBtn);
-        addTapBtn = findViewById(R.id.addTapBtn);
-        addTosilogBtn = findViewById(R.id.addTosilogBtn);
-
-        addBaconBtn.setOnClickListener(v -> addItemToCart("BaconSilog", 45));
-        addTapBtn.setOnClickListener(v -> addItemToCart("TapSilog", 45));
-
-
 
         //  BACK BUTTON
         backBtn = findViewById(R.id.backtostartbtn);
@@ -92,7 +59,6 @@ public class MainMenu extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-
         if (silogBtn != null) silogBtn.setOnClickListener(v -> showToast("Silog clicked"));
         if (pastilBtn != null) pastilBtn.setOnClickListener(v -> showToast("Pastil clicked"));
         if (shawarmaBtn != null) shawarmaBtn.setOnClickListener(v -> showToast("Shawarma clicked"));
@@ -101,7 +67,7 @@ public class MainMenu extends AppCompatActivity {
         if (drinkBtn != null) drinkBtn.setOnClickListener(v -> showToast("Drinks clicked"));
 
         //  ADD TO CART BUTTONS
-        /*setupAddButton(R.id.addBaconBtn, "BaconSilog");
+        setupAddButton(R.id.addBaconBtn, "BaconSilog");
         setupAddButton(R.id.addTapBtn, "TapSilog");
         setupAddButton(R.id.addTosilogBtn, "ToSilog");
         setupAddButton(R.id.addBurgerBtn, "Burger Steak");
@@ -110,8 +76,7 @@ public class MainMenu extends AppCompatActivity {
         setupAddButton(R.id.addSiomaiBtn, "Siomai Rice");
         setupAddButton(R.id.addBigSiomaiBtn, "Big Siomai");
         setupAddButton(R.id.addDumplingBtn, "Dumpling Rice");
-        setupAddButton(R.id.addSiopaoBtn, "Siopao");*/
-
+        setupAddButton(R.id.addSiopaoBtn, "Siopao");
 
         //  ORDER BUTTON
         orderNowBtn = findViewById(R.id.orderNowBtn);
@@ -123,7 +88,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     //  ADD ITEM TO CART
-    /*private void setupAddButton(int id, String itemName) {
+    private void setupAddButton(int id, String itemName) {
         MaterialButton btn = findViewById(id);
 
         if (btn != null) {
@@ -134,13 +99,9 @@ public class MainMenu extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             });
         }
-    }*/
+    }
 
     //
-
-
-
-
     private void showToast(String message) {
         Toast.makeText(MainMenu.this, message, Toast.LENGTH_SHORT).show();
     }
