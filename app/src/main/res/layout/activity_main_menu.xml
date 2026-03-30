@@ -1347,7 +1347,7 @@
                                 android:scaleType="centerCrop"
                                 android:paddingTop="15dp"
                                 android:src="@drawable/jumbosiopao"
-                                android:background="@color/black"/>
+                                 android:background="@color/black"/>
 
                             <!-- BLACK INFO AREA -->
                             <LinearLayout
