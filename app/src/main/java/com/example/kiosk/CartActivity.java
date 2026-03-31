@@ -2,6 +2,8 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Button;
@@ -10,12 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
 public class CartActivity extends AppCompatActivity {
 
-    private Button backBtn, orderBtn;
+    private Button  orderBtn;
+    private MaterialButton backBtn;
     private LinearLayout cartContainer;
     private TextView emptyText, totalText;
 
@@ -32,7 +38,8 @@ public class CartActivity extends AppCompatActivity {
         // Add a TextView for total price
         totalText = findViewById(R.id.cartTotalText);
 
-        backBtn.setOnClickListener(v -> finish());
+        backBtn.setOnClickListener(v ->
+                finish());
 
         updateCartUI();
 
@@ -43,14 +50,12 @@ public class CartActivity extends AppCompatActivity {
                 // Pass cart items (convert to Strings or keep as CartItem objects)
                 ArrayList<String> items = new ArrayList<>();
                 for (CartItem c : MainMenu.cartList) {
-                    items.add(c.name + " - $" + c.price);
+                    items.add(c.name + " - ₱" + c.price);
                 }
                 intent.putStringArrayListExtra("cart_items", items);
                 startActivity(intent);
 
                 // Clear cart
-                MainMenu.cartList.clear();
-                updateCartUI();
             } else {
                 Toast.makeText(this, "Cart is empty!", Toast.LENGTH_SHORT).show();
             }
@@ -77,18 +82,26 @@ public class CartActivity extends AppCompatActivity {
                 itemLayout.setPadding(16, 16, 16, 16);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
+                //item name
                 TextView itemName = new TextView(this);
-                itemName.setText(item.name + " - $" + item.price);
+                itemName.setText(item.name + " - ₱" + item.price);
                 itemName.setLayoutParams(new LinearLayout.LayoutParams(
                         0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
                 itemName.setTextSize(18f);
+                Typeface manropeMedium = ResourcesCompat.getFont(this, R.font.manrope_medium);
+                itemName.setTextColor(Color.BLACK);
+                itemName.setTypeface(manropeMedium);
 
+
+                //delete button
                 Button deleteBtn = new Button(this);
                 deleteBtn.setText("Delete");
-                deleteBtn.setBackgroundTintList(ColorStateList.valueOf(
-                        getResources().getColor(android.R.color.holo_red_light)
-                ));
-                deleteBtn.setTextColor(getResources().getColor(android.R.color.white));
+                deleteBtn.setBackgroundResource(R.drawable.delete_bg);
+                Typeface manropeBold = ResourcesCompat.getFont(this, R.font.manrope_bold);
+                deleteBtn.setTextColor(Color.WHITE);
+                deleteBtn.setTextSize(13f);
+                deleteBtn.setTypeface(manropeBold);
+                deleteBtn.setPadding(20, 2, 20, 2);
 
                 int finalI = i;
                 deleteBtn.setOnClickListener(v -> {
@@ -102,7 +115,7 @@ public class CartActivity extends AppCompatActivity {
                 cartContainer.addView(itemLayout);
             }
 
-            totalText.setText("Total: $" + String.format("%.2f", totalPrice));
+            totalText.setText(String.format("Total: ₱%.2f", totalPrice));
 
         } else {
             emptyText.setVisibility(TextView.VISIBLE);

@@ -118,7 +118,6 @@ public class MainMenu extends AppCompatActivity {
 
         // Refresh cart info
         refreshCartInfo();
-
         Toast.makeText(this, itemName + " added to cart", Toast.LENGTH_SHORT).show();
     }
 
@@ -135,10 +134,10 @@ public class MainMenu extends AppCompatActivity {
         if (cartInfo != null) {
             if (totalItems > 0) {
                 cartInfo.setText(totalItems + " items - ₱" + totalPrice);
-                if (cartPanel != null) cartPanel.setVisibility(View.VISIBLE);
+                cartPanel.setVisibility(View.VISIBLE);
             } else {
                 cartInfo.setText("Cart is empty");
-                if (cartPanel != null) cartPanel.setVisibility(View.GONE);
+                cartPanel.setVisibility(View.GONE);
             }
         }
     }
@@ -153,5 +152,11 @@ public class MainMenu extends AppCompatActivity {
     // --- Utility ---
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshCartInfo();
     }
 }

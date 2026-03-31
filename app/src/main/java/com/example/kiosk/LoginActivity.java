@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,17 +18,23 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     EditText email, password;
-    Button loginBtn, goRegisterBtn;
+    Button loginBtn;
+
+    MaterialButton backbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        backbtn = findViewById(R.id.backtostartbtn);
         email = findViewById(R.id.editTextEmail);
         password = findViewById(R.id.editTextPassword);
         loginBtn = findViewById(R.id.loginBtn);
-        goRegisterBtn = findViewById(R.id.goRegisterBtn);
+
+        backbtn = findViewById(R.id.backtostartbtn);
+        if (backbtn != null) backbtn.setOnClickListener(v -> finish());
+
 
         loginBtn.setOnClickListener(v -> {
 

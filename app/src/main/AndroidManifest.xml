@@ -17,28 +17,24 @@
         android:usesCleartextTraffic="true">
 
         <activity
+            android:name=".LoginActivity"
+            android:exported="false"/>
+
+        <activity
             android:name="com.example.kiosk.MainMenu"
             android:exported="false" />
 
         <activity
-            android:name=".StartOrder"
-            android:exported="false"
-            android:label="@string/title_activity_start_order"
-            android:theme="@style/Theme.Kiosk" />
-        <activity
-            android:name=".StartOrder_activity"
-            android:exported="false"
-            android:label="@string/title_activity_start_order"
-            android:theme="@style/Theme.Kiosk" />
-
-        <activity
             android:name=".CartActivity"
             android:exported="false" />
+
         <activity android:name=".PaymentActivity" />
 
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".StartOrder"
+            android:exported="true"
+            android:label="@string/title_activity_start_order"
+            android:theme="@style/Theme.Kiosk" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

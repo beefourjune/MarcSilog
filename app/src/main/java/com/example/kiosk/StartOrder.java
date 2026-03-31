@@ -11,10 +11,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+
+import com.google.android.material.button.MaterialButton;
 
 public class StartOrder extends AppCompatActivity {
 
-    Button backtostartBtn, dineinBtn;
+    Button dineinBtn;
+    MaterialButton adminAcc;
 
 
     @Override
@@ -23,8 +27,8 @@ public class StartOrder extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start_order);
 
-        backtostartBtn = findViewById(R.id.backtostartbtn);
         dineinBtn = findViewById(R.id.dineinbtn);
+        adminAcc = findViewById(R.id.adminaccount);
 
         dineinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,11 +37,14 @@ public class StartOrder extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        backtostartBtn.setOnClickListener(new View.OnClickListener() {
+
+        adminAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(StartOrder.this,LoginActivity.class);
+                startActivity(intent);
             }
         });
+
     }
 }

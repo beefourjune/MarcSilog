@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartOrder">
+    tools:context=".StartOrder"
+    android:background="@drawable/gradient_bg">
 
     <TextView
         android:id="@+id/marcsilog"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/margarine"
         android:text="MarcSilog"
-        android:textColor="#F34E34"
+        android:textColor="#FFCD93"
         android:textSize="65dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +28,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/over_the_rainbow"
         android:text="Start Order"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,11 +47,13 @@
         android:lineHeight="16dp"
         android:paddingBottom="16dp"
         android:text="Dine in"
-        android:textColor="#FFCD93"
+        android:textColor="@color/white"
         android:textSize="16dp"
         android:textStyle="bold"
 
-        app:backgroundTint="#F34E34"
+        app:strokeColor="#FFCC93"
+        app:strokeWidth="3dp"
+        app:backgroundTint="@android:color/transparent"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,11 +73,13 @@
         android:paddingBottom="16dp"
         android:text="Take Out"
         android:textAlignment="gravity"
-        android:textColor="#FFCD93"
+        android:textColor="@color/white"
         android:textSize="16dp"
 
         android:textStyle="bold"
-        app:backgroundTint="#F34E34"
+        app:strokeColor="#FFCC93"
+        app:strokeWidth="3dp"
+        app:backgroundTint="@android:color/transparent"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
 
@@ -84,29 +89,35 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.614" />
 
+
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/backtostartbtn"
-        android:layout_width="50dp"
+        android:id="@+id/adminaccount"
+        android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
 
         android:elevation="8dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:padding="0dp"
+        android:padding="10dp"
 
         app:backgroundTint="@android:color/transparent"
-        app:icon="@drawable/baseline_arrow_back_24"
+        app:icon="@drawable/outline_account_circle_24"
         app:iconGravity="textStart"
+        app:iconPadding="0dp"
         app:iconSize="20dp"
 
         app:iconTint="#FFCD93"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.054"
+        app:layout_constraintVertical_bias="0.991"
         app:strokeColor="#FFCC93"
         app:strokeWidth="2dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
