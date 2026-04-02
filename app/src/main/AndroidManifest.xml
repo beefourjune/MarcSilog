@@ -29,6 +29,7 @@
             android:exported="false" />
 
         <activity android:name=".PaymentActivity" />
+        <activity android:name=".AdminDashboard" />
 
         <activity
             android:name=".StartOrder"

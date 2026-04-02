@@ -10,77 +10,85 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText email, password;
-    Button loginBtn;
+    private EditText etUsername, etPassword;
+    private Button loginBtn;
+    private MaterialButton backBtn;
 
-    MaterialButton backbtn;
+    private static final String TAG = "LoginActivity";
+
+    // Firebase reference for admins
+    private DatabaseReference adminsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        backbtn = findViewById(R.id.backtostartbtn);
-        email = findViewById(R.id.editTextEmail);
-        password = findViewById(R.id.editTextPassword);
+        // Initialize views
+        backBtn = findViewById(R.id.backtostartbtn);
+        etUsername = findViewById(R.id.editTextEmail);
+        etPassword = findViewById(R.id.editTextPassword);
         loginBtn = findViewById(R.id.loginBtn);
 
-        backbtn = findViewById(R.id.backtostartbtn);
-        if (backbtn != null) backbtn.setOnClickListener(v -> finish());
+        // Back button
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> finish());
+        }
 
+        // Firebase reference
+        adminsRef = FirebaseDatabase.getInstance().getReference().child("admins");
 
+        // Login button click
         loginBtn.setOnClickListener(v -> {
+            String inputUsername = etUsername.getText().toString().trim();
+            String inputPassword = etPassword.getText().toString().trim();
 
-            String userEmail = email.getText().toString().trim();
-            String userPass = password.getText().toString().trim();
-
-            //  validation
-            if (userEmail.isEmpty() || userPass.isEmpty()) {
-                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+            if (inputUsername.isEmpty() || inputPassword.isEmpty()) {
+                Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            ApiService api = RetrofitClient.getApi();
+            checkAdminLogin(inputUsername, inputPassword);
+        });
+    }
 
-            api.login(userEmail, userPass).enqueue(new Callback<ApiResponse>() {
-                @Override
-                public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+    // Check login against Firebase admins
+    private void checkAdminLogin(String username, String password) {
+        adminsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                boolean loginSuccess = false;
 
-                    if (response.isSuccessful() && response.body() != null) {
+                for (DataSnapshot adminSnapshot : snapshot.getChildren()) {
+                    // Read values safely as strings regardless of key order
+                    String firebaseUsername = String.valueOf(adminSnapshot.child("username").getValue());
+                    String firebasePassword = String.valueOf(adminSnapshot.child("password").getValue());
 
-                        String status = response.body().getStatus();
-
-                        //  DEBUG
-                        Log.d("LOGIN_STATUS", status);
-
-                        if ("success".equals(status)) {
-                            Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(LoginActivity.this, MainMenu.class));
-                            finish();
-
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-                        }
-
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    if (firebaseUsername.equals(username) && firebasePassword.equals(password)) {
+                        loginSuccess = true;
+                        break;
                     }
                 }
 
-                @Override
-                public void onFailure(Call<ApiResponse> call, Throwable t) {
-                    Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                if (loginSuccess) {
+                    Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, AdminDashboard.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                 }
-            });
-        });
 
+            } else {
+                Toast.makeText(this, "Database error", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Firebase error: ", task.getException());
+            }
+        });
     }
 }

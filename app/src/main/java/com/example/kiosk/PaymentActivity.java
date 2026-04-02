@@ -13,7 +13,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -28,17 +33,14 @@ public class PaymentActivity extends AppCompatActivity {
         paymentContainer = findViewById(R.id.paymentContainer);
         payNowBtn = findViewById(R.id.payNowBtn);
 
-        // Get the cart items passed from CartActivity
-        ArrayList<String> cartItems = getIntent().getStringArrayListExtra("cart_items");
-
-        if (cartItems != null && !cartItems.isEmpty()) {
+        // Get cart items from MainMenu.cartList
+        if (MainMenu.cartList != null && !MainMenu.cartList.isEmpty()) {
             Typeface manropeMedium = ResourcesCompat.getFont(this, R.font.manrope_medium);
 
-            for (String item : cartItems) {
-                // Split the string "MealName - ₱Price" into name and price
-                String[] parts = item.split(" - ₱");
-                String itemNameText = parts[0];
-                String itemPriceText = "₱" + parts[1];
+            int totalPrice = 0;
+
+            for (CartItem item : MainMenu.cartList) {
+                totalPrice += item.price * item.quantity;
 
                 // Horizontal layout for each item
                 LinearLayout itemLayout = new LinearLayout(this);
@@ -48,7 +50,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 // Meal name (left)
                 TextView itemName = new TextView(this);
-                itemName.setText(itemNameText);
+                itemName.setText(item.name);
                 itemName.setTypeface(manropeMedium);
                 itemName.setTextColor(Color.BLACK);
                 itemName.setLayoutParams(new LinearLayout.LayoutParams(
@@ -57,7 +59,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 // Price (right)
                 TextView itemPrice = new TextView(this);
-                itemPrice.setText(itemPriceText);
+                itemPrice.setText("₱" + item.price);
                 itemPrice.setTypeface(manropeMedium);
                 itemPrice.setTextColor(Color.BLACK);
                 itemPrice.setGravity(Gravity.END);
@@ -72,24 +74,55 @@ public class PaymentActivity extends AppCompatActivity {
                 // Add horizontal layout to payment container
                 paymentContainer.addView(itemLayout);
             }
+
+            // Display total at the bottom
+            TextView totalText = new TextView(this);
+            totalText.setText("Total: ₱" + totalPrice);
+            totalText.setTypeface(manropeMedium);
+            totalText.setTextColor(Color.BLACK);
+            totalText.setTextSize(18f);
+            totalText.setGravity(Gravity.END);
+            totalText.setPadding(16, 16, 16, 16);
+            paymentContainer.addView(totalText);
+
+            // Handle Pay Now button click
+            int finalTotalPrice = totalPrice;
+            payNowBtn.setOnClickListener(v -> sendOrderToFirebase(finalTotalPrice));
+
         } else {
             Toast.makeText(this, "No items to pay for!", Toast.LENGTH_SHORT).show();
+            payNowBtn.setEnabled(false);
+        }
+    }
+
+    private void sendOrderToFirebase(int totalPrice) {
+        DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference("orders");
+        String orderId = ordersRef.push().getKey();
+
+        ArrayList<Map<String, Object>> itemsList = new ArrayList<>();
+        for (CartItem item : MainMenu.cartList) {
+            itemsList.add(item.toMap());
         }
 
-        // Handle Pay Now button click
-        payNowBtn.setOnClickListener(v -> {
-            Toast.makeText(this, "Payment successful!", Toast.LENGTH_SHORT).show();
+        HashMap<String, Object> order = new HashMap<>();
+        order.put("items", itemsList);
+        order.put("total", totalPrice);
 
-            // --- Clear the cart ---
-            MainMenu.cartList.clear();
-            // If you have totals in MainMenu, reset them too
-            // MainMenu.resetTotals();  // Uncomment if you implement resetTotals()
+        ordersRef.child(orderId).setValue(order)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(PaymentActivity.this, "Payment successful! Order sent to admin.", Toast.LENGTH_LONG).show();
 
-            // --- Return to MainMenu and clear back stack ---
-            Intent intent = new Intent(PaymentActivity.this, MainMenu.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish(); // Close PaymentActivity
-        });
+                    // Clear cart
+                    MainMenu.cartList.clear();
+
+                    // Return to MainMenu and clear back stack
+                    Intent intent = new Intent(PaymentActivity.this, MainMenu.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(PaymentActivity.this, "Failed to send order: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }
