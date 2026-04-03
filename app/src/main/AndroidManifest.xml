@@ -30,6 +30,12 @@
 
         <activity android:name=".PaymentActivity" />
         <activity android:name=".AdminDashboard" />
+        <activity android:name=".SilogActivity" />
+        <activity android:name=".PastilActivity" />
+        <activity android:name=".ShawarmaActivity" />
+        <activity android:name=".SizzlingActivity" />
+        <activity android:name=".SSDActivity" />
+        <activity android:name=".DrinksActivity" />
 
         <activity
             android:name=".StartOrder"

@@ -127,13 +127,47 @@ public class MainMenu extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) silogBtn.setOnClickListener(v -> showToast("Silog clicked"));
-        if (pastilBtn != null) pastilBtn.setOnClickListener(v -> showToast("Pastil clicked"));
-        if (shawarmaBtn != null) shawarmaBtn.setOnClickListener(v -> showToast("Shawarma clicked"));
-        if (sizzlingBtn != null) sizzlingBtn.setOnClickListener(v -> showToast("Sizzling clicked"));
-        if (ssdBtn != null) ssdBtn.setOnClickListener(v -> showToast("SSD clicked"));
-        if (drinkBtn != null) drinkBtn.setOnClickListener(v -> showToast("Drinks clicked"));
+        if (silogBtn != null) {
+            silogBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, SilogActivity.class);
+                startActivity(intent);
+            });
+        }
 
+        if (pastilBtn != null) {
+            pastilBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, PastilActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        if (shawarmaBtn != null) {
+            shawarmaBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, ShawarmaActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        if (sizzlingBtn != null) {
+            sizzlingBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, SizzlingActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        if (ssdBtn != null) {
+            ssdBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, SSDActivity.class);
+                startActivity(intent);
+            });
+        }
+
+        if (drinkBtn != null) {
+            drinkBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainMenu.this, DrinksActivity.class);
+                startActivity(intent);
+            });
+        }
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) orderNowBtn.setOnClickListener(v -> showToast("Proceeding to Order…"));
     }
