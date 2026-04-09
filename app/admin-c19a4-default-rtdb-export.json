@@ -1,0 +1,420 @@
+{
+  "admins": {
+    "admin1": {
+      "password": "admin",
+      "username": "admin"
+    }
+  },
+  "cart": {
+    "-OpJPoV_lScDHQXUoVpp": {
+      "imageResId": 0,
+      "name": "Shawarma Pita",
+      "price": 150,
+      "stock": 10
+    },
+    "-OpJPpqWifC2ot3-FBWj": {
+      "imageResId": 0,
+      "name": "Shawarma Rice",
+      "price": 150,
+      "stock": 10
+    },
+    "-OpJQFISa9MmLxuZUpko": {
+      "imageResId": 0,
+      "name": "Shawarma Rice",
+      "price": 150,
+      "stock": 10
+    },
+    "-OpJQcK6k-b7pkbDaqXT": {
+      "imageResId": 0,
+      "name": "Shawarma Burger",
+      "price": 150,
+      "stock": 10
+    },
+    "-OpJQd-oxC4vJPC-HMDV": {
+      "imageResId": 0,
+      "name": "Shawarma Rice",
+      "price": 150,
+      "stock": 10
+    },
+    "-OpJT3xZEBLx4HiqjgW5": {
+      "imageResId": 1,
+      "name": "Shawarma Pita",
+      "price": 150,
+      "quantity": 10,
+      "stability": 0
+    },
+    "-OpJT9CkEVy2LmLS_Osf": {
+      "imageResId": 1,
+      "name": "Shawarma Double Rice",
+      "price": 150,
+      "quantity": 10,
+      "stability": 0
+    },
+    "-OpJUqS-fvH3TQg7v91Z": {
+      "imageResId": 1,
+      "name": "Porkchop",
+      "price": 180,
+      "quantity": 10,
+      "stability": 0
+    },
+    "-OpJWnUjVR_TE-gOMDwh": {
+      "imageResId": 1,
+      "name": "Jumbo Siopao",
+      "price": 90,
+      "quantity": 10,
+      "stability": 0
+    },
+    "-OpJYHTX0fhVqYXn5kwU": {
+      "imageResId": 1,
+      "name": "Mountain Dew",
+      "price": 50,
+      "quantity": 20,
+      "stability": 0
+    }
+  },
+  "categories": {
+    "drinks": {
+      "cobra": {
+        "imageResId": 0,
+        "name": "Cobra",
+        "price": 50,
+        "stock": 20
+      },
+      "juice_1_5l": {
+        "imageResId": 0,
+        "name": "1.5 Juice",
+        "price": 50,
+        "stock": 20
+      },
+      "mineral_1l": {
+        "imageResId": 0,
+        "name": "Mineral 1L",
+        "price": 50,
+        "stock": 20
+      },
+      "mineral_500ml": {
+        "imageResId": 0,
+        "name": "Mineral 500ML",
+        "price": 50,
+        "stock": 20
+      },
+      "mismo": {
+        "imageResId": 0,
+        "name": "Mismo",
+        "price": 50,
+        "stock": 20
+      },
+      "mountain_dew": {
+        "imageResId": 0,
+        "name": "Mountain Dew",
+        "price": 50,
+        "stock": 20
+      },
+      "sting_red": {
+        "imageResId": 0,
+        "name": "Sting Red",
+        "price": 50,
+        "stock": 20
+      }
+    },
+    "pastil": {
+      "double_pastil": {
+        "imageResId": 0,
+        "name": "Double Pastil",
+        "price": 100,
+        "stock": 10
+      },
+      "pastil_double_rice": {
+        "imageResId": 0,
+        "name": "Pastil Double Rice",
+        "price": 100,
+        "stock": 10
+      },
+      "pastil_plain": {
+        "imageResId": 0,
+        "name": "Pastil",
+        "price": 100,
+        "stock": 10
+      },
+      "pastil_rice": {
+        "imageResId": 0,
+        "name": "Pastil w/ Rice",
+        "price": 100,
+        "stock": 10
+      },
+      "pastilog": {
+        "imageResId": 0,
+        "name": "Pastilog",
+        "price": 100,
+        "stock": 10
+      }
+    },
+    "shawarma": {
+      "shawarma_burger": {
+        "imageResId": 0,
+        "name": "Shawarma Burger",
+        "price": 150,
+        "stock": 10
+      },
+      "shawarma_burger_fries": {
+        "imageResId": 0,
+        "name": "Shawarma Burger w/ Fries",
+        "price": 150,
+        "stock": 10
+      },
+      "shawarma_double_rice": {
+        "imageResId": 0,
+        "name": "Shawarma Double Rice",
+        "price": 150,
+        "stock": 10
+      },
+      "shawarma_pita": {
+        "imageResId": 0,
+        "name": "Shawarma Pita",
+        "price": 150,
+        "stock": 10
+      },
+      "shawarma_rice": {
+        "imageResId": 0,
+        "name": "Shawarma Rice",
+        "price": 150,
+        "stock": 10
+      }
+    },
+    "silog": {
+      "bbq_silog": {
+        "imageResId": 0,
+        "name": "BBQ Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "bologna_silog": {
+        "imageResId": 0,
+        "name": "Bologna Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "burger_silog": {
+        "imageResId": 0,
+        "name": "Burger Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "chicken_silog": {
+        "imageResId": 0,
+        "name": "Chicken Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "ham_silog": {
+        "imageResId": 0,
+        "name": "Ham Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "hotdog_silog": {
+        "imageResId": 0,
+        "name": "Hotdog Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "hungarian_silog": {
+        "imageResId": 0,
+        "name": "Hungarian Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "longanisa_silog": {
+        "imageResId": 0,
+        "name": "Longanisa Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "pork_silog": {
+        "imageResId": 0,
+        "name": "Pork Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "sisig_silog": {
+        "imageResId": 0,
+        "name": "Sisig Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "tapa_silog": {
+        "imageResId": 0,
+        "name": "Tapa Silog",
+        "price": 120,
+        "stock": 10
+      },
+      "tocino_silog": {
+        "imageResId": 0,
+        "name": "Tocino Silog",
+        "price": 120,
+        "stock": 10
+      }
+    },
+    "sizzling": {
+      "burger_steak": {
+        "imageResId": 0,
+        "name": "Burger Steak",
+        "price": 180,
+        "stock": 10
+      },
+      "chicken": {
+        "imageResId": 0,
+        "name": "Chicken",
+        "price": 180,
+        "stock": 10
+      },
+      "hungarian": {
+        "imageResId": 0,
+        "name": "Hungarian",
+        "price": 180,
+        "stock": 10
+      },
+      "kare_kare": {
+        "imageResId": 0,
+        "name": "Kare Kare",
+        "price": 180,
+        "stock": 10
+      },
+      "lechon_kawali": {
+        "imageResId": 0,
+        "name": "Lechon Kawali",
+        "price": 180,
+        "stock": 10
+      },
+      "porkchop": {
+        "imageResId": 0,
+        "name": "Porkchop",
+        "price": 180,
+        "stock": 10
+      },
+      "sisig": {
+        "imageResId": 0,
+        "name": "Sisig",
+        "price": 180,
+        "stock": 10
+      }
+    },
+    "ssd": {
+      "big_siomai_rice_3pcs": {
+        "imageResId": 0,
+        "name": "Big Siomai Rice (3 pcs)",
+        "price": 90,
+        "stock": 10
+      },
+      "dumpling_rice_3pcs": {
+        "imageResId": 0,
+        "name": "Dumpling Rice (3 pcs)",
+        "price": 90,
+        "stock": 10
+      },
+      "jumbo_siopao": {
+        "imageResId": 0,
+        "name": "Jumbo Siopao",
+        "price": 90,
+        "stock": 10
+      },
+      "siomai_rice_4pcs": {
+        "imageResId": 0,
+        "name": "Siomai Rice (4 pcs)",
+        "price": 90,
+        "stock": 10
+      }
+    }
+  },
+  "orders": {
+    "-Op8zd6MeXQVRArHRVIN": {
+      "items": [
+        {
+          "imageResId": 2131230842,
+          "name": "BaconSilog",
+          "price": 120,
+          "quantity": 1
+        }
+      ],
+      "total": 120
+    },
+    "-Op90UCcT6EorsCcJDSs": {
+      "items": [
+        {
+          "imageResId": 2131230998,
+          "name": "TapSilog",
+          "price": 60,
+          "quantity": 1
+        }
+      ],
+      "total": 60
+    },
+    "-OpJ5QXBAXquyyszo1-G": {
+      "items": [
+        {
+          "imageResId": 0,
+          "name": "Hotdog Silog",
+          "price": 120,
+          "quantity": 1
+        }
+      ],
+      "total": 120
+    }
+  },
+  "products": {
+    "BaconSilog": {
+      "imageResId": 2131230842,
+      "name": "BaconSilog",
+      "price": 120,
+      "stock": 10
+    },
+    "BigSiomai": {
+      "imageResId": 2131230846,
+      "name": "BigSiomai",
+      "price": 70,
+      "stock": 10
+    },
+    "BurgerSteak": {
+      "imageResId": 2131230855,
+      "name": "BurgerSteak",
+      "price": 75,
+      "stock": 6
+    },
+    "Dumpling": {
+      "imageResId": 2131230881,
+      "name": "Dumpling",
+      "price": 60,
+      "stock": 8
+    },
+    "JumboSiopao": {
+      "imageResId": 2131230916,
+      "name": "JumboSiopao",
+      "price": 45,
+      "stock": 15
+    },
+    "Shawarma": {
+      "imageResId": 2131230996,
+      "name": "Shawarma",
+      "price": 85,
+      "stock": 7
+    },
+    "Siomai": {
+      "imageResId": 2131230997,
+      "name": "Siomai",
+      "price": 50,
+      "stock": 12
+    },
+    "TapSilog": {
+      "imageResId": 2131230998,
+      "name": "TapSilog",
+      "price": 60,
+      "stock": 8
+    },
+    "ToSilog": {
+      "imageResId": 2131231002,
+      "name": "ToSilog",
+      "price": 80,
+      "stock": 5
+    }
+  }
+}

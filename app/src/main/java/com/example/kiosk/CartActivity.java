@@ -1,28 +1,28 @@
 package com.example.kiosk;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity implements CartAdapter.CartListener {
 
-    private Button orderBtn;
     private MaterialButton backBtn;
-    private LinearLayout cartContainer;
+    private RecyclerView recyclerView;
+    private Button orderBtn;
     private TextView emptyText, totalText;
+
+    private CartAdapter cartAdapter;
+    private List<CartItem> cartList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,86 +31,57 @@ public class CartActivity extends AppCompatActivity {
 
         backBtn = findViewById(R.id.backBtn);
         orderBtn = findViewById(R.id.orderBtn);
-        cartContainer = findViewById(R.id.cartContainer);
         emptyText = findViewById(R.id.cartEmptyText);
         totalText = findViewById(R.id.cartTotalText);
+        recyclerView = findViewById(R.id.recyclerViewCart);
+
+        cartList = MainMenu.cartList; // assuming cartList is static in MainMenu
+
+        // RecyclerView setup
+        cartAdapter = new CartAdapter(this, cartList, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(cartAdapter);
 
         backBtn.setOnClickListener(v -> finish());
 
-        updateCartUI();
-
-        // ------------------------------
-        // ORDER BUTTON GOES TO PAYMENT
-        // ------------------------------
         orderBtn.setOnClickListener(v -> {
-            if (!MainMenu.cartList.isEmpty()) {
-                Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
-                startActivity(intent);
+            if (!cartList.isEmpty()) {
+                startActivity(new Intent(CartActivity.this, PaymentActivity.class));
             } else {
                 Toast.makeText(this, "Cart is empty!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        updateCartUI();
     }
 
+    // Called whenever the cart changes
     private void updateCartUI() {
-        cartContainer.removeAllViews();
-
-        if (MainMenu.cartList != null && !MainMenu.cartList.isEmpty()) {
+        if (cartList != null && !cartList.isEmpty()) {
             emptyText.setVisibility(TextView.GONE);
-            cartContainer.setVisibility(LinearLayout.VISIBLE);
+            recyclerView.setVisibility(RecyclerView.VISIBLE);
             orderBtn.setVisibility(Button.VISIBLE);
             totalText.setVisibility(TextView.VISIBLE);
 
+            // Calculate total price
             int totalPrice = 0;
-
-            for (int i = 0; i < MainMenu.cartList.size(); i++) {
-                CartItem item = MainMenu.cartList.get(i);
+            for (CartItem item : cartList) {
                 totalPrice += item.price * item.quantity;
-
-                LinearLayout itemLayout = new LinearLayout(this);
-                itemLayout.setOrientation(LinearLayout.HORIZONTAL);
-                itemLayout.setPadding(16, 16, 16, 16);
-                itemLayout.setGravity(Gravity.CENTER_VERTICAL);
-
-                // Item name
-                TextView itemName = new TextView(this);
-                itemName.setText(item.name + " - ₱" + item.price);
-                itemName.setLayoutParams(new LinearLayout.LayoutParams(
-                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-                itemName.setTextSize(18f);
-                Typeface manropeMedium = ResourcesCompat.getFont(this, R.font.manrope_medium);
-                itemName.setTextColor(Color.BLACK);
-                itemName.setTypeface(manropeMedium);
-
-                // Delete button
-                Button deleteBtn = new Button(this);
-                deleteBtn.setText("Delete");
-                deleteBtn.setBackgroundResource(R.drawable.delete_bg);
-                Typeface manropeBold = ResourcesCompat.getFont(this, R.font.manrope_bold);
-                deleteBtn.setTextColor(Color.WHITE);
-                deleteBtn.setTextSize(13f);
-                deleteBtn.setTypeface(manropeBold);
-                deleteBtn.setPadding(20, 2, 20, 2);
-
-                int finalI = i;
-                deleteBtn.setOnClickListener(v -> {
-                    CartItem removedItem = MainMenu.cartList.remove(finalI);
-                    Toast.makeText(this, removedItem.name + " deleted", Toast.LENGTH_SHORT).show();
-                    updateCartUI();
-                });
-
-                itemLayout.addView(itemName);
-                itemLayout.addView(deleteBtn);
-                cartContainer.addView(itemLayout);
             }
-
             totalText.setText("Total: ₱" + totalPrice);
 
         } else {
             emptyText.setVisibility(TextView.VISIBLE);
-            cartContainer.setVisibility(LinearLayout.GONE);
+            recyclerView.setVisibility(RecyclerView.GONE);
             orderBtn.setVisibility(Button.GONE);
             totalText.setVisibility(TextView.GONE);
         }
+    }
+
+    // This is called from CartAdapter whenever quantity changes or item removed
+    @Override
+    public void onQuantityChanged() {
+        cartAdapter.notifyDataSetChanged(); // refresh adapter
+        updateCartUI(); // update total & visibility
     }
 }

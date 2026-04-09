@@ -30,11 +30,11 @@
             app:cornerRadius="20dp"
             app:icon="@drawable/baseline_arrow_back_24"
             app:iconGravity="textStart"
-            app:strokeColor="#B73B28"
+            app:strokeColor="#000"
             app:strokeWidth="2dp"
             app:iconPadding="0dp"
             app:iconSize="25dp"
-            app:iconTint="#B73B28"
+            app:iconTint="#000"
             />
 
         <TextView
@@ -43,7 +43,7 @@
             android:text="Payment"
             android:textSize="40sp"
             android:fontFamily="@font/margarine"
-            android:textColor="#B73B28"
+            android:textColor="#000"
             />
 
     </LinearLayout>

@@ -160,13 +160,6 @@
                     android:textColor="@color/black"
                     android:textSize="24sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/manrope_medium"
-                    android:text="See all"
-                    android:textColor="#B73B28"
-                    android:textSize="16sp"/>
 
             </LinearLayout>
 

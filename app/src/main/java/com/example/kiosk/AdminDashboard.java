@@ -27,7 +27,7 @@ public class AdminDashboard extends AppCompatActivity {
 
     private MaterialButton backToStartBtn;
     private EditText searchBar;
-    private TextView pendingOrdersText, kitchenQueueText;
+    private TextView pendingOrdersText, kitchenQueueText, pendingNumber, kitchenNumber;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
 
@@ -57,6 +57,8 @@ public class AdminDashboard extends AppCompatActivity {
         kitchenQueueText = findViewById(R.id.kitchenQueueText);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
+        pendingNumber = findViewById(R.id.pendingNumber);
+        kitchenNumber = findViewById(R.id.kitchenNumber);
 
         // Optional: find RecyclerViews if inside tabs
         // ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
@@ -84,7 +86,7 @@ public class AdminDashboard extends AppCompatActivity {
         loadProducts();
 
         // --- Setup tabs + viewpager ---
-        String[] tabTitles = {"Orders", "Menu", "Users"};
+        String[] tabTitles = {"Orders", "Kitchen", "Ready"};
         AdminPagerAdapter adapter = new AdminPagerAdapter(this, tabTitles.length);
         viewPager.setAdapter(adapter);
 
@@ -111,8 +113,8 @@ public class AdminDashboard extends AppCompatActivity {
                     }
                 }
 
-                pendingOrdersText.setText("Pending Orders: " + pendingOrders);
-                kitchenQueueText.setText("Kitchen Queue: " + kitchenQueue);
+                pendingNumber.setText(String.valueOf(pendingOrders));
+                kitchenNumber.setText(String.valueOf(kitchenQueue));
 
                 // Pass orderList to RecyclerView Adapter
                 ordersAdapter.setOrders(orderList);

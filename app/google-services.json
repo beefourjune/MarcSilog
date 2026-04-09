@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "1074324797430",
-    "firebase_url": "https://admin-c19a4-default-rtdb.firebaseio.com",
-    "project_id": "admin-c19a4",
-    "storage_bucket": "admin-c19a4.firebasestorage.app"
+    "project_number": "43518324224",
+    "firebase_url": "https://marcsilog-366ea-default-rtdb.firebaseio.com",
+    "project_id": "marcsilog-366ea",
+    "storage_bucket": "marcsilog-366ea.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1074324797430:android:993f2b4085eac256fe79d7",
+        "mobilesdk_app_id": "1:43518324224:android:b211bd814cc07ae18a72e5",
         "android_client_info": {
           "package_name": "com.example.kiosk"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAkwQ77N4cLmxn19WfqR2g2ex4E1XOmq74"
+          "current_key": "AIzaSyDoHbCQYpM4NZS1UCO3h9Ev9LMf_h9KZmY"
         }
       ],
       "services": {

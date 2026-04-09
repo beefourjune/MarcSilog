@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_bg">
+    android:background="@color/white">
 
     <!-- Main vertical layout -->
     <LinearLayout
@@ -18,36 +18,245 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="8dp"
+            >
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/backBtn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginEnd="14dp"
-                android:elevation="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
+                app:elevation="5dp"
                 android:padding="10dp"
                 app:backgroundTint="@android:color/transparent"
                 app:cornerRadius="20dp"
                 app:icon="@drawable/baseline_arrow_back_24"
                 app:iconGravity="textStart"
-                app:strokeColor="#FFCC93"
-                app:strokeWidth="2dp"
                 app:iconPadding="0dp"
                 app:iconSize="25dp"
-                app:iconTint="#FFCC93"/>
+                app:iconTint="#B73B28"/>
 
-            <TextView
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_edittext"
+                android:hint="Search food..."
+                android:padding="10dp"
+                android:textSize="15sp"
+                android:elevation="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:padding="0dp">
+
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pastil Menu"
-                android:textSize="40sp"
-                android:fontFamily="@font/margarine"
-                android:textColor="@color/white"/>
-        </LinearLayout>
+                android:orientation="horizontal">
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:id="@+id/silogBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Silog"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:id="@+id/pastilBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pastil"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:layout_width="100dp"
+                        android:id="@+id/shawarmaBtn"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Shawarma"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:id="@+id/sizzlingBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sizzling"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:id="@+id/ssdBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SSD"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp">
+
+                    <ImageButton
+                        android:id="@+id/drinkBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/baconsilog"
+                        android:backgroundTint="@color/black"
+                        android:paddingTop="30dp"
+                        android:background="@drawable/rounded_button"
+                        android:scaleType="centerCrop"
+                        android:clipToOutline="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drinks"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_extrabold"
+            android:text="PASTIL MEALS!"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:textSize="22sp" />
 
         <!-- RecyclerView for Pastil items -->
         <androidx.recyclerview.widget.RecyclerView
@@ -57,41 +266,54 @@
             android:layout_weight="1"
             android:layout_marginTop="20dp"
             android:clipToPadding="false"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="80dp"/> <!-- leave space for floating panel -->
 
     </LinearLayout>
 
     <!-- Floating Cart Panel -->
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/floatingCartPanel"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
+        android:layout_margin="16dp"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFCC93"
-        android:gravity="center_vertical"
-        android:elevation="8dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp">
 
-        <TextView
-            android:id="@+id/cartItemCount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cart: 0 items"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-medium"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#908AE2"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/goToCartBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="View Cart"
-            android:backgroundTint="#ffffff"
-            android:textColor="#FFCC93"
-            app:cornerRadius="12dp"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/cartItemCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_extrabold"
+                android:layout_weight="1"
+                android:text="0 items - ₱0"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/goToCartBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/manrope_extrabold"
+                android:text="View Cart"
+                android:backgroundTint="@android:color/white"
+                android:textColor="@android:color/black"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </FrameLayout>
