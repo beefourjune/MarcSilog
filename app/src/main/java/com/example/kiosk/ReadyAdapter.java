@@ -10,37 +10,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
+public class ReadyAdapter extends RecyclerView.Adapter<ReadyAdapter.ViewHolder> {
 
-    private final List<String> menuItems;
+    private final List<String> users;
 
-    public MenuAdapter(List<String> menuItems) {
-        this.menuItems = menuItems;
+    public ReadyAdapter(List<String> users) {
+        this.users = users;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_menu, parent, false);
+                .inflate(R.layout.item_user, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.menuText.setText(menuItems.get(position));
+        holder.userText.setText(users.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return menuItems.size();
+        return users.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView menuText;
+        TextView userText;
         ViewHolder(View itemView) {
             super(itemView);
-            menuText = itemView.findViewById(R.id.menuText);
+            userText = itemView.findViewById(R.id.userText);
         }
     }
 }

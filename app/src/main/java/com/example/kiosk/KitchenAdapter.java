@@ -16,11 +16,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
+public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHolder> {
 
     private List<Order> orders = new ArrayList<>();
 
-    public OrdersAdapter(List<Order> orders) {
+    public KitchenAdapter(List<Order> orders) {
         if (orders != null) this.orders = orders;
     }
 
@@ -34,7 +34,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_order, parent, false);
+                .inflate(R.layout.item_order, parent, false); // reuse same layout
 
         return new ViewHolder(view);
     }
@@ -44,17 +44,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         Order order = orders.get(position);
 
-        String displayId = order.getId() != null ? order.getId() : "UNKNOWN";
+        String orderId = (order.getId() != null) ? order.getId() : "UNKNOWN";
 
-        // ✅ FIX: ensure firebase key is FINAL for lambda
-        String key = order.getFirebaseKey();
-
-        if (key == null || key.isEmpty()) {
-            key = displayId; // fallback
-        }
-
-        final String firebaseKey = key; // 🔥 REQUIRED for lambda
-
+        // 🔥 BUILD ITEMS TEXT
         StringBuilder itemsText = new StringBuilder();
 
         if (order.getItems() != null && !order.getItems().isEmpty()) {
@@ -72,19 +64,22 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         }
 
         holder.orderText.setText(
-                "Order ID: " + displayId + "\n\nItems:\n" + itemsText
+                "Order ID: " + orderId + "\n\nItems:\n" + itemsText.toString()
         );
 
-        holder.btnPrepare.setOnClickListener(v -> {
+        // 🔥 CHANGE BUTTON TEXT TO COMPLETE
+        holder.btnAction.setText("Complete");
+
+        holder.btnAction.setOnClickListener(v -> {
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
                     .getReference("orders")
-                    .child(firebaseKey);
+                    .child(order.getId());
 
-            ref.child("inKitchen").setValue(true)
+            ref.child("completed").setValue(true)
                     .addOnSuccessListener(unused ->
                             Toast.makeText(v.getContext(),
-                                    "Moved to Kitchen",
+                                    "Order Completed",
                                     Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->
@@ -103,13 +98,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView orderText;
-        Button btnPrepare;
+        Button btnAction;
 
         ViewHolder(View itemView) {
             super(itemView);
 
             orderText = itemView.findViewById(R.id.orderText);
-            btnPrepare = itemView.findViewById(R.id.prepareBtn);
+            btnAction = itemView.findViewById(R.id.prepareBtn); // reuse button
         }
     }
 }

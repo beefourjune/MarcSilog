@@ -19,8 +19,8 @@ public class AdminPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0: return new OrdersFragment(); // Pending Orders tab
-            case 1: return new MenuFragment();   // Menu tab
-            case 2: return new UsersFragment();  // Users tab
+            case 1: return new KitchenFragment();   // Menu tab
+            case 2: return new ReadyFragment();  // Users tab
             default: return new OrdersFragment();
         }
     }

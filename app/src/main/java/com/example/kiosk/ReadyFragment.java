@@ -11,29 +11,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MenuFragment extends Fragment {
+public class ReadyFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private MenuAdapter adapter;
-    private ArrayList<String> menuList;
+    private ReadyAdapter adapter;
+    private ArrayList<String> usersList;
 
-    public MenuFragment() {}
+    public ReadyFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_users, container, false);
 
-        recyclerView = view.findViewById(R.id.menuRecyclerView);
+        recyclerView = view.findViewById(R.id.usersRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Sample menu items
-        menuList = new ArrayList<>();
-        menuList.add("Burger - $5");
-        menuList.add("Pizza - $7");
-        menuList.add("Fries - $3");
+        // Sample users
+        usersList = new ArrayList<>();
+        usersList.add("John Doe - admin");
+        usersList.add("Jane Smith - user");
+        usersList.add("Mark Lee - user");
 
-        adapter = new MenuAdapter(menuList);
+        adapter = new ReadyAdapter(usersList);
         recyclerView.setAdapter(adapter);
 
         return view;

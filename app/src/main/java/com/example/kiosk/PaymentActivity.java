@@ -17,8 +17,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -33,49 +31,47 @@ public class PaymentActivity extends AppCompatActivity {
         paymentContainer = findViewById(R.id.paymentContainer);
         payNowBtn = findViewById(R.id.payNowBtn);
 
-        // Get cart items from MainMenu.cartList
         if (MainMenu.cartList != null && !MainMenu.cartList.isEmpty()) {
-            Typeface manropeMedium = ResourcesCompat.getFont(this, R.font.manrope_medium);
+
+            Typeface manropeMedium =
+                    ResourcesCompat.getFont(this, R.font.manrope_medium);
 
             int totalPrice = 0;
 
             for (CartItem item : MainMenu.cartList) {
                 totalPrice += item.price * item.quantity;
 
-                // Horizontal layout for each item
                 LinearLayout itemLayout = new LinearLayout(this);
                 itemLayout.setOrientation(LinearLayout.HORIZONTAL);
                 itemLayout.setPadding(16, 16, 16, 16);
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
-                // Meal name (left)
                 TextView itemName = new TextView(this);
-                itemName.setText(item.name);
+                itemName.setText(item.name + " x" + item.quantity);
                 itemName.setTypeface(manropeMedium);
                 itemName.setTextColor(Color.BLACK);
                 itemName.setLayoutParams(new LinearLayout.LayoutParams(
-                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 2
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        2
                 ));
 
-                // Price (right)
                 TextView itemPrice = new TextView(this);
-                itemPrice.setText("₱" + item.price);
+                itemPrice.setText("₱" + (item.price * item.quantity));
                 itemPrice.setTypeface(manropeMedium);
                 itemPrice.setTextColor(Color.BLACK);
                 itemPrice.setGravity(Gravity.END);
                 itemPrice.setLayoutParams(new LinearLayout.LayoutParams(
-                        0, LinearLayout.LayoutParams.WRAP_CONTENT, 1
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1
                 ));
 
-                // Add name and price to horizontal layout
                 itemLayout.addView(itemName);
                 itemLayout.addView(itemPrice);
-
-                // Add horizontal layout to payment container
                 paymentContainer.addView(itemLayout);
             }
 
-            // Display total at the bottom
             TextView totalText = new TextView(this);
             totalText.setText("Total: ₱" + totalPrice);
             totalText.setTypeface(manropeMedium);
@@ -83,11 +79,14 @@ public class PaymentActivity extends AppCompatActivity {
             totalText.setTextSize(18f);
             totalText.setGravity(Gravity.END);
             totalText.setPadding(16, 16, 16, 16);
+
             paymentContainer.addView(totalText);
 
-            // Handle Pay Now button click
-            int finalTotalPrice = totalPrice;
-            payNowBtn.setOnClickListener(v -> sendOrderToFirebase(finalTotalPrice));
+            final int finalTotalPrice = totalPrice;
+
+            payNowBtn.setOnClickListener(v ->
+                    sendOrderToFirebase(finalTotalPrice)
+            );
 
         } else {
             Toast.makeText(this, "No items to pay for!", Toast.LENGTH_SHORT).show();
@@ -95,34 +94,75 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
+    // ================= FIREBASE ORDER SAVE (FIXED FINAL VERSION) =================
+
     private void sendOrderToFirebase(int totalPrice) {
-        DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference("orders");
-        String orderId = ordersRef.push().getKey();
 
-        ArrayList<Map<String, Object>> itemsList = new ArrayList<>();
-        for (CartItem item : MainMenu.cartList) {
-            itemsList.add(item.toMap());
-        }
+        DatabaseReference rootRef =
+                FirebaseDatabase.getInstance().getReference();
 
-        HashMap<String, Object> order = new HashMap<>();
-        order.put("items", itemsList);
-        order.put("total", totalPrice);
+        DatabaseReference ordersRef = rootRef.child("orders");
+        DatabaseReference counterRef = rootRef.child("counters").child("orderId");
 
-        ordersRef.child(orderId).setValue(order)
-                .addOnSuccessListener(unused -> {
-                    Toast.makeText(PaymentActivity.this, "Payment successful! Order sent to admin.", Toast.LENGTH_LONG).show();
+        ArrayList<CartItem> itemsBackup =
+                new ArrayList<>(MainMenu.cartList);
 
-                    // Clear cart
-                    MainMenu.cartList.clear();
+        counterRef.get().addOnSuccessListener(snapshot -> {
 
-                    // Return to MainMenu and clear back stack
-                    Intent intent = new Intent(PaymentActivity.this, MainMenu.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(PaymentActivity.this, "Failed to send order: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+            int currentValue = 0;
+
+            Integer dbValue = snapshot.getValue(Integer.class);
+            if (dbValue != null) {
+                currentValue = dbValue;
+            }
+
+            final int newNumber = currentValue + 1;
+            final String displayId = String.format("%04d", newNumber);
+
+            // 🔥 REAL FIREBASE KEY (THIS FIXES EVERYTHING)
+            String firebaseKey = ordersRef.push().getKey();
+
+            if (firebaseKey == null) {
+                Toast.makeText(this,
+                        "Failed to generate order key",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Order order = new Order(
+                    displayId,
+                    firebaseKey,
+                    false,
+                    false,
+                    System.currentTimeMillis(),
+                    itemsBackup
+            );
+
+            // 🔥 CRITICAL: SAVE BOTH IDS
+            order.setId(displayId);
+            order.setFirebaseKey(firebaseKey);
+
+            ordersRef.child(firebaseKey).setValue(order)
+                    .addOnSuccessListener(unused -> {
+
+                        counterRef.setValue(newNumber);
+
+                        MainMenu.cartList.clear();
+
+                        Intent intent = new Intent(PaymentActivity.this, OrderReceivedActivity.class);
+
+                        intent.putExtra("ORDER_ID", displayId);
+                        intent.putExtra("FIREBASE_KEY", firebaseKey); // 🔥 IMPORTANT
+                        intent.putExtra("TOTAL", totalPrice);
+
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this,
+                                    "Order failed: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show()
+                    );
+        });
     }
 }

@@ -2,7 +2,10 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,51 +29,148 @@ public class MainMenu extends AppCompatActivity {
     private DatabaseReference database;
     private DatabaseReference productsRef;
 
-    // --- Cart UI ---
+    // --- UI ---
     private TextView cartInfo;
     private View cartPanel;
     private MaterialButton viewCartBtn;
     private LinearLayout productContainer;
+    private EditText searchBar;
 
     // --- Category buttons ---
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
     private MaterialButton orderNowBtn, cartBtn, backBtn;
 
-    // --- Add-to-cart buttons ---
+    // --- Add to cart ---
     private MaterialButton addBaconBtn, addTapBtn, addTosilogBtn, addBurgerBtn, addShawarmaBtn,
             addSiomaiBtn, addBigSiomaiBtn, addDumplingBtn, addSiopaoBtn;
 
-    // --- Cart data ---
+    // --- Cart ---
     public static ArrayList<CartItem> cartList = new ArrayList<>();
+    public static ArrayList<CartItem> cartListBackup = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        // --- Firebase init ---
         database = FirebaseDatabase.getInstance().getReference();
         productsRef = database.child("products");
 
-        // --- Initialize default products in Firebase ---
         initializeDefaultProducts();
 
-        // --- UI init ---
         cartPanel = findViewById(R.id.cartPanel);
         cartInfo = findViewById(R.id.cartInfo);
         viewCartBtn = findViewById(R.id.viewCartBtn);
         productContainer = findViewById(R.id.productContainer);
+        searchBar = findViewById(R.id.searchBar);
 
+        setupSearch(); // 🔥 ADDED SEARCH
         setupCartUI();
         setupCategoryButtons();
         setupAddToCartButtons();
 
-        // --- Refresh cart initially ---
         refreshCartInfo();
     }
 
-    // --- Initialize default products in Firebase ---
+    // ================= SEARCH (FIREBASE LIVE) =================
+    private void setupSearch() {
+
+        if (searchBar == null) return;
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                String query = s.toString().trim().toLowerCase();
+
+                if (query.isEmpty()) {
+                    productContainer.removeAllViews();
+                    productContainer.setVisibility(View.GONE);
+                    return;
+                }
+
+                productContainer.setVisibility(View.VISIBLE);
+                searchFirebaseProducts(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void searchFirebaseProducts(String query) {
+
+        productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                productContainer.removeAllViews();
+
+                boolean found = false;
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+
+                    String name = ds.child("name").getValue(String.class);
+                    Integer price = ds.child("price").getValue(Integer.class);
+                    Integer imageResId = ds.child("imageResId").getValue(Integer.class);
+
+                    if (name == null || price == null || imageResId == null) continue;
+
+                    if (name.toLowerCase().contains(query)) {
+
+                        found = true;
+
+                        LinearLayout row = new LinearLayout(MainMenu.this);
+                        row.setOrientation(LinearLayout.HORIZONTAL);
+                        row.setPadding(20, 20, 20, 20);
+
+                        TextView tv = new TextView(MainMenu.this);
+                        tv.setText(name + " - ₱" + price);
+                        tv.setLayoutParams(new LinearLayout.LayoutParams(
+                                0,
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                1
+                        ));
+
+                        MaterialButton addBtn = new MaterialButton(MainMenu.this);
+                        addBtn.setText("Add");
+
+                        String finalName = name;
+                        int finalPrice = price;
+                        int finalImage = imageResId;
+
+                        addBtn.setOnClickListener(v ->
+                                addItemToCart(finalName, finalPrice, finalImage)
+                        );
+
+                        row.addView(tv);
+                        row.addView(addBtn);
+
+                        productContainer.addView(row);
+                    }
+                }
+
+                if (!found) {
+                    TextView empty = new TextView(MainMenu.this);
+                    empty.setText("No products found");
+                    empty.setPadding(20, 20, 20, 20);
+                    productContainer.addView(empty);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast(error.getMessage());
+            }
+        });
+    }
+
+    // ================= FIREBASE DEFAULT PRODUCTS =================
     private void initializeDefaultProducts() {
+
         productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -84,18 +184,15 @@ public class MainMenu extends AppCompatActivity {
                 addProductIfMissing(snapshot, "BigSiomai", 70, 10, R.drawable.bigsiomairice);
                 addProductIfMissing(snapshot, "Dumpling", 60, 8, R.drawable.dumplingrice);
                 addProductIfMissing(snapshot, "JumboSiopao", 45, 15, R.drawable.jumbosiopao);
-
-                showToast("Default products initialized!");
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                showToast("Firebase error: " + error.getMessage());
+                showToast(error.getMessage());
             }
         });
     }
 
-    // --- Add product if missing ---
     private void addProductIfMissing(DataSnapshot snapshot, String name, int price, int stock, int imageResId) {
         if (!snapshot.hasChild(name)) {
             Product product = new Product(name, price, stock, imageResId);
@@ -103,13 +200,40 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    // --- Setup cart UI ---
-    private void setupCartUI() {
-        if (cartPanel != null) {
-            cartPanel.setVisibility(View.GONE);
-            cartPanel.setOnClickListener(v -> openCart());
+    // ================= CART =================
+    private void addItemToCart(String name, int price, int imageResId) {
+        cartList.add(new CartItem(name, price, imageResId));
+        if (cartPanel.getVisibility() == View.GONE) cartPanel.setVisibility(View.VISIBLE);
+        refreshCartInfo();
+        showToast(name + " added to cart");
+    }
+
+    private void refreshCartInfo() {
+
+        int totalItems = 0;
+        int totalPrice = 0;
+
+        for (CartItem item : cartList) {
+            totalItems++;
+            totalPrice += item.price;
         }
-        if (viewCartBtn != null) viewCartBtn.setOnClickListener(v -> openCart());
+
+        if (cartInfo != null) {
+            if (totalItems > 0) {
+                cartInfo.setText(totalItems + " items - ₱" + totalPrice);
+                cartPanel.setVisibility(View.VISIBLE);
+            } else {
+                cartInfo.setText("Cart is empty");
+                cartPanel.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setupCartUI() {
+
+        if (viewCartBtn != null) {
+            viewCartBtn.setOnClickListener(v -> openCart());
+        }
 
         backBtn = findViewById(R.id.backtostartbtn);
         if (backBtn != null) backBtn.setOnClickListener(v -> finish());
@@ -118,7 +242,13 @@ public class MainMenu extends AppCompatActivity {
         if (cartBtn != null) cartBtn.setOnClickListener(v -> openCart());
     }
 
-    // --- Setup category buttons ---
+    private void openCart() {
+        Intent intent = new Intent(MainMenu.this, CartActivity.class);
+        intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartList));
+        startActivity(intent);
+    }
+
+    // ================= CATEGORY =================
     private void setupCategoryButtons() {
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
@@ -127,52 +257,15 @@ public class MainMenu extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, SilogActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, PastilActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, SizzlingActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, SSDActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(MainMenu.this, DrinksActivity.class);
-                startActivity(intent);
-            });
-        }
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) orderNowBtn.setOnClickListener(v -> showToast("Proceeding to Order…"));
+        if (silogBtn != null) silogBtn.setOnClickListener(v -> startActivity(new Intent(this, SilogActivity.class)));
+        if (pastilBtn != null) pastilBtn.setOnClickListener(v -> startActivity(new Intent(this, PastilActivity.class)));
+        if (shawarmaBtn != null) shawarmaBtn.setOnClickListener(v -> startActivity(new Intent(this, ShawarmaActivity.class)));
+        if (sizzlingBtn != null) sizzlingBtn.setOnClickListener(v -> startActivity(new Intent(this, SizzlingActivity.class)));
+        if (ssdBtn != null) ssdBtn.setOnClickListener(v -> startActivity(new Intent(this, SSDActivity.class)));
+        if (drinkBtn != null) drinkBtn.setOnClickListener(v -> startActivity(new Intent(this, DrinksActivity.class)));
     }
 
-    // --- Setup add-to-cart buttons ---
+    // ================= ADD TO CART =================
     private void setupAddToCartButtons() {
         addBaconBtn = findViewById(R.id.addBaconBtn);
         addTapBtn = findViewById(R.id.addTapBtn);
@@ -196,42 +289,8 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void setAddToCartListener(MaterialButton button, String name, int price, int imageResId) {
-        if (button != null) button.setOnClickListener(v -> addItemToCart(name, price, imageResId));
-    }
-
-    // --- Add to cart ---
-    private void addItemToCart(String name, int price, int imageResId) {
-        cartList.add(new CartItem(name, price, imageResId));
-        if (cartPanel.getVisibility() == View.GONE) cartPanel.setVisibility(View.VISIBLE);
-        refreshCartInfo();
-        showToast(name + " added to cart");
-    }
-
-    // --- Refresh cart info ---
-    private void refreshCartInfo() {
-        int totalItems = 0;
-        int totalPrice = 0;
-        for (CartItem item : cartList) {
-            totalItems++;
-            totalPrice += item.price;
-        }
-
-        if (cartInfo != null) {
-            if (totalItems > 0) {
-                cartInfo.setText(totalItems + " items - ₱" + totalPrice);
-                cartPanel.setVisibility(View.VISIBLE);
-            } else {
-                cartInfo.setText("Cart is empty");
-                cartPanel.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    // --- Open cart activity ---
-    private void openCart() {
-        Intent intent = new Intent(MainMenu.this, CartActivity.class);
-        intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartList));
-        startActivity(intent);
+        if (button != null)
+            button.setOnClickListener(v -> addItemToCart(name, price, imageResId));
     }
 
     private void showToast(String message) {

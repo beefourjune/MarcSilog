@@ -5,25 +5,37 @@ public class Product {
     private String name;
     private int price;
     private int stock;
-    private int imageResId; // Drawable resource ID for the product image
+    private int imageResId;
+    private String category; // ✅ NEW
 
-    // Default constructor required for Firebase
+    // Default constructor (REQUIRED for Firebase)
     public Product() {}
 
-    // 4-parameter constructor (with image)
+    // Full constructor (recommended)
+    public Product(String name, int price, int stock, int imageResId, String category) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.imageResId = imageResId;
+        this.category = category;
+    }
+
+    // Old constructor (kept for compatibility)
     public Product(String name, int price, int stock, int imageResId) {
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.imageResId = imageResId;
+        this.category = "Others"; // default
     }
 
-    // 3-parameter constructor (optional, uses default imageResId = 0)
+    // Optional constructor
     public Product(String name, int price, int stock) {
         this.name = name;
         this.price = price;
         this.stock = stock;
-        this.imageResId = 0; // default placeholder
+        this.imageResId = 0;
+        this.category = "Others";
     }
 
     // --- Getters ---
@@ -31,10 +43,12 @@ public class Product {
     public int getPrice() { return price; }
     public int getStock() { return stock; }
     public int getImageResId() { return imageResId; }
+    public String getCategory() { return category; } // ✅ NEW
 
     // --- Setters ---
     public void setName(String name) { this.name = name; }
     public void setPrice(int price) { this.price = price; }
     public void setStock(int stock) { this.stock = stock; }
     public void setImageResId(int imageResId) { this.imageResId = imageResId; }
+    public void setCategory(String category) { this.category = category; } // ✅ NEW
 }

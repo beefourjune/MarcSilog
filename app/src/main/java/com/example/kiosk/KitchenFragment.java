@@ -19,66 +19,67 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrdersFragment extends Fragment {
+public class KitchenFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private OrdersAdapter adapter;
-    private List<Order> ordersList;
-
+    private KitchenAdapter adapter;
     private DatabaseReference ordersRef;
 
-    public OrdersFragment() {}
+    public KitchenFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_orders, container, false);
+        View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        recyclerView = view.findViewById(R.id.ordersRecyclerView);
+        recyclerView = view.findViewById(R.id.menuRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ordersList = new ArrayList<>();
-        adapter = new OrdersAdapter(ordersList);
+        adapter = new KitchenAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        ordersRef = FirebaseDatabase.getInstance()
-                .getReference("orders");
+        ordersRef = FirebaseDatabase.getInstance().getReference("orders");
 
-        loadOrdersFromFirebase();
+        loadKitchenOrders();
 
         return view;
     }
 
-    private void loadOrdersFromFirebase() {
+    // ================= LOAD KITCHEN ORDERS =================
+    private void loadKitchenOrders() {
 
         ordersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                ordersList.clear();
+                List<Order> kitchenList = new ArrayList<>();
 
-                for (DataSnapshot orderSnap : snapshot.getChildren()) {
+                for (DataSnapshot snap : snapshot.getChildren()) {
 
-                    Order order = orderSnap.getValue(Order.class);
+                    Order order = snap.getValue(Order.class);
 
-                    if (order != null) {
+                    if (order == null) continue;
 
-                        // 🔥 FIX: Firebase key becomes REAL order ID
-                        if (order.getId() == null || order.getId().isEmpty()) {
-                            order.setId(orderSnap.getKey());
-                        }
+                    // 🔥 IMPORTANT
+                    order.setId(snap.getKey());
 
-                        ordersList.add(order);
+                    if (order.getItems() == null) {
+                        order.setItems(new ArrayList<>());
+                    }
+
+                    // 🔥 FILTER ONLY KITCHEN ORDERS
+                    if (order.isInKitchen() && !order.isCompleted()) {
+                        kitchenList.add(order);
                     }
                 }
 
-                adapter.setOrders(ordersList);
+                adapter.setOrders(kitchenList);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // optional error handling
+                // optional: handle error
             }
         });
     }
