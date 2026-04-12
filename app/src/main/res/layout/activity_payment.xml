@@ -5,84 +5,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp"
+    android:background="#FAFAFA">
 
+    <!-- Header -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
-        >
+        android:orientation="horizontal">
 
-
-        <!-- Back button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/backBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="14dp"
-            android:elevation="8dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="10dp"
             app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="20dp"
             app:icon="@drawable/baseline_arrow_back_24"
-            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconTint="#000"
             app:strokeColor="#000"
             app:strokeWidth="2dp"
-            app:iconPadding="0dp"
-            app:iconSize="25dp"
-            app:iconTint="#000"
-            />
+            app:cornerRadius="21dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Payment"
-            android:textSize="40sp"
-            android:fontFamily="@font/margarine"
+            android:textSize="36sp"
+            android:fontFamily="@font/inter_extrabold"
             android:textColor="#000"
-            />
-
+            android:layout_marginStart="12dp"/>
     </LinearLayout>
 
+
+    <!-- Order Summary Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="#F5F5F5">
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFFFFF">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:id="@+id/paymentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:padding="16dp"
                 android:orientation="vertical"/>
+
         </ScrollView>
 
     </com.google.android.material.card.MaterialCardView>
 
 
-    <Button
-        android:id="@+id/payNowBtn"
-        android:layout_width="190dp"
+    <!-- Total Label -->
+    <TextView
+        android:id="@+id/totalLabel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/inter"
+        android:text="Confirm Payment"
+        android:textColor="#777"
+        android:textSize="16sp" />
+
+
+    <!-- Pay Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/payNowBtn"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
         android:text="Pay Now"
-        android:backgroundTint="#B73B28"
         android:textSize="18sp"
         android:fontFamily="@font/manrope_extrabold"
         android:textColor="@android:color/white"
-        android:padding="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:backgroundTint="#B73B28"
+        app:cornerRadius="14dp"
+        app:elevation="6dp"/>
+
 </LinearLayout>

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="Your Cart"
             android:textSize="40sp"
-            android:fontFamily="@font/margarine"
+            android:fontFamily="@font/inter_extrabold"
             android:textColor="@color/black"
             />
     </LinearLayout>
