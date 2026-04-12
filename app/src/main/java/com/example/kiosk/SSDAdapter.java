@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,14 +43,9 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Product product = ssdList.get(position);
 
         holder.ssdName.setText(product.getName());
-
-        // ✅ FIX: IMAGE ADDED
-        holder.ssdImage.setImageResource(product.getImageResId());
-        holder.ssdPrice.setText("₱" + product.getPrice());
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
@@ -61,26 +55,35 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
         CartItem cartItem = new CartItem(
                 product.getName(),
                 product.getPrice(),
-                1,
-                product.getImageResId()
+                R.drawable.jumbosiopao, // or product image if you have it
+                1
         );
 
         MainMenu.cartList.add(cartItem);
 
         DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart");
-        String key = cartRef.push().getKey();
+        String cartItemKey = cartRef.push().getKey();
 
-        if (key != null) {
-            cartRef.child(key).setValue(cartItem)
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(context,
-                                    product.getName() + " added to cart",
-                                    Toast.LENGTH_SHORT).show()
+        if (cartItemKey != null) {
+            cartRef.child(cartItemKey).setValue(cartItem)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(
+                                context,
+                                product.getName() + " added to cart",
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        if (listener != null) {
+                            listener.onCartUpdated();
+                        }
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(
+                                    context,
+                                    "Failed to add to cart",
+                                    Toast.LENGTH_SHORT
+                            ).show()
                     );
-        }
-
-        if (listener != null) {
-            listener.onCartUpdated();
         }
     }
 
@@ -91,16 +94,13 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView ssdName, ssdPrice;
-        ImageView ssdImage;
+        TextView ssdName;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ssdName = itemView.findViewById(R.id.ssdName);
-            ssdPrice = itemView.findViewById(R.id.ssdPrice); // ✅ important
-            ssdImage = itemView.findViewById(R.id.ssdImage);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

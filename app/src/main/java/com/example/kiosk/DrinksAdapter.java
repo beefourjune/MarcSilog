@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,12 +43,9 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Product product = drinksList.get(position);
 
         holder.drinkName.setText(product.getName());
-        holder.drinkPrice.setText("₱" + product.getPrice());
-        holder.drinkImage.setImageResource(product.getImageResId());
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
@@ -60,27 +56,34 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
                 product.getName(),
                 product.getPrice(),
                 1,
-                product.getImageResId()
+                product.getStock()
         );
 
         MainMenu.cartList.add(cartItem);
 
         DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart");
-        String key = cartRef.push().getKey();
+        String cartItemKey = cartRef.push().getKey();
 
-        if (key != null) {
-            cartRef.child(key).setValue(cartItem)
+        if (cartItemKey != null) {
+            cartRef.child(cartItemKey).setValue(cartItem)
                     .addOnSuccessListener(aVoid -> {
-
-                        // ✅ THIS IS YOUR POPUP
-                        Toast.makeText(context,
+                        Toast.makeText(
+                                context,
                                 product.getName() + " added to cart",
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT
+                        ).show();
 
                         if (listener != null) {
                             listener.onCartUpdated();
                         }
-                    });
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(
+                                    context,
+                                    "Failed to add to cart",
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                    );
         }
     }
 
@@ -91,16 +94,13 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView drinkName, drinkPrice;;
-        ImageView drinkImage;
+        TextView drinkName;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             drinkName = itemView.findViewById(R.id.drinkName);
-            drinkPrice = itemView.findViewById(R.id.drinkPrice);
-            drinkImage = itemView.findViewById(R.id.drinkImage);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

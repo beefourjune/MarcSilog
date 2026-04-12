@@ -25,6 +25,13 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
     private List<CartItem> cartList;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        cartAdapter.notifyDataSetChanged();
+        updateCartUI();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
@@ -66,7 +73,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
             // Calculate total price
             int totalPrice = 0;
             for (CartItem item : cartList) {
-                totalPrice += item.price * item.quantity;
+                totalPrice += item.getPrice() * item.getQuantity();
             }
             totalText.setText("Total: ₱" + totalPrice);
 
@@ -78,6 +85,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         }
     }
 
+    public void refreshCart() {
+        cartAdapter.notifyDataSetChanged();
+        updateCartUI();
+    }
     // This is called from CartAdapter whenever quantity changes or item removed
     @Override
     public void onQuantityChanged() {
