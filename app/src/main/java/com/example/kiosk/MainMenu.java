@@ -63,11 +63,15 @@ public class MainMenu extends AppCompatActivity {
 
         loadAllProducts();
 
-        if (getIntent() != null && getIntent().getStringExtra("order_type") != null) {
-            orderType = getIntent().getStringExtra("order_type");
+        // ================= FIXED ORDER TYPE HANDLING =================
+        if (getIntent() != null) {
+            String incomingType = getIntent().getStringExtra("order_type");
+
+            if (incomingType != null && !incomingType.isEmpty()) {
+                orderType = incomingType;
+            }
         }
 
-        // ✅ DEFAULT PRODUCTS (RESTORED - NOT REMOVED)
         initializeDefaultProducts();
 
         cartPanel = findViewById(R.id.cartPanel);
@@ -135,7 +139,6 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
-    // ================= SEARCH RESULTS =================
     private void searchFirebaseProducts(String query) {
 
         productContainer.removeAllViews();
@@ -220,12 +223,12 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    // ================= 🔥 FIXED CART (NO DUPLICATES) =================
+    // ================= CART =================
     private void addItemToCart(String name, int price, int imageResId) {
 
         for (CartItem item : cartList) {
             if (item.name != null && item.name.equals(name)) {
-                item.quantity++; // 🔥 increase instead of duplicate
+                item.quantity++;
                 refreshCartInfo();
                 showToast(name + " quantity increased");
                 return;
@@ -274,11 +277,11 @@ public class MainMenu extends AppCompatActivity {
 
     private void openCart() {
         Intent intent = new Intent(MainMenu.this, CartActivity.class);
-        intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartList));
-        intent.putExtra("order_type", orderType);
+        intent.putExtra("order_type", orderType); // FIXED SAFE PASSING
         startActivity(intent);
     }
 
+    // ================= CATEGORY BUTTONS =================
     private void setupCategoryButtons() {
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);

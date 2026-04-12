@@ -24,7 +24,7 @@ public class PaymentActivity extends AppCompatActivity {
     private Button payNowBtn;
 
     // ================= ORDER TYPE =================
-    private String orderType = "TAKE OUT";
+    private String orderType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +34,23 @@ public class PaymentActivity extends AppCompatActivity {
         paymentContainer = findViewById(R.id.paymentContainer);
         payNowBtn = findViewById(R.id.payNowBtn);
 
-        // ================= RECEIVE ORDER TYPE =================
+        // ================= ORDER TYPE FIX (CLEAN) =================
         Intent intent = getIntent();
-        if (intent != null) {
-            orderType = intent.getStringExtra("order_type");
-            if (orderType == null) {
-                orderType = "TAKE OUT";
-            }
+        String receivedType = intent.getStringExtra("order_type");
+
+        if (receivedType != null && !receivedType.isEmpty()) {
+            orderType = receivedType;
+            MainMenu.orderType = receivedType;
+        } else {
+            orderType = MainMenu.orderType;
         }
 
+        if (orderType == null || orderType.isEmpty()) {
+            orderType = "TAKE OUT";
+            MainMenu.orderType = "TAKE OUT";
+        }
+
+        // ================= CART CHECK =================
         if (MainMenu.cartList != null && !MainMenu.cartList.isEmpty()) {
 
             Typeface manropeMedium =
@@ -107,17 +115,13 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     // ================= FIREBASE ORDER SAVE =================
-
     private void sendOrderToFirebase(int totalPrice) {
 
-        DatabaseReference rootRef =
-                FirebaseDatabase.getInstance().getReference();
-
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference ordersRef = rootRef.child("orders");
         DatabaseReference counterRef = rootRef.child("counters").child("orderId");
 
-        ArrayList<CartItem> itemsBackup =
-                new ArrayList<>(MainMenu.cartList);
+        ArrayList<CartItem> itemsBackup = new ArrayList<>(MainMenu.cartList);
 
         counterRef.get().addOnSuccessListener(snapshot -> {
 
@@ -151,7 +155,7 @@ public class PaymentActivity extends AppCompatActivity {
             order.setId(displayId);
             order.setFirebaseKey(firebaseKey);
 
-            // ================= SAVE ORDER TYPE (🔥 FIX) =================
+            // KEEP ORDER TYPE
             order.setOrderType(orderType);
 
             ordersRef.child(firebaseKey).setValue(order)
@@ -161,16 +165,16 @@ public class PaymentActivity extends AppCompatActivity {
 
                         MainMenu.cartList.clear();
 
-                        Intent intent = new Intent(PaymentActivity.this, OrderReceivedActivity.class);
+                        // ❌ FIX: DO NOT RESET ORDER TYPE HERE ANYMORE
 
-                        intent.putExtra("ORDER_ID", displayId);
-                        intent.putExtra("FIREBASE_KEY", firebaseKey);
-                        intent.putExtra("TOTAL", totalPrice);
+                        Intent next = new Intent(PaymentActivity.this, OrderReceivedActivity.class);
 
-                        // ================= PASS ORDER TYPE (🔥 FIX) =================
-                        intent.putExtra("order_type", orderType);
+                        next.putExtra("ORDER_ID", displayId);
+                        next.putExtra("FIREBASE_KEY", firebaseKey);
+                        next.putExtra("TOTAL", totalPrice);
+                        next.putExtra("order_type", orderType);
 
-                        startActivity(intent);
+                        startActivity(next);
                         finish();
                     })
                     .addOnFailureListener(e ->

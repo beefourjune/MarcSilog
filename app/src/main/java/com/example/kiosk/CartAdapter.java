@@ -60,7 +60,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         // ================= INCREASE =================
         holder.btnIncrease.setOnClickListener(v -> {
-            item.setQuantity(item.getQuantity() + 1);
+            item.increaseQuantity();
             holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
             listener.onQuantityChanged();
         });
@@ -68,7 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         // ================= DECREASE =================
         holder.btnDecrease.setOnClickListener(v -> {
             if (item.getQuantity() > 1) {
-                item.setQuantity(item.getQuantity() - 1);
+                item.decreaseQuantity();
                 holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
                 listener.onQuantityChanged();
             }

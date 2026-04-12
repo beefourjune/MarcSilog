@@ -2,10 +2,8 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,13 +20,15 @@ import java.util.List;
 public class ShawarmaActivity extends AppCompatActivity {
 
     private List<Product> shawarmaList;
-
-    private MaterialCardView floatingCartPanel;
-    private TextView cartItemCount;
+    private RecyclerView recyclerView;
+    private ShawarmaAdapter adapter;
 
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
 
-    private MaterialButton goToCartBtn, orderNowBtn, backBtn;
+    // Floating cart
+    private MaterialCardView floatingCartPanel;
+    private TextView cartItemCount;
+    private MaterialButton goToCartBtn, backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,29 +37,27 @@ public class ShawarmaActivity extends AppCompatActivity {
 
         setupCategoryButtons();
 
-        // Back button
+        // ================= BACK =================
         backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(v -> finish());
 
-        // Floating cart panel
+        // ================= FLOATING CART =================
         floatingCartPanel = findViewById(R.id.floatingCartPanel);
         cartItemCount = findViewById(R.id.cartItemCount);
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
-        goToCartBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(ShawarmaActivity.this, CartActivity.class);
-            startActivity(intent);
-        });
+        goToCartBtn.setOnClickListener(v ->
+                startActivity(new Intent(this, CartActivity.class))
+        );
 
-        // Initialize list
+        // ================= LIST =================
         shawarmaList = new ArrayList<>();
         addShawarmaProducts();
 
-        // RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.shawarmaRecyclerView);
+        recyclerView = findViewById(R.id.shawarmaRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        ShawarmaAdapter adapter = new ShawarmaAdapter(
+        adapter = new ShawarmaAdapter(
                 this,
                 shawarmaList,
                 this::updateFloatingCart
@@ -70,21 +68,23 @@ public class ShawarmaActivity extends AppCompatActivity {
         updateFloatingCart();
     }
 
+    // ================= LOAD PRODUCTS =================
     private void addShawarmaProducts() {
 
-        DatabaseReference shawarmaRef = FirebaseDatabase.getInstance()
+        DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("categories/shawarma");
 
-        Object[][] shawarmas = {
+        Object[][] items = {
                 {"shawarma_rice", "Shawarma Rice", 120, R.drawable.shawarmarice},
                 {"shawarma_double_rice", "Shawarma Double Rice", 140, R.drawable.shawarmarice},
                 {"shawarma_burger", "Shawarma Burger", 90, R.drawable.shawarmaburger},
                 {"shawarma_burger_fries", "Shawarma Burger w/ Fries", 110, R.drawable.shawarma_burger_fries},
                 {"shawarma_pita", "Shawarma Pita", 80, R.drawable.shawarmapita}
         };
+
         int defaultStock = 10;
 
-        for (Object[] item : shawarmas) {
+        for (Object[] item : items) {
 
             String key = (String) item[0];
             String name = (String) item[1];
@@ -93,30 +93,31 @@ public class ShawarmaActivity extends AppCompatActivity {
 
             Product product = new Product(name, price, defaultStock, imageResId);
 
-            shawarmaRef.child(key).setValue(product);
+            ref.child(key).setValue(product);
             shawarmaList.add(product);
         }
     }
 
+    // ================= FLOATING CART (FIXED LIKE SILOG) =================
     private void updateFloatingCart() {
 
         int totalItems = 0;
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {
-            floatingCartPanel.setVisibility(View.VISIBLE);
-            cartItemCount.setText(totalItems + " Items - ₱" + totalPrice);
+            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
+            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
         } else {
-            floatingCartPanel.setVisibility(View.GONE);
+            floatingCartPanel.setVisibility(android.view.View.GONE);
         }
     }
 
+    // ================= CATEGORY BUTTONS =================
     private void setupCategoryButtons() {
 
         silogBtn = findViewById(R.id.silogBtn);
@@ -126,51 +127,29 @@ public class ShawarmaActivity extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, SilogActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (silogBtn != null)
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
 
-        if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, PastilActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (pastilBtn != null)
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
 
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> recreate());
-        }
+        if (shawarmaBtn != null)
+            shawarmaBtn.setOnClickListener(v ->
+                    recreate());
 
-        if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, SizzlingActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (sizzlingBtn != null)
+            sizzlingBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SizzlingActivity.class)));
 
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, SSDActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (ssdBtn != null)
+            ssdBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SSDActivity.class)));
 
-        if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(this, DrinksActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
-        }
+        if (drinkBtn != null)
+            drinkBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, DrinksActivity.class)));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class DrinksActivity extends AppCompatActivity {
 
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
     private TextView cartItemCount;
-    private MaterialButton goToCartBtn, orderNowBtn;
+    private MaterialButton goToCartBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +47,10 @@ public class DrinksActivity extends AppCompatActivity {
         cartItemCount = findViewById(R.id.cartItemCount);
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
-        orderNowBtn = findViewById(R.id.orderNowBtn); // ✅ FIXED CRASH
-
         goToCartBtn.setOnClickListener(v -> {
             Intent intent = new Intent(DrinksActivity.this, CartActivity.class);
             startActivity(intent);
         });
-
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
-        }
 
         drinksList = new ArrayList<>();
         addDrinksProducts();
@@ -77,6 +69,7 @@ public class DrinksActivity extends AppCompatActivity {
         updateFloatingCart();
     }
 
+    // ================= CATEGORY BUTTONS =================
     private void setupCategoryButtons() {
 
         silogBtn = findViewById(R.id.silogBtn);
@@ -86,55 +79,46 @@ public class DrinksActivity extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, SilogActivity.class)));
-        }
+        if (silogBtn != null)
+            silogBtn.setOnClickListener(v -> startActivity(new Intent(this, SilogActivity.class)));
 
-        if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, PastilActivity.class)));
-        }
+        if (pastilBtn != null)
+            pastilBtn.setOnClickListener(v -> startActivity(new Intent(this, PastilActivity.class)));
 
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, ShawarmaActivity.class)));
-        }
+        if (shawarmaBtn != null)
+            shawarmaBtn.setOnClickListener(v -> startActivity(new Intent(this, ShawarmaActivity.class)));
 
-        if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, SizzlingActivity.class)));
-        }
+        if (sizzlingBtn != null)
+            sizzlingBtn.setOnClickListener(v -> startActivity(new Intent(this, SizzlingActivity.class)));
 
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, SSDActivity.class)));
-        }
+        if (ssdBtn != null)
+            ssdBtn.setOnClickListener(v -> startActivity(new Intent(this, SSDActivity.class)));
     }
 
+    // ================= FLOATING CART FIX =================
     private void updateFloatingCart() {
 
-        runOnUiThread(() -> {
+        int totalItems = 0;
+        int totalPrice = 0;
 
-            int totalItems = 0;
-            int totalPrice = 0;
+        if (MainMenu.cartList == null) return;
 
-            for (CartItem item : MainMenu.cartList) {
-                totalItems++;
-                totalPrice += item.price;
-            }
+        for (CartItem item : MainMenu.cartList) {
+            totalItems += item.getQuantity(); // FIXED
+            totalPrice += item.getPrice() * item.getQuantity(); // FIXED
+        }
 
-            if (floatingCartPanel == null) return;
+        if (floatingCartPanel == null) return;
 
-            if (totalItems > 0) {
-                floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-                cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
-            } else {
-                floatingCartPanel.setVisibility(android.view.View.GONE);
-            }
-        });
+        if (totalItems > 0) {
+            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
+            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+        } else {
+            floatingCartPanel.setVisibility(android.view.View.GONE);
+        }
     }
 
+    // ================= PRODUCTS =================
     private void addDrinksProducts() {
 
         DatabaseReference drinksRef = FirebaseDatabase.getInstance()
@@ -149,6 +133,7 @@ public class DrinksActivity extends AppCompatActivity {
                 {"cobra", "Cobra", 40, R.drawable.cobra},
                 {"juice_1_5l", "1.5 Juice", 45, R.drawable.juice}
         };
+
         int defaultStock = 20;
 
         for (Object[] item : items) {

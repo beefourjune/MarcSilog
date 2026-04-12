@@ -21,12 +21,16 @@ import java.util.List;
 public class SizzlingActivity extends AppCompatActivity {
 
     private List<Product> sizzlingList;
+    private RecyclerView recyclerView;
+    private SizzlingAdapter adapter;
 
-    private MaterialCardView floatingCartPanel;
-
+    // Category buttons
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
+
+    // Floating cart
+    private MaterialCardView floatingCartPanel;
     private TextView cartItemCount;
-    private MaterialButton goToCartBtn, orderNowBtn;
+    private MaterialButton goToCartBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,30 +39,28 @@ public class SizzlingActivity extends AppCompatActivity {
 
         setupCategoryButtons();
 
+        // Back button
         MaterialButton backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(SizzlingActivity.this, MainMenu.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+        backBtn.setOnClickListener(v -> finish());
 
+        // Floating cart UI
         floatingCartPanel = findViewById(R.id.floatingCartPanel);
         cartItemCount = findViewById(R.id.cartItemCount);
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(SizzlingActivity.this, CartActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(SizzlingActivity.this, CartActivity.class));
         });
 
+        // Product list
         sizzlingList = new ArrayList<>();
         addSizzlingProducts();
 
-        RecyclerView recyclerView = findViewById(R.id.sizzlingRecyclerView);
+        // RecyclerView
+        recyclerView = findViewById(R.id.sizzlingRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        SizzlingAdapter adapter = new SizzlingAdapter(
+        adapter = new SizzlingAdapter(
                 this,
                 sizzlingList,
                 this::updateFloatingCart
@@ -69,68 +71,10 @@ public class SizzlingActivity extends AppCompatActivity {
         updateFloatingCart();
     }
 
-    private void setupCategoryButtons() {
-        silogBtn = findViewById(R.id.silogBtn);
-        pastilBtn = findViewById(R.id.pastilBtn);
-        shawarmaBtn = findViewById(R.id.shawarmaBtn);
-        sizzlingBtn = findViewById(R.id.sizzlingBtn);
-        ssdBtn = findViewById(R.id.ssdBtn);
-        drinkBtn = findViewById(R.id.drinkBtn);
-
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, SilogActivity.class)));
-        }
-
-        if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, PastilActivity.class)));
-        }
-
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, ShawarmaActivity.class)));
-        }
-
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, SSDActivity.class)));
-        }
-
-        if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v ->
-                    startActivity(new Intent(this, DrinksActivity.class)));
-        }
-
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
-        }
-    }
-
-    private void updateFloatingCart() {
-
-        int totalItems = 0;
-        int totalPrice = 0;
-
-        for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
-        }
-
-        if (totalItems > 0) {
-            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
-        } else {
-            floatingCartPanel.setVisibility(android.view.View.GONE);
-        }
-    }
-
+    // ================= PRODUCTS =================
     private void addSizzlingProducts() {
 
-        DatabaseReference sizzlingRef = FirebaseDatabase.getInstance()
+        DatabaseReference ref = FirebaseDatabase.getInstance()
                 .getReference("categories/sizzling");
 
         Object[][] items = {
@@ -142,6 +86,7 @@ public class SizzlingActivity extends AppCompatActivity {
                 {"lechon_kawali", "Lechon Kawali", 200, R.drawable.lechonkawali},
                 {"hungarian", "Hungarian", 175, R.drawable.hungarian}
         };
+
         int defaultStock = 10;
 
         for (Object[] item : items) {
@@ -153,9 +98,59 @@ public class SizzlingActivity extends AppCompatActivity {
 
             Product product = new Product(name, price, defaultStock, imageResId);
 
-            sizzlingRef.child(key).setValue(product);
+            ref.child(key).setValue(product);
             sizzlingList.add(product);
         }
+    }
+
+    // ================= FLOATING CART (SAME AS SILOG) =================
+    private void updateFloatingCart() {
+
+        int totalItems = 0;
+        int totalPrice = 0;
+
+        for (CartItem item : MainMenu.cartList) {
+            totalItems++;
+            totalPrice += item.price * item.quantity;
+        }
+
+        if (totalItems > 0) {
+            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
+            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+        } else {
+            floatingCartPanel.setVisibility(android.view.View.GONE);
+        }
+    }
+
+    // ================= CATEGORY BUTTONS =================
+    private void setupCategoryButtons() {
+
+        silogBtn = findViewById(R.id.silogBtn);
+        pastilBtn = findViewById(R.id.pastilBtn);
+        shawarmaBtn = findViewById(R.id.shawarmaBtn);
+        sizzlingBtn = findViewById(R.id.sizzlingBtn);
+        ssdBtn = findViewById(R.id.ssdBtn);
+        drinkBtn = findViewById(R.id.drinkBtn);
+
+        if (silogBtn != null)
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
+
+        if (pastilBtn != null)
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
+
+        if (shawarmaBtn != null)
+            shawarmaBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, ShawarmaActivity.class)));
+
+        if (ssdBtn != null)
+            ssdBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SSDActivity.class)));
+
+        if (drinkBtn != null)
+            drinkBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, DrinksActivity.class)));
     }
 
     @Override

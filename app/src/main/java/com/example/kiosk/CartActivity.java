@@ -32,21 +32,20 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        // UI INIT
+        // ================= UI INIT =================
         backBtn = findViewById(R.id.backBtn);
         orderBtn = findViewById(R.id.orderBtn);
         emptyText = findViewById(R.id.cartEmptyText);
         totalText = findViewById(R.id.cartTotalText);
         recyclerView = findViewById(R.id.recyclerViewCart);
 
-        // USE MAIN CART
+        // ================= USE MAIN CART =================
         cartList = MainMenu.cartList;
 
-        // ================= ORDER TYPE (FIXED) =================
-        Intent intent = getIntent();
-        orderType = intent.getStringExtra("order_type");
+        // ================= FIX: SINGLE SOURCE OF TRUTH =================
+        orderType = MainMenu.orderType;
 
-        if (orderType == null || orderType.isEmpty()) {
+        if (orderType == null || orderType.trim().isEmpty()) {
             orderType = "TAKE OUT";
         }
 
@@ -55,15 +54,17 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(cartAdapter);
 
-        // BACK BUTTON
+        // ================= BACK =================
         backBtn.setOnClickListener(v -> finish());
 
-        // ORDER BUTTON
+        // ================= ORDER BUTTON =================
         orderBtn.setOnClickListener(v -> {
 
             if (cartList != null && !cartList.isEmpty()) {
 
                 Intent paymentIntent = new Intent(CartActivity.this, PaymentActivity.class);
+
+                // STILL PASS IT (backup only)
                 paymentIntent.putExtra("order_type", orderType);
 
                 startActivity(paymentIntent);

@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -28,7 +26,7 @@ public class SilogActivity extends AppCompatActivity {
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
 
     // Floating cart panel
-    private MaterialButton goToCartBtn, orderNowBtn;
+    private MaterialButton goToCartBtn;
     private TextView cartItemCount;
     private MaterialButton backBtn;
     private MaterialCardView floatingCartPanel;
@@ -38,47 +36,46 @@ public class SilogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_silog);
 
+        // ================= CATEGORY BUTTONS =================
         setupCategoryButtons();
 
-        // --- Top bar back button ---
+        // ================= BACK BUTTON =================
         backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(v -> finish());
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> finish());
+        }
 
-        // --- Floating cart panel ---
+        // ================= FLOATING CART =================
         floatingCartPanel = findViewById(R.id.floatingCartPanel);
         cartItemCount = findViewById(R.id.cartItemCount);
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
-        goToCartBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(SilogActivity.this, CartActivity.class);
-            startActivity(intent);
-        });
+        if (goToCartBtn != null) {
+            goToCartBtn.setOnClickListener(v -> {
+                Intent intent = new Intent(SilogActivity.this, CartActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        // --- Initialize Silog list ---
+        // ================= SILOG PRODUCTS =================
         silogList = new ArrayList<>();
         addSilogProducts();
 
-        // --- Setup RecyclerView ---
         recyclerView = findViewById(R.id.silogRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        adapter = new SilogAdapter(this, silogList, new SilogAdapter.CartUpdateListener() {
-            @Override
-            public void onCartUpdated() {
-                updateFloatingCart();
-            }
-        });
+        adapter = new SilogAdapter(this, silogList, () -> updateFloatingCart());
         recyclerView.setAdapter(adapter);
 
-        // --- Initial cart panel update ---
         updateFloatingCart();
     }
 
+    // ================= ADD PRODUCTS =================
     private void addSilogProducts() {
-        DatabaseReference silogRef = FirebaseDatabase.getInstance()
-                .getReference("categories/silog");
 
-        // ✅ updated to include images
+        DatabaseReference silogRef =
+                FirebaseDatabase.getInstance().getReference("categories/silog");
+
         Object[][] silogs = {
                 {"hotdog_silog", "Hotdog Silog", 95, R.drawable.hotsilog},
                 {"ham_silog", "Ham Silog", 100, R.drawable.hamsilog},
@@ -93,12 +90,12 @@ public class SilogActivity extends AppCompatActivity {
                 {"sisig_silog", "Sisig Silog", 140, R.drawable.sisig},
                 {"hungarian_silog", "Hungarian Silog", 150, R.drawable.hungarian_silog},
                 {"bacon_silog", "Bacon Silog", 120, R.drawable.baconsilog}
-
         };
 
         int defaultStock = 10;
 
         for (Object[] item : silogs) {
+
             String key = (String) item[0];
             String name = (String) item[1];
             int price = (int) item[2];
@@ -106,24 +103,23 @@ public class SilogActivity extends AppCompatActivity {
 
             Product product = new Product(name, price, defaultStock, imageResId);
 
-            // Add to Firebase (optional overwrite)
             silogRef.child(key).setValue(product);
-
-            // Add to local list
             silogList.add(product);
         }
     }
 
-    // --- Update floating cart panel ---
+    // ================= FLOATING CART =================
     private void updateFloatingCart() {
 
         int totalItems = 0;
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
+
+        if (floatingCartPanel == null) return;
 
         if (totalItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
@@ -133,7 +129,9 @@ public class SilogActivity extends AppCompatActivity {
         }
     }
 
+    // ================= CATEGORY NAVIGATION =================
     private void setupCategoryButtons() {
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -141,53 +139,29 @@ public class SilogActivity extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, SilogActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (silogBtn != null)
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
 
-        if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, PastilActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (pastilBtn != null)
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
 
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (shawarmaBtn != null)
+            shawarmaBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, ShawarmaActivity.class)));
 
-        if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, SizzlingActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (sizzlingBtn != null)
+            sizzlingBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SizzlingActivity.class)));
 
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, SSDActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (ssdBtn != null)
+            ssdBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SSDActivity.class)));
 
-        if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, DrinksActivity.class);
-                startActivity(intent);
-            });
-        }
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(SilogActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
-        }
+        if (drinkBtn != null)
+            drinkBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, DrinksActivity.class)));
     }
 
     @Override

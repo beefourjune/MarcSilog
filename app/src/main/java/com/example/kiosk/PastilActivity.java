@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -29,7 +28,7 @@ public class PastilActivity extends AppCompatActivity {
     // Floating cart panel
     private MaterialCardView floatingCartPanel;
     private TextView cartItemCount;
-    private MaterialButton goToCartBtn, orderNowBtn;
+    private MaterialButton goToCartBtn;
     private MaterialButton backBtn;
 
     @Override
@@ -58,32 +57,32 @@ public class PastilActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // --- Initialize Pastil list ---
+        // --- Initialize list ---
         pastilList = new ArrayList<>();
         addPastilProducts();
 
-        // --- Setup RecyclerView ---
+        // --- Recycler ---
         recyclerView = findViewById(R.id.pastilRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         adapter = new PastilAdapter(
                 this,
                 pastilList,
-                () -> updateFloatingCart(),
+                this::updateFloatingCart,
                 getSupportFragmentManager()
         );
+
         recyclerView.setAdapter(adapter);
 
-        // --- Initial floating panel update ---
         updateFloatingCart();
     }
 
-    // --- Add Pastil products ---
+    // ================= PRODUCTS =================
     private void addPastilProducts() {
+
         DatabaseReference pastilRef = FirebaseDatabase.getInstance()
                 .getReference("categories/pastil");
 
-        // ✅ Added image resource per item
         Object[][] pastils = {
                 {"pastil_plain", "Pastil", 50, R.drawable.pastilog},
                 {"pastil_rice", "Pastil w/ Rice", 65, R.drawable.pastilwithrice},
@@ -92,10 +91,10 @@ public class PastilActivity extends AppCompatActivity {
                 {"pastilog", "Pastilog", 100, R.drawable.pastilog}
         };
 
-
         int defaultStock = 10;
 
         for (Object[] item : pastils) {
+
             String key = (String) item[0];
             String name = (String) item[1];
             int price = (int) item[2];
@@ -103,24 +102,25 @@ public class PastilActivity extends AppCompatActivity {
 
             Product product = new Product(name, price, defaultStock, imageResId);
 
-            // Add to Firebase
             pastilRef.child(key).setValue(product);
-
-            // Add to local list
             pastilList.add(product);
         }
     }
 
-    // --- Update floating cart panel ---
+    // ================= FLOATING CART FIX =================
     private void updateFloatingCart() {
 
         int totalItems = 0;
         int totalPrice = 0;
 
+        if (MainMenu.cartList == null) return;
+
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.getQuantity();
+            totalPrice += item.getPrice() * item.getQuantity();
         }
+
+        if (floatingCartPanel == null) return;
 
         if (totalItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
@@ -130,7 +130,9 @@ public class PastilActivity extends AppCompatActivity {
         }
     }
 
+    // ================= CATEGORY BUTTONS =================
     private void setupCategoryButtons() {
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -138,47 +140,20 @@ public class PastilActivity extends AppCompatActivity {
         ssdBtn = findViewById(R.id.ssdBtn);
         drinkBtn = findViewById(R.id.drinkBtn);
 
-        if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(PastilActivity.this, SilogActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (silogBtn != null)
+            silogBtn.setOnClickListener(v -> startActivity(new Intent(this, SilogActivity.class)));
 
-        if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(PastilActivity.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (shawarmaBtn != null)
+            shawarmaBtn.setOnClickListener(v -> startActivity(new Intent(this, ShawarmaActivity.class)));
 
-        if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(PastilActivity.this, SizzlingActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (sizzlingBtn != null)
+            sizzlingBtn.setOnClickListener(v -> startActivity(new Intent(this, SizzlingActivity.class)));
 
-        if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(PastilActivity.this, SSDActivity.class);
-                startActivity(intent);
-            });
-        }
+        if (ssdBtn != null)
+            ssdBtn.setOnClickListener(v -> startActivity(new Intent(this, SSDActivity.class)));
 
-        if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(PastilActivity.this, DrinksActivity.class);
-                startActivity(intent);
-            });
-        }
-
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(PastilActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
-        }
+        if (drinkBtn != null)
+            drinkBtn.setOnClickListener(v -> startActivity(new Intent(this, DrinksActivity.class)));
     }
 
     @Override
