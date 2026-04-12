@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1074324797430",
+    "firebase_url": "https://admin-c19a4-default-rtdb.firebaseio.com",
+    "project_id": "admin-c19a4",
+    "storage_bucket": "admin-c19a4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074324797430:android:993f2b4085eac256fe79d7",
+        "android_client_info": {
+          "package_name": "com.example.kiosk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkwQ77N4cLmxn19WfqR2g2ex4E1XOmq74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
