@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageView; // ✅ added
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,11 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
         Product product = silogs.get(position);
         holder.silogName.setText(product.getName());
 
+
+        // ✅ added (image binding)
+        holder.silogImage.setImageResource(product.getImageResId());
+        holder.silogPrice.setText("₱" + product.getPrice());
+
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
@@ -65,13 +71,16 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView silogName;
+        TextView silogName, silogPrice;
         MaterialButton addToCartBtn;
+        ImageView silogImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             silogName = itemView.findViewById(R.id.silogName);
+            silogPrice = itemView.findViewById(R.id.silogPrice); // ✅ FIXED
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            silogImage = itemView.findViewById(R.id.silogImage);
         }
     }
 }

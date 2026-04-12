@@ -15,14 +15,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- SHAWARMA IMAGE -->
+
         <ImageView
-            android:id="@+id/sizzlingImage"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:id="@+id/drinkImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/burgersteak"
-            android:background="@color/black"/>
+            android:src="@drawable/water" />
 
         <!-- INFO AREA -->
         <LinearLayout
@@ -56,7 +55,7 @@
                 android:textSize="11sp"/>
 
             <TextView
-                android:id="@+id/sizzlingPrice"
+                android:id="@+id/drinkPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="₱70"

@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -30,7 +28,7 @@ public class ShawarmaActivity extends AppCompatActivity {
 
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
 
-    private MaterialButton goToCartBtn,orderNowBtn;
+    private MaterialButton goToCartBtn, orderNowBtn, backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +36,10 @@ public class ShawarmaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shawarma);
 
         setupCategoryButtons();
-        
+
         // Back button
-        MaterialButton backBtn = findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(ShawarmaActivity.this, MainMenu.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+        backBtn = findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(v -> finish());
 
         // Floating cart panel
         floatingCartPanel = findViewById(R.id.floatingCartPanel);
@@ -60,22 +53,72 @@ public class ShawarmaActivity extends AppCompatActivity {
 
         // Initialize list
         shawarmaList = new ArrayList<>();
-
-        // Add Shawarma products
         addShawarmaProducts();
 
-        // Setup RecyclerView
+        // RecyclerView
         RecyclerView recyclerView = findViewById(R.id.shawarmaRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        ShawarmaAdapter adapter = new ShawarmaAdapter(this, shawarmaList, () -> updateFloatingCart());
+        ShawarmaAdapter adapter = new ShawarmaAdapter(
+                this,
+                shawarmaList,
+                this::updateFloatingCart
+        );
+
         recyclerView.setAdapter(adapter);
 
-        // Initial update
         updateFloatingCart();
     }
 
+    private void addShawarmaProducts() {
+
+        DatabaseReference shawarmaRef = FirebaseDatabase.getInstance()
+                .getReference("categories/shawarma");
+
+        Object[][] shawarmas = {
+                {"shawarma_rice", "Shawarma Rice", 120, R.drawable.shawarmarice},
+                {"shawarma_double_rice", "Shawarma Double Rice", 140, R.drawable.shawarmarice},
+                {"shawarma_burger", "Shawarma Burger", 90, R.drawable.shawarmaburger},
+                {"shawarma_burger_fries", "Shawarma Burger w/ Fries", 110, R.drawable.shawarma_burger_fries},
+                {"shawarma_pita", "Shawarma Pita", 80, R.drawable.shawarmapita}
+        };
+        int defaultStock = 10;
+
+        for (Object[] item : shawarmas) {
+
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
+
+            shawarmaRef.child(key).setValue(product);
+            shawarmaList.add(product);
+        }
+    }
+
+    private void updateFloatingCart() {
+
+        int totalItems = 0;
+        int totalPrice = 0;
+
+        for (CartItem item : MainMenu.cartList) {
+
+            totalItems++;
+            totalPrice += item.price;
+        }
+
+        if (totalItems > 0) {
+            floatingCartPanel.setVisibility(View.VISIBLE);
+            cartItemCount.setText(totalItems + " Items - ₱" + totalPrice);
+        } else {
+            floatingCartPanel.setVisibility(View.GONE);
+        }
+    }
+
     private void setupCategoryButtons() {
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -85,42 +128,47 @@ public class ShawarmaActivity extends AppCompatActivity {
 
         if (silogBtn != null) {
             silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(ShawarmaActivity.this, SilogActivity.class);
+                Intent intent = new Intent(this, SilogActivity.class);
                 startActivity(intent);
             });
         }
 
         if (pastilBtn != null) {
             pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(ShawarmaActivity.this, PastilActivity.class);
+                Intent intent = new Intent(this, PastilActivity.class);
                 startActivity(intent);
             });
         }
 
+        if (shawarmaBtn != null) {
+            shawarmaBtn.setOnClickListener(v -> recreate());
+        }
+
         if (sizzlingBtn != null) {
             sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(ShawarmaActivity.this, SizzlingActivity.class);
+                Intent intent = new Intent(this, SizzlingActivity.class);
                 startActivity(intent);
             });
         }
 
         if (ssdBtn != null) {
             ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(ShawarmaActivity.this, SSDActivity.class);
+                Intent intent = new Intent(this, SSDActivity.class);
                 startActivity(intent);
             });
         }
 
         if (drinkBtn != null) {
             drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(ShawarmaActivity.this, DrinksActivity.class);
+                Intent intent = new Intent(this, DrinksActivity.class);
                 startActivity(intent);
             });
         }
+
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
             orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(ShawarmaActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
             );
         }
     }
@@ -129,52 +177,5 @@ public class ShawarmaActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateFloatingCart();
-    }
-
-    private void updateFloatingCart() {
-
-        int totalItems = 0;
-        int totalPrice = 0;
-
-        for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
-        }
-
-        if (totalItems > 0) {
-            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
-        } else {
-            floatingCartPanel.setVisibility(android.view.View.GONE);
-        }
-    }
-
-    private void addShawarmaProducts() {
-        DatabaseReference shawarmaRef = FirebaseDatabase.getInstance()
-                .getReference("categories/shawarma");
-
-        String[][] shawarmas = {
-                {"shawarma_rice", "Shawarma Rice"},
-                {"shawarma_double_rice", "Shawarma Double Rice"},
-                {"shawarma_burger", "Shawarma Burger"},
-                {"shawarma_burger_fries", "Shawarma Burger w/ Fries"},
-                {"shawarma_pita", "Shawarma Pita"}
-        };
-
-        int defaultPrice = 150;
-        int defaultStock = 10;
-
-        for (String[] item : shawarmas) {
-            String key = item[0];
-            String name = item[1];
-
-            Product product = new Product(name, defaultPrice, defaultStock);
-
-            // Save to Firebase
-            shawarmaRef.child(key).setValue(product);
-
-            // Add locally for RecyclerView
-            shawarmaList.add(product);
-        }
     }
 }

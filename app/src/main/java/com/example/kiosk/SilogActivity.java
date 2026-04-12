@@ -74,33 +74,37 @@ public class SilogActivity extends AppCompatActivity {
         updateFloatingCart();
     }
 
-    // --- Add Silog products to Firebase and local list ---
     private void addSilogProducts() {
         DatabaseReference silogRef = FirebaseDatabase.getInstance()
                 .getReference("categories/silog");
 
-        String[][] silogs = {
-                {"hotdog_silog", "Hotdog Silog"},
-                {"ham_silog", "Ham Silog"},
-                {"bologna_silog", "Bologna Silog"},
-                {"longanisa_silog", "Longanisa Silog"},
-                {"burger_silog", "Burger Silog"},
-                {"bbq_silog", "BBQ Silog"},
-                {"chicken_silog", "Chicken Silog"},
-                {"pork_silog", "Pork Silog"},
-                {"tapa_silog", "Tapa Silog"},
-                {"tocino_silog", "Tocino Silog"},
-                {"sisig_silog", "Sisig Silog"},
-                {"hungarian_silog", "Hungarian Silog"}
+        // ✅ updated to include images
+        Object[][] silogs = {
+                {"hotdog_silog", "Hotdog Silog", 95, R.drawable.hotsilog},
+                {"ham_silog", "Ham Silog", 100, R.drawable.hamsilog},
+                {"bologna_silog", "Bologna Silog", 105, R.drawable.bologna_silog},
+                {"longanisa_silog", "Longanisa Silog", 110, R.drawable.longanisa_silog},
+                {"burger_silog", "Burger Silog", 115, R.drawable.burger_silog},
+                {"bbq_silog", "BBQ Silog", 120, R.drawable.bbq_silog},
+                {"chicken_silog", "Chicken Silog", 125, R.drawable.chicken_silog},
+                {"pork_silog", "Pork Silog", 130, R.drawable.pork_silog},
+                {"tapa_silog", "Tapa Silog", 135, R.drawable.tapsilog},
+                {"tocino_silog", "Tocino Silog", 120, R.drawable.tosilog},
+                {"sisig_silog", "Sisig Silog", 140, R.drawable.sisig},
+                {"hungarian_silog", "Hungarian Silog", 150, R.drawable.hungarian_silog},
+                {"bacon_silog", "Bacon Silog", 120, R.drawable.baconsilog}
+
         };
 
-        int defaultPrice = 120;
         int defaultStock = 10;
 
-        for (String[] item : silogs) {
-            String key = item[0];
-            String name = item[1];
-            Product product = new Product(name, defaultPrice, defaultStock);
+        for (Object[] item : silogs) {
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
 
             // Add to Firebase (optional overwrite)
             silogRef.child(key).setValue(product);
