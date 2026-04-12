@@ -2,15 +2,12 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -29,12 +26,14 @@ public class DrinksActivity extends AppCompatActivity {
 
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
     private TextView cartItemCount;
-    private MaterialButton goToCartBtn,orderNowBtn;
+    private MaterialButton goToCartBtn, orderNowBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drinks);
+
+        setupCategoryButtons();
 
         MaterialButton backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(v -> {
@@ -48,10 +47,18 @@ public class DrinksActivity extends AppCompatActivity {
         cartItemCount = findViewById(R.id.cartItemCount);
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
+        orderNowBtn = findViewById(R.id.orderNowBtn); // ✅ FIXED CRASH
+
         goToCartBtn.setOnClickListener(v -> {
             Intent intent = new Intent(DrinksActivity.this, CartActivity.class);
             startActivity(intent);
         });
+
+        if (orderNowBtn != null) {
+            orderNowBtn.setOnClickListener(v ->
+                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
+            );
+        }
 
         drinksList = new ArrayList<>();
         addDrinksProducts();
@@ -62,7 +69,7 @@ public class DrinksActivity extends AppCompatActivity {
         DrinksAdapter adapter = new DrinksAdapter(
                 this,
                 drinksList,
-                () -> updateFloatingCart()
+                this::updateFloatingCart
         );
 
         recyclerView.setAdapter(adapter);
@@ -71,6 +78,7 @@ public class DrinksActivity extends AppCompatActivity {
     }
 
     private void setupCategoryButtons() {
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -79,44 +87,81 @@ public class DrinksActivity extends AppCompatActivity {
         drinkBtn = findViewById(R.id.drinkBtn);
 
         if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(DrinksActivity.this, SilogActivity.class);
-                startActivity(intent);
-            });
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
         }
 
         if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(DrinksActivity.this, PastilActivity.class);
-                startActivity(intent);
-            });
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
         }
 
         if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(DrinksActivity.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
+            shawarmaBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, ShawarmaActivity.class)));
         }
 
         if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(DrinksActivity.this, SizzlingActivity.class);
-                startActivity(intent);
-            });
+            sizzlingBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SizzlingActivity.class)));
         }
 
         if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(DrinksActivity.this, DrinksActivity.class);
-                startActivity(intent);
-            });
+            ssdBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SSDActivity.class)));
         }
-        orderNowBtn = findViewById(R.id.orderNowBtn);
-        if (orderNowBtn != null) {
-            orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(DrinksActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
-            );
+    }
+
+    private void updateFloatingCart() {
+
+        runOnUiThread(() -> {
+
+            int totalItems = 0;
+            int totalPrice = 0;
+
+            for (CartItem item : MainMenu.cartList) {
+                totalItems++;
+                totalPrice += item.price;
+            }
+
+            if (floatingCartPanel == null) return;
+
+            if (totalItems > 0) {
+                floatingCartPanel.setVisibility(android.view.View.VISIBLE);
+                cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+            } else {
+                floatingCartPanel.setVisibility(android.view.View.GONE);
+            }
+        });
+    }
+
+    private void addDrinksProducts() {
+
+        DatabaseReference drinksRef = FirebaseDatabase.getInstance()
+                .getReference("categories/drinks");
+
+        Object[][] items = {
+                {"mineral_1l", "Mineral 1L", 25, R.drawable.water},
+                {"mineral_500ml", "Mineral 500ML", 15, R.drawable.water},
+                {"mismo", "Mismo", 20, R.drawable.coke},
+                {"mountain_dew", "Mountain Dew", 35, R.drawable.mountaindew},
+                {"sting_red", "Sting Red", 30, R.drawable.sting},
+                {"cobra", "Cobra", 40, R.drawable.cobra},
+                {"juice_1_5l", "1.5 Juice", 45, R.drawable.juice}
+        };
+        int defaultStock = 20;
+
+        for (Object[] item : items) {
+
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
+
+            drinksRef.child(key).setValue(product);
+            drinksList.add(product);
         }
     }
 
@@ -124,52 +169,5 @@ public class DrinksActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateFloatingCart();
-    }
-
-    private void updateFloatingCart() {
-
-        int totalItems = 0;
-        int totalPrice = 0;
-
-        for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
-        }
-
-        if (totalItems > 0) {
-            floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
-        } else {
-            floatingCartPanel.setVisibility(android.view.View.GONE);
-        }
-    }
-
-    private void addDrinksProducts() {
-        DatabaseReference drinksRef = FirebaseDatabase.getInstance()
-                .getReference("categories/drinks");
-
-        String[][] items = {
-                {"mineral_1l", "Mineral 1L"},
-                {"mineral_500ml", "Mineral 500ML"},
-                {"mismo", "Mismo"},
-                {"mountain_dew", "Mountain Dew"},
-                {"sting_red", "Sting Red"},
-                {"cobra", "Cobra"},
-                {"juice_1_5l", "1.5 Juice"}
-        };
-
-        int defaultPrice = 50;
-        int defaultStock = 20;
-
-        for (String[] item : items) {
-            Product product = new Product(
-                    item[1],
-                    defaultPrice,
-                    defaultStock
-            );
-
-            drinksRef.child(item[0]).setValue(product);
-            drinksList.add(product);
-        }
     }
 }

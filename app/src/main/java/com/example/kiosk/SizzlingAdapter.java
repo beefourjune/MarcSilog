@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -43,41 +42,32 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Product product = sizzlingList.get(position);
 
         holder.sizzlingName.setText(product.getName());
+        holder.sizzlingPrice.setText("₱" + product.getPrice());
+        holder.sizzlingImage.setImageResource(product.getImageResId());
 
-        holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
-    }
+        holder.addToCartBtn.setOnClickListener(v -> {
 
-    private void addToCart(Product product) {
+            CartItem cartItem = new CartItem(
+                    product.getName(),
+                    product.getPrice(),
+                    1,
+                    product.getImageResId()
+            );
 
-        CartItem cartItem = new CartItem(
-                product.getName(),
-                product.getPrice(),
-                1,
-                product.getStock()
-        );
+            MainMenu.cartList.add(cartItem);
 
-        MainMenu.cartList.add(cartItem);
+            Toast.makeText(context,
+                    product.getName() + " added to cart",
+                    Toast.LENGTH_SHORT).show();
 
-        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart");
-        String cartItemKey = cartRef.push().getKey();
-
-        if (cartItemKey != null) {
-            cartRef.child(cartItemKey).setValue(cartItem)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(
-                                context,
-                                product.getName() + " added to cart",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        if (listener != null) {
-                            listener.onCartUpdated();
-                        }
-                    });
-        }
+            if (listener != null) {
+                listener.onCartUpdated();
+            }
+        });
     }
 
     @Override
@@ -87,13 +77,16 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView sizzlingName;
+        TextView sizzlingName, sizzlingPrice;
+        ImageView sizzlingImage;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             sizzlingName = itemView.findViewById(R.id.sizzlingName);
+            sizzlingPrice = itemView.findViewById(R.id.sizzlingPrice);
+            sizzlingImage = itemView.findViewById(R.id.sizzlingImage);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

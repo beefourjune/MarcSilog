@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageView; // ✅ added
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,10 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = pastils.get(position);
         holder.pastilName.setText(product.getName());
+        holder.pastilPrice.setText("₱" + product.getPrice());
+
+        // ✅ added (this is the key fix)
+        holder.pastilImage.setImageResource(product.getImageResId());
 
         holder.addToCartBtn.setOnClickListener(v -> {
             MainMenu.cartList.add(new CartItem(product.getName(), product.getPrice(), product.getImageResId()));
@@ -55,12 +60,17 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView pastilName;
+
+        TextView pastilName, pastilPrice;
         MaterialButton addToCartBtn;
+        ImageView pastilImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             pastilName = itemView.findViewById(R.id.pastilName);
+            pastilPrice = itemView.findViewById(R.id.pastilPrice); // ✅ important
+            pastilImage = itemView.findViewById(R.id.pastilImage);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

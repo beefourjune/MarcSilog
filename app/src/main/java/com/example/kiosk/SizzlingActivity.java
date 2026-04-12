@@ -2,15 +2,12 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -64,7 +61,7 @@ public class SizzlingActivity extends AppCompatActivity {
         SizzlingAdapter adapter = new SizzlingAdapter(
                 this,
                 sizzlingList,
-                () -> updateFloatingCart()
+                this::updateFloatingCart
         );
 
         recyclerView.setAdapter(adapter);
@@ -81,52 +78,36 @@ public class SizzlingActivity extends AppCompatActivity {
         drinkBtn = findViewById(R.id.drinkBtn);
 
         if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SizzlingActivity.this, SilogActivity.class);
-                startActivity(intent);
-            });
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
         }
 
         if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SizzlingActivity.this, PastilActivity.class);
-                startActivity(intent);
-            });
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
         }
 
         if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SizzlingActivity.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
+            shawarmaBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, ShawarmaActivity.class)));
         }
 
-
         if (ssdBtn != null) {
-            ssdBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SizzlingActivity.this, SSDActivity.class);
-                startActivity(intent);
-            });
+            ssdBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SSDActivity.class)));
         }
 
         if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SizzlingActivity.this, DrinksActivity.class);
-                startActivity(intent);
-            });
+            drinkBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, DrinksActivity.class)));
         }
+
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
             orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(SizzlingActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
             );
         }
-    }
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateFloatingCart();
     }
 
     private void updateFloatingCart() {
@@ -148,30 +129,38 @@ public class SizzlingActivity extends AppCompatActivity {
     }
 
     private void addSizzlingProducts() {
+
         DatabaseReference sizzlingRef = FirebaseDatabase.getInstance()
                 .getReference("categories/sizzling");
 
-        String[][] items = {
-                {"porkchop", "Porkchop"},
-                {"sisig", "Sisig"},
-                {"chicken", "Chicken"},
-                {"burger_steak", "Burger Steak"},
-                {"kare_kare", "Kare Kare"},
-                {"lechon_kawali", "Lechon Kawali"},
-                {"hungarian", "Hungarian"}
+        Object[][] items = {
+                {"porkchop", "Porkchop", 180, R.drawable.porkchop},
+                {"sisig", "Sisig", 170, R.drawable.sisig},
+                {"chicken", "Chicken", 160, R.drawable.chicken},
+                {"burger_steak", "Burger Steak", 150, R.drawable.burgersteak},
+                {"kare_kare", "Kare Kare", 190, R.drawable.karekare},
+                {"lechon_kawali", "Lechon Kawali", 200, R.drawable.lechonkawali},
+                {"hungarian", "Hungarian", 175, R.drawable.hungarian}
         };
-
-        int defaultPrice = 180;
         int defaultStock = 10;
 
-        for (String[] item : items) {
-            String key = item[0];
-            String name = item[1];
+        for (Object[] item : items) {
 
-            Product product = new Product(name, defaultPrice, defaultStock);
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
 
             sizzlingRef.child(key).setValue(product);
             sizzlingList.add(product);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateFloatingCart();
     }
 }

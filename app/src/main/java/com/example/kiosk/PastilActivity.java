@@ -3,13 +3,11 @@ package com.example.kiosk;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -80,21 +78,25 @@ public class PastilActivity extends AppCompatActivity {
         DatabaseReference pastilRef = FirebaseDatabase.getInstance()
                 .getReference("categories/pastil");
 
-        String[][] pastils = {
-                {"pastil_plain", "Pastil"},
-                {"pastil_rice", "Pastil w/ Rice"},
-                {"pastil_double_rice", "Pastil Double Rice"},
-                {"double_pastil", "Double Pastil"},
-                {"pastilog", "Pastilog"}
+        // ✅ Added image resource per item
+        Object[][] pastils = {
+                {"pastil_plain", "Pastil", 50, R.drawable.pastilog},
+                {"pastil_rice", "Pastil w/ Rice", 65, R.drawable.pastilwithrice},
+                {"pastil_double_rice", "Pastil Double Rice", 80, R.drawable.doublepastil},
+                {"double_pastil", "Double Pastil", 90, R.drawable.doublepastil},
+                {"pastilog", "Pastilog", 100, R.drawable.pastilog}
         };
 
-        int defaultPrice = 100;
+
         int defaultStock = 10;
 
-        for (String[] item : pastils) {
-            String key = item[0];
-            String name = item[1];
-            Product product = new Product(name, defaultPrice, defaultStock);
+        for (Object[] item : pastils) {
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
 
             // Add to Firebase
             pastilRef.child(key).setValue(product);
@@ -165,6 +167,7 @@ public class PastilActivity extends AppCompatActivity {
                 startActivity(intent);
             });
         }
+
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
             orderNowBtn.setOnClickListener(v ->

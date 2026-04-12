@@ -2,15 +2,12 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
@@ -64,7 +61,7 @@ public class SSDActivity extends AppCompatActivity {
         SSDAdapter adapter = new SSDAdapter(
                 this,
                 ssdList,
-                () -> updateFloatingCart()
+                this::updateFloatingCart
         );
 
         recyclerView.setAdapter(adapter);
@@ -73,6 +70,7 @@ public class SSDActivity extends AppCompatActivity {
     }
 
     private void setupCategoryButtons() {
+
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
         shawarmaBtn = findViewById(R.id.shawarmaBtn);
@@ -81,53 +79,42 @@ public class SSDActivity extends AppCompatActivity {
         drinkBtn = findViewById(R.id.drinkBtn);
 
         if (silogBtn != null) {
-            silogBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SSDActivity.this, SilogActivity.class);
-                startActivity(intent);
-            });
+            silogBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SilogActivity.class)));
         }
 
         if (pastilBtn != null) {
-            pastilBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SSDActivity.this, PastilActivity.class);
-                startActivity(intent);
-            });
+            pastilBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, PastilActivity.class)));
         }
 
         if (shawarmaBtn != null) {
-            shawarmaBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SSDActivity.this, ShawarmaActivity.class);
-                startActivity(intent);
-            });
+            shawarmaBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, ShawarmaActivity.class)));
         }
 
         if (sizzlingBtn != null) {
-            sizzlingBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SSDActivity.this, SizzlingActivity.class);
-                startActivity(intent);
-            });
+            sizzlingBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, SizzlingActivity.class)));
+        }
+
+        if (ssdBtn != null) {
+            ssdBtn.setOnClickListener(v ->
+                    recreate());
         }
 
         if (drinkBtn != null) {
-            drinkBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SSDActivity.this, DrinksActivity.class);
-                startActivity(intent);
-            });
+            drinkBtn.setOnClickListener(v ->
+                    startActivity(new Intent(this, DrinksActivity.class)));
         }
+
         orderNowBtn = findViewById(R.id.orderNowBtn);
         if (orderNowBtn != null) {
             orderNowBtn.setOnClickListener(v ->
-                    Toast.makeText(SSDActivity.this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Proceeding to Order…", Toast.LENGTH_SHORT).show()
             );
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateFloatingCart();
-    }
-
 
     private void updateFloatingCart() {
 
@@ -148,28 +135,35 @@ public class SSDActivity extends AppCompatActivity {
     }
 
     private void addSSDProducts() {
+
         DatabaseReference ssdRef = FirebaseDatabase.getInstance()
                 .getReference("categories/ssd");
 
-        String[][] items = {
-                {"siomai_rice_4pcs", "Siomai Rice (4 pcs)"},
-                {"big_siomai_rice_3pcs", "Big Siomai Rice (3 pcs)"},
-                {"dumpling_rice_3pcs", "Dumpling Rice (3 pcs)"},
-                {"jumbo_siopao", "Jumbo Siopao"}
+        Object[][] items = {
+                {"siomai_rice_4pcs", "Siomai Rice (4 pcs)", 65, R.drawable.siomairice},
+                {"big_siomai_rice_3pcs", "Big Siomai Rice (3 pcs)", 75, R.drawable.bigsiomairice},
+                {"dumpling_rice_3pcs", "Dumpling Rice (3 pcs)", 70, R.drawable.dumplingrice},
+                {"jumbo_siopao", "Jumbo Siopao", 60, R.drawable.jumbosiopao2}
         };
-
-        int defaultPrice = 90;
         int defaultStock = 10;
 
-        for (String[] item : items) {
-            Product product = new Product(
-                    item[1],
-                    defaultPrice,
-                    defaultStock
-            );
+        for (Object[] item : items) {
 
-            ssdRef.child(item[0]).setValue(product);
+            String key = (String) item[0];
+            String name = (String) item[1];
+            int price = (int) item[2];
+            int imageResId = (int) item[3];
+
+            Product product = new Product(name, price, defaultStock, imageResId);
+
+            ssdRef.child(key).setValue(product);
             ssdList.add(product);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateFloatingCart();
     }
 }

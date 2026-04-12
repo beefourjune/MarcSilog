@@ -112,7 +112,7 @@
                         android:id="@+id/pastilBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/pastilog"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -141,7 +141,7 @@
                         android:layout_width="100dp"
                         android:id="@+id/shawarmaBtn"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/shawarmapita"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -170,7 +170,7 @@
                         android:id="@+id/sizzlingBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/sisig"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -199,7 +199,7 @@
                         android:id="@+id/ssdBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/siomairice"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -228,7 +228,7 @@
                         android:id="@+id/drinkBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/water"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -254,10 +254,10 @@
             android:id="@+id/silogRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="20dp"
+            android:layout_weight="1"
             android:clipToPadding="false"
-            android:paddingBottom="80dp"/> <!-- leave space for floating panel -->
+            android:paddingBottom="80dp" /> <!-- leave space for floating panel -->
 
     </LinearLayout>
 

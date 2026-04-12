@@ -154,11 +154,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:letterSpacing="-0.1"
                     android:fontFamily="@font/manrope_extrabold"
+                    android:letterSpacing="-0.1"
                     android:text="Category"
                     android:textColor="@color/black"
-                    android:textSize="24sp"/>
+                    android:textSize="24sp" />
 
 
             </LinearLayout>
@@ -190,12 +190,12 @@
                             android:id="@+id/silogBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
-                            android:backgroundTint="@color/black"
-                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
+                            android:backgroundTint="@color/black"
+                            android:clipToOutline="true"
+                            android:paddingTop="30dp"
                             android:scaleType="centerCrop"
-                            android:clipToOutline="true"/>
+                            android:src="@drawable/baconsilog" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -219,12 +219,12 @@
                             android:id="@+id/pastilBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
-                            android:backgroundTint="@color/black"
-                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
+                            android:backgroundTint="@color/black"
+                            android:clipToOutline="true"
+                            android:paddingTop="30dp"
                             android:scaleType="centerCrop"
-                            android:clipToOutline="true"/>
+                            android:src="@drawable/pastilwithrice" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -248,7 +248,7 @@
                             android:layout_width="100dp"
                             android:id="@+id/shawarmaBtn"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
+                            android:src="@drawable/shawarmapita"
                             android:backgroundTint="@color/black"
                             android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
@@ -277,12 +277,12 @@
                             android:id="@+id/sizzlingBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
-                            android:backgroundTint="@color/black"
-                            android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
+                            android:backgroundTint="@color/black"
+                            android:clipToOutline="true"
+                            android:paddingTop="30dp"
                             android:scaleType="centerCrop"
-                            android:clipToOutline="true"/>
+                            android:src="@drawable/sisig" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -306,7 +306,7 @@
                             android:id="@+id/ssdBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
+                            android:src="@drawable/siomairice"
                             android:backgroundTint="@color/black"
                             android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
@@ -335,7 +335,7 @@
                             android:id="@+id/drinkBtn"
                             android:layout_width="100dp"
                             android:layout_height="50dp"
-                            android:src="@drawable/baconsilog"
+                            android:src="@drawable/water"
                             android:backgroundTint="@color/black"
                             android:paddingTop="30dp"
                             android:background="@drawable/rounded_button"
@@ -436,12 +436,12 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="₱45"
-                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="30dp"
+                                    android:text="120"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:textSize="20sp"/>
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
 
 
@@ -522,12 +522,12 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="₱45"
-                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="30dp"
+                                    android:text="60"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:textSize="20sp"/>
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
 
 
@@ -607,12 +607,12 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="₱39"
-                                    android:layout_marginTop="30dp"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="30dp"
+                                    android:text="80"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:textSize="20sp"/>
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
 
 
@@ -684,12 +684,12 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="₱25"
-                                    android:layout_marginTop="34dp"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="34dp"
+                                    android:text="75"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:textSize="20sp"/>
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
 
 
@@ -763,12 +763,12 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="₱25"
-                                    android:layout_marginTop="34dp"
                                     android:layout_gravity="center"
+                                    android:layout_marginTop="34dp"
+                                    android:text="85"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:textSize="20sp"/>
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
 
 
