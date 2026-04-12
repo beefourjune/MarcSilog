@@ -55,8 +55,8 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
         CartItem cartItem = new CartItem(
                 product.getName(),
                 product.getPrice(),
-                1,
-                product.getStock()
+                R.drawable.jumbosiopao, // or product image if you have it
+                1
         );
 
         MainMenu.cartList.add(cartItem);

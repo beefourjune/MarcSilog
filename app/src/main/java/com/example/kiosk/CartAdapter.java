@@ -42,10 +42,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CartItem item = cartItems.get(position);
         holder.itemName.setText(item.name);
-        holder.itemPrice.setText("$" + item.price);
+        holder.itemPrice.setText("₱" + item.price);
         holder.itemQuantity.setText(String.valueOf(item.quantity));
-        holder.itemImage.setImageResource(item.imageResId);
-
+        try {
+            if (item.imageResId > 0) {
+                holder.itemImage.setImageResource(item.imageResId);
+            } else {
+                holder.itemImage.setImageResource(R.drawable.baconsilog);
+            }
+        } catch (Exception e) {
+            holder.itemImage.setImageResource(R.drawable.baconsilog);
+        }
         holder.btnIncrease.setOnClickListener(v -> {
             item.quantity += 1;
             holder.itemQuantity.setText(String.valueOf(item.quantity));
@@ -61,11 +68,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         });
 
         holder.btnRemove.setOnClickListener(v -> {
-            cartItems.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, cartItems.size());
-            listener.onQuantityChanged();
-            Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
+
+            int pos = holder.getAdapterPosition();
+
+            if (pos != RecyclerView.NO_POSITION) {
+                cartItems.remove(pos);
+                notifyItemRemoved(pos);
+                listener.onQuantityChanged();
+                Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 

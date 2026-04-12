@@ -68,7 +68,12 @@ public class PastilActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.pastilRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        adapter = new PastilAdapter(this, pastilList, () -> updateFloatingCart());
+        adapter = new PastilAdapter(
+                this,
+                pastilList,
+                () -> updateFloatingCart(),
+                getSupportFragmentManager()
+        );
         recyclerView.setAdapter(adapter);
 
         // --- Initial floating panel update ---

@@ -72,6 +72,9 @@ public class MainMenu extends AppCompatActivity {
         refreshCartInfo();
     }
 
+    public void refreshCartUI() {
+        refreshCartInfo();
+    }
     // ================= SEARCH (FIREBASE LIVE) =================
     private void setupSearch() {
 
@@ -214,8 +217,8 @@ public class MainMenu extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (cartInfo != null) {

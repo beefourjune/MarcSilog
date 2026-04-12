@@ -55,8 +55,8 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
         CartItem cartItem = new CartItem(
                 product.getName(),
                 product.getPrice(),
-                1,
-                product.getStock()
+                R.drawable.water, // or product image if you have it
+                1
         );
 
         MainMenu.cartList.add(cartItem);

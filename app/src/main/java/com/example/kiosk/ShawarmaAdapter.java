@@ -53,11 +53,10 @@ public class ShawarmaAdapter extends RecyclerView.Adapter<ShawarmaAdapter.ViewHo
         CartItem cartItem = new CartItem(
                 product.getName(),
                 product.getPrice(),
-                1,
-                product.getStock()
+                R.drawable.shawarmacute, // or product image if you have it
+                1
         );
 
-        // Add to local cart list
         MainMenu.cartList.add(cartItem);
 
         // Add to Firebase cart

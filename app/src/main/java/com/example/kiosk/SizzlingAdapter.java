@@ -55,8 +55,8 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
         CartItem cartItem = new CartItem(
                 product.getName(),
                 product.getPrice(),
-                1,
-                product.getStock()
+                R.drawable.sisig, // or product image if you have it
+                1
         );
 
         MainMenu.cartList.add(cartItem);
