@@ -29,6 +29,9 @@ public class MainMenu extends AppCompatActivity {
     private DatabaseReference database;
     private DatabaseReference productsRef;
 
+    // 🔥 Cached product list
+    private ArrayList<Product> fullProductList = new ArrayList<>();
+
     // --- UI ---
     private TextView cartInfo;
     private View cartPanel;
@@ -48,6 +51,8 @@ public class MainMenu extends AppCompatActivity {
     public static ArrayList<CartItem> cartList = new ArrayList<>();
     public static ArrayList<CartItem> cartListBackup = new ArrayList<>();
 
+    public static String orderType = "TAKE OUT";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +61,13 @@ public class MainMenu extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference();
         productsRef = database.child("products");
 
+        loadAllProducts();
+
+        if (getIntent() != null && getIntent().getStringExtra("order_type") != null) {
+            orderType = getIntent().getStringExtra("order_type");
+        }
+
+        // ✅ DEFAULT PRODUCTS (RESTORED - NOT REMOVED)
         initializeDefaultProducts();
 
         cartPanel = findViewById(R.id.cartPanel);
@@ -64,7 +76,7 @@ public class MainMenu extends AppCompatActivity {
         productContainer = findViewById(R.id.productContainer);
         searchBar = findViewById(R.id.searchBar);
 
-        setupSearch(); // 🔥 ADDED SEARCH
+        setupSearch();
         setupCartUI();
         setupCategoryButtons();
         setupAddToCartButtons();
@@ -72,17 +84,37 @@ public class MainMenu extends AppCompatActivity {
         refreshCartInfo();
     }
 
-    public void refreshCartUI() {
-        refreshCartInfo();
+    // ================= LOAD FIREBASE PRODUCTS =================
+    private void loadAllProducts() {
+
+        productsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                fullProductList.clear();
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Product product = ds.getValue(Product.class);
+                    if (product != null) {
+                        fullProductList.add(product);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast(error.getMessage());
+            }
+        });
     }
-    // ================= SEARCH (FIREBASE LIVE) =================
+
+    // ================= SEARCH =================
     private void setupSearch() {
 
         if (searchBar == null) return;
 
         searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -99,79 +131,64 @@ public class MainMenu extends AppCompatActivity {
                 searchFirebaseProducts(query);
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
     }
 
+    // ================= SEARCH RESULTS =================
     private void searchFirebaseProducts(String query) {
 
-        productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        productContainer.removeAllViews();
 
-                productContainer.removeAllViews();
+        boolean found = false;
 
-                boolean found = false;
+        for (Product product : fullProductList) {
 
-                for (DataSnapshot ds : snapshot.getChildren()) {
+            String name = product.getName();
+            int price = product.getPrice();
+            int imageResId = product.getImageResId();
 
-                    String name = ds.child("name").getValue(String.class);
-                    Integer price = ds.child("price").getValue(Integer.class);
-                    Integer imageResId = ds.child("imageResId").getValue(Integer.class);
+            if (name == null) continue;
 
-                    if (name == null || price == null || imageResId == null) continue;
+            if (name.toLowerCase().contains(query)) {
 
-                    if (name.toLowerCase().contains(query)) {
+                found = true;
 
-                        found = true;
+                LinearLayout row = new LinearLayout(MainMenu.this);
+                row.setOrientation(LinearLayout.HORIZONTAL);
+                row.setPadding(20, 20, 20, 20);
 
-                        LinearLayout row = new LinearLayout(MainMenu.this);
-                        row.setOrientation(LinearLayout.HORIZONTAL);
-                        row.setPadding(20, 20, 20, 20);
+                TextView tv = new TextView(MainMenu.this);
+                tv.setText(name + " - ₱" + price);
+                tv.setLayoutParams(new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1
+                ));
 
-                        TextView tv = new TextView(MainMenu.this);
-                        tv.setText(name + " - ₱" + price);
-                        tv.setLayoutParams(new LinearLayout.LayoutParams(
-                                0,
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                1
-                        ));
+                MaterialButton addBtn = new MaterialButton(MainMenu.this);
+                addBtn.setText("Add");
 
-                        MaterialButton addBtn = new MaterialButton(MainMenu.this);
-                        addBtn.setText("Add");
+                addBtn.setOnClickListener(v ->
+                        addItemToCart(name, price, imageResId)
+                );
 
-                        String finalName = name;
-                        int finalPrice = price;
-                        int finalImage = imageResId;
+                row.addView(tv);
+                row.addView(addBtn);
 
-                        addBtn.setOnClickListener(v ->
-                                addItemToCart(finalName, finalPrice, finalImage)
-                        );
-
-                        row.addView(tv);
-                        row.addView(addBtn);
-
-                        productContainer.addView(row);
-                    }
-                }
-
-                if (!found) {
-                    TextView empty = new TextView(MainMenu.this);
-                    empty.setText("No products found");
-                    empty.setPadding(20, 20, 20, 20);
-                    productContainer.addView(empty);
-                }
+                productContainer.addView(row);
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                showToast(error.getMessage());
-            }
-        });
+        if (!found) {
+            TextView empty = new TextView(MainMenu.this);
+            empty.setText("No products found");
+            empty.setPadding(20, 20, 20, 20);
+            productContainer.addView(empty);
+        }
     }
 
-    // ================= FIREBASE DEFAULT PRODUCTS =================
+    // ================= DEFAULT PRODUCTS =================
     private void initializeDefaultProducts() {
 
         productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -203,10 +220,19 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    // ================= CART =================
+    // ================= 🔥 FIXED CART (NO DUPLICATES) =================
     private void addItemToCart(String name, int price, int imageResId) {
+
+        for (CartItem item : cartList) {
+            if (item.name != null && item.name.equals(name)) {
+                item.quantity++; // 🔥 increase instead of duplicate
+                refreshCartInfo();
+                showToast(name + " quantity increased");
+                return;
+            }
+        }
+
         cartList.add(new CartItem(name, price, imageResId));
-        if (cartPanel.getVisibility() == View.GONE) cartPanel.setVisibility(View.VISIBLE);
         refreshCartInfo();
         showToast(name + " added to cart");
     }
@@ -232,6 +258,7 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
+    // ================= UI =================
     private void setupCartUI() {
 
         if (viewCartBtn != null) {
@@ -248,10 +275,10 @@ public class MainMenu extends AppCompatActivity {
     private void openCart() {
         Intent intent = new Intent(MainMenu.this, CartActivity.class);
         intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartList));
+        intent.putExtra("order_type", orderType);
         startActivity(intent);
     }
 
-    // ================= CATEGORY =================
     private void setupCategoryButtons() {
         silogBtn = findViewById(R.id.silogBtn);
         pastilBtn = findViewById(R.id.pastilBtn);
@@ -268,8 +295,8 @@ public class MainMenu extends AppCompatActivity {
         if (drinkBtn != null) drinkBtn.setOnClickListener(v -> startActivity(new Intent(this, DrinksActivity.class)));
     }
 
-    // ================= ADD TO CART =================
     private void setupAddToCartButtons() {
+
         addBaconBtn = findViewById(R.id.addBaconBtn);
         addTapBtn = findViewById(R.id.addTapBtn);
         addTosilogBtn = findViewById(R.id.addTosilogBtn);

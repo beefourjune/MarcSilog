@@ -24,36 +24,50 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
     private CartAdapter cartAdapter;
     private List<CartItem> cartList;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        cartAdapter.notifyDataSetChanged();
-        updateCartUI();
-    }
+    // ================= ORDER TYPE =================
+    private String orderType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        // UI INIT
         backBtn = findViewById(R.id.backBtn);
         orderBtn = findViewById(R.id.orderBtn);
         emptyText = findViewById(R.id.cartEmptyText);
         totalText = findViewById(R.id.cartTotalText);
         recyclerView = findViewById(R.id.recyclerViewCart);
 
-        cartList = MainMenu.cartList; // assuming cartList is static in MainMenu
+        // USE MAIN CART
+        cartList = MainMenu.cartList;
 
-        // RecyclerView setup
+        // ================= ORDER TYPE (FIXED) =================
+        Intent intent = getIntent();
+        orderType = intent.getStringExtra("order_type");
+
+        if (orderType == null || orderType.isEmpty()) {
+            orderType = "TAKE OUT";
+        }
+
+        // ================= RECYCLER =================
         cartAdapter = new CartAdapter(this, cartList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(cartAdapter);
 
+        // BACK BUTTON
         backBtn.setOnClickListener(v -> finish());
 
+        // ORDER BUTTON
         orderBtn.setOnClickListener(v -> {
-            if (!cartList.isEmpty()) {
-                startActivity(new Intent(CartActivity.this, PaymentActivity.class));
+
+            if (cartList != null && !cartList.isEmpty()) {
+
+                Intent paymentIntent = new Intent(CartActivity.this, PaymentActivity.class);
+                paymentIntent.putExtra("order_type", orderType);
+
+                startActivity(paymentIntent);
+
             } else {
                 Toast.makeText(this, "Cart is empty!", Toast.LENGTH_SHORT).show();
             }
@@ -62,22 +76,33 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         updateCartUI();
     }
 
-    // Called whenever the cart changes
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cartAdapter.notifyDataSetChanged();
+        updateCartUI();
+    }
+
+    // ================= UI UPDATE =================
     private void updateCartUI() {
+
         if (cartList != null && !cartList.isEmpty()) {
+
             emptyText.setVisibility(TextView.GONE);
             recyclerView.setVisibility(RecyclerView.VISIBLE);
             orderBtn.setVisibility(Button.VISIBLE);
             totalText.setVisibility(TextView.VISIBLE);
 
-            // Calculate total price
             int totalPrice = 0;
+
             for (CartItem item : cartList) {
                 totalPrice += item.getPrice() * item.getQuantity();
             }
+
             totalText.setText("Total: ₱" + totalPrice);
 
         } else {
+
             emptyText.setVisibility(TextView.VISIBLE);
             recyclerView.setVisibility(RecyclerView.GONE);
             orderBtn.setVisibility(Button.GONE);
@@ -85,14 +110,16 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
         }
     }
 
+    // ================= REFRESH =================
     public void refreshCart() {
         cartAdapter.notifyDataSetChanged();
         updateCartUI();
     }
-    // This is called from CartAdapter whenever quantity changes or item removed
+
+    // ================= CALLBACK =================
     @Override
     public void onQuantityChanged() {
-        cartAdapter.notifyDataSetChanged(); // refresh adapter
-        updateCartUI(); // update total & visibility
+        cartAdapter.notifyDataSetChanged();
+        updateCartUI();
     }
 }

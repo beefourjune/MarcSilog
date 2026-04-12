@@ -34,6 +34,13 @@ public class OrderReceivedActivity extends AppCompatActivity {
         String firebaseKey = getIntent().getStringExtra("FIREBASE_KEY");
         String displayId = getIntent().getStringExtra("ORDER_ID");
 
+        // ✅ ADDED: ORDER TYPE
+        String orderType = getIntent().getStringExtra("order_type");
+
+        if (orderType == null) {
+            orderType = "TAKE OUT"; // fallback default
+        }
+
         if (firebaseKey == null) {
             Toast.makeText(this, "Invalid Order", Toast.LENGTH_LONG).show();
             finish();
@@ -54,14 +61,23 @@ public class OrderReceivedActivity extends AppCompatActivity {
         title.setPadding(20, 30, 20, 30);
         receiptContainer.addView(title);
 
-        // ================= ORDER ID (DISPLAY ONLY) =================
+        // ================= ORDER ID =================
         TextView idText = new TextView(this);
         idText.setText("ORDER ID: " + displayId);
         idText.setTextSize(18f);
         idText.setTypeface(bold);
         idText.setGravity(Gravity.CENTER);
-        idText.setPadding(20, 10, 20, 20);
+        idText.setPadding(20, 10, 20, 10);
         receiptContainer.addView(idText);
+
+        // ================= ORDER TYPE (NEW) =================
+        TextView typeText = new TextView(this);
+        typeText.setText("ORDER TYPE: " + orderType);
+        typeText.setTextSize(18f);
+        typeText.setTypeface(bold);
+        typeText.setGravity(Gravity.CENTER);
+        typeText.setPadding(20, 10, 20, 20);
+        receiptContainer.addView(typeText);
 
         // ================= LOAD ORDER =================
         orderRef.get().addOnSuccessListener(snapshot -> {

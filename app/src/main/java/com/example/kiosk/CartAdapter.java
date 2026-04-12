@@ -40,44 +40,55 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         CartItem item = cartItems.get(position);
-        holder.itemName.setText(item.name);
-        holder.itemPrice.setText("₱" + item.price);
-        holder.itemQuantity.setText(String.valueOf(item.quantity));
+
+        holder.itemName.setText(item.getName());
+        holder.itemPrice.setText("₱" + item.getPrice());
+        holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
+
+        // ================= IMAGE SAFE LOAD =================
         try {
-            if (item.imageResId > 0) {
-                holder.itemImage.setImageResource(item.imageResId);
+            if (item.getImageResId() > 0) {
+                holder.itemImage.setImageResource(item.getImageResId());
             } else {
                 holder.itemImage.setImageResource(R.drawable.baconsilog);
             }
         } catch (Exception e) {
             holder.itemImage.setImageResource(R.drawable.baconsilog);
         }
+
+        // ================= INCREASE =================
         holder.btnIncrease.setOnClickListener(v -> {
-            item.quantity += 1;
-            holder.itemQuantity.setText(String.valueOf(item.quantity));
+            item.setQuantity(item.getQuantity() + 1);
+            holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
             listener.onQuantityChanged();
         });
 
+        // ================= DECREASE =================
         holder.btnDecrease.setOnClickListener(v -> {
-            if (item.quantity > 1) {
-                item.quantity -= 1;
-                holder.itemQuantity.setText(String.valueOf(item.quantity));
+            if (item.getQuantity() > 1) {
+                item.setQuantity(item.getQuantity() - 1);
+                holder.itemQuantity.setText(String.valueOf(item.getQuantity()));
                 listener.onQuantityChanged();
             }
         });
 
+        // ================= REMOVE =================
         holder.btnRemove.setOnClickListener(v -> {
 
             int pos = holder.getAdapterPosition();
 
             if (pos != RecyclerView.NO_POSITION) {
+
                 cartItems.remove(pos);
                 notifyItemRemoved(pos);
+                notifyItemRangeChanged(pos, cartItems.size());
+
                 listener.onQuantityChanged();
+
                 Toast.makeText(context, "Item removed", Toast.LENGTH_SHORT).show();
             }
-
         });
     }
 
@@ -86,7 +97,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return cartItems.size();
     }
 
+    // ================= VIEW HOLDER =================
     static class ViewHolder extends RecyclerView.ViewHolder {
+
         TextView itemName, itemPrice, itemQuantity;
         ImageView itemImage;
         Button btnIncrease, btnDecrease;
@@ -94,10 +107,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             itemName = itemView.findViewById(R.id.itemName);
             itemPrice = itemView.findViewById(R.id.itemPrice);
             itemQuantity = itemView.findViewById(R.id.itemQuantity);
             itemImage = itemView.findViewById(R.id.itemImage);
+
             btnIncrease = itemView.findViewById(R.id.btnIncrease);
             btnDecrease = itemView.findViewById(R.id.btnDecrease);
             btnRemove = itemView.findViewById(R.id.btnRemove);

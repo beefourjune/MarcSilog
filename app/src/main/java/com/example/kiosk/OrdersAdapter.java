@@ -44,17 +44,18 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         Order order = orders.get(position);
 
+        // ✅ Order ID display
         String displayId = order.getId() != null ? order.getId() : "UNKNOWN";
 
-        // ✅ FIX: ensure firebase key is FINAL for lambda
+        // ✅ Firebase key fallback safety
         String key = order.getFirebaseKey();
-
         if (key == null || key.isEmpty()) {
-            key = displayId; // fallback
+            key = displayId;
         }
 
-        final String firebaseKey = key; // 🔥 REQUIRED for lambda
+        final String firebaseKey = key;
 
+        // ✅ Build items text
         StringBuilder itemsText = new StringBuilder();
 
         if (order.getItems() != null && !order.getItems().isEmpty()) {
@@ -71,20 +72,22 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             itemsText.append("No items");
         }
 
+        // ✅ Display order details
         holder.orderText.setText(
                 "Order ID: " + displayId + "\n\nItems:\n" + itemsText
         );
 
+        // ✅ BUTTON: Send to Kitchen (PREPARE)
         holder.btnPrepare.setOnClickListener(v -> {
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
                     .getReference("orders")
                     .child(firebaseKey);
 
-            ref.child("inKitchen").setValue(true)
+            ref.child("status").setValue("preparing")
                     .addOnSuccessListener(unused ->
                             Toast.makeText(v.getContext(),
-                                    "Moved to Kitchen",
+                                    "Sent to Kitchen",
                                     Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->
@@ -100,6 +103,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         return orders.size();
     }
 
+    // ================= VIEW HOLDER =================
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView orderText;

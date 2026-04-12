@@ -23,6 +23,9 @@ public class PaymentActivity extends AppCompatActivity {
     private LinearLayout paymentContainer;
     private Button payNowBtn;
 
+    // ================= ORDER TYPE =================
+    private String orderType = "TAKE OUT";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,15 @@ public class PaymentActivity extends AppCompatActivity {
 
         paymentContainer = findViewById(R.id.paymentContainer);
         payNowBtn = findViewById(R.id.payNowBtn);
+
+        // ================= RECEIVE ORDER TYPE =================
+        Intent intent = getIntent();
+        if (intent != null) {
+            orderType = intent.getStringExtra("order_type");
+            if (orderType == null) {
+                orderType = "TAKE OUT";
+            }
+        }
 
         if (MainMenu.cartList != null && !MainMenu.cartList.isEmpty()) {
 
@@ -94,7 +106,7 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
-    // ================= FIREBASE ORDER SAVE (FIXED FINAL VERSION) =================
+    // ================= FIREBASE ORDER SAVE =================
 
     private void sendOrderToFirebase(int totalPrice) {
 
@@ -119,7 +131,6 @@ public class PaymentActivity extends AppCompatActivity {
             final int newNumber = currentValue + 1;
             final String displayId = String.format("%04d", newNumber);
 
-            // 🔥 REAL FIREBASE KEY (THIS FIXES EVERYTHING)
             String firebaseKey = ordersRef.push().getKey();
 
             if (firebaseKey == null) {
@@ -132,15 +143,16 @@ public class PaymentActivity extends AppCompatActivity {
             Order order = new Order(
                     displayId,
                     firebaseKey,
-                    false,
-                    false,
+                    "pending",
                     System.currentTimeMillis(),
                     itemsBackup
             );
 
-            // 🔥 CRITICAL: SAVE BOTH IDS
             order.setId(displayId);
             order.setFirebaseKey(firebaseKey);
+
+            // ================= SAVE ORDER TYPE (🔥 FIX) =================
+            order.setOrderType(orderType);
 
             ordersRef.child(firebaseKey).setValue(order)
                     .addOnSuccessListener(unused -> {
@@ -152,8 +164,11 @@ public class PaymentActivity extends AppCompatActivity {
                         Intent intent = new Intent(PaymentActivity.this, OrderReceivedActivity.class);
 
                         intent.putExtra("ORDER_ID", displayId);
-                        intent.putExtra("FIREBASE_KEY", firebaseKey); // 🔥 IMPORTANT
+                        intent.putExtra("FIREBASE_KEY", firebaseKey);
                         intent.putExtra("TOTAL", totalPrice);
+
+                        // ================= PASS ORDER TYPE (🔥 FIX) =================
+                        intent.putExtra("order_type", orderType);
 
                         startActivity(intent);
                         finish();

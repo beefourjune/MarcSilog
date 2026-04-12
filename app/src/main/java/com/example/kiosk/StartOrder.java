@@ -2,24 +2,18 @@ package com.example.kiosk;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.google.android.material.button.MaterialButton;
 
 public class StartOrder extends AppCompatActivity {
 
-    Button dineinBtn;
+    MaterialButton dineinBtn;
+    MaterialButton takeoutBtn;
     MaterialButton adminAcc;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +22,32 @@ public class StartOrder extends AppCompatActivity {
         setContentView(R.layout.activity_start_order);
 
         dineinBtn = findViewById(R.id.dineinbtn);
+        takeoutBtn = findViewById(R.id.takeoutbtn);
         adminAcc = findViewById(R.id.adminaccount);
 
+        // ================= DINE IN =================
         dineinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(StartOrder.this, MainMenu.class);
+                intent.putExtra("order_type", "DINE IN"); // 🔥 IMPORTANT
                 startActivity(intent);
             }
         });
 
-        adminAcc.setOnClickListener(new View.OnClickListener() {
+        // ================= TAKE OUT =================
+        takeoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartOrder.this,LoginActivity.class);
+                Intent intent = new Intent(StartOrder.this, MainMenu.class);
+                intent.putExtra("order_type", "TAKE OUT"); // 🔥 IMPORTANT
                 startActivity(intent);
             }
         });
 
+        adminAcc.setOnClickListener(v -> {
+            Intent intent = new Intent(StartOrder.this, LoginActivity.class);
+            startActivity(intent);
+        });
     }
 }

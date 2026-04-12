@@ -31,6 +31,7 @@ public class KitchenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // ⚠️ KEEP YOUR ORIGINAL LAYOUT (unchanged)
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
         recyclerView = view.findViewById(R.id.menuRecyclerView);
@@ -58,18 +59,21 @@ public class KitchenFragment extends Fragment {
                 for (DataSnapshot snap : snapshot.getChildren()) {
 
                     Order order = snap.getValue(Order.class);
-
                     if (order == null) continue;
 
-                    // 🔥 IMPORTANT
-                    order.setId(snap.getKey());
+                    // ✅ FIX: use Firebase key as single source of truth
+                    String firebaseKey = snap.getKey();
+                    order.setId(firebaseKey);
 
+                    // safety check
                     if (order.getItems() == null) {
                         order.setItems(new ArrayList<>());
                     }
 
-                    // 🔥 FILTER ONLY KITCHEN ORDERS
-                    if (order.isInKitchen() && !order.isCompleted()) {
+                    // ✔ ONLY "preparing" ORDERS GO TO KITCHEN
+                    String status = order.getStatus();
+
+                    if (status != null && status.equals("preparing")) {
                         kitchenList.add(order);
                     }
                 }
@@ -79,7 +83,7 @@ public class KitchenFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // optional: handle error
+                // optional error handling
             }
         });
     }

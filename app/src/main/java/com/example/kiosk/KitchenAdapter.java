@@ -34,7 +34,7 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_order, parent, false); // reuse same layout
+                .inflate(R.layout.item_order, parent, false);
 
         return new ViewHolder(view);
     }
@@ -44,7 +44,12 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
 
         Order order = orders.get(position);
 
-        String orderId = (order.getId() != null) ? order.getId() : "UNKNOWN";
+        // ✅ FIX: use Firebase-safe ID only
+        String orderId = order.getId();
+
+        if (orderId == null || orderId.isEmpty()) {
+            orderId = "UNKNOWN";
+        }
 
         // 🔥 BUILD ITEMS TEXT
         StringBuilder itemsText = new StringBuilder();
@@ -64,22 +69,30 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
         }
 
         holder.orderText.setText(
-                "Order ID: " + orderId + "\n\nItems:\n" + itemsText.toString()
+                "Order ID: " + orderId + "\n\nItems:\n" + itemsText
         );
 
-        // 🔥 CHANGE BUTTON TEXT TO COMPLETE
-        holder.btnAction.setText("Complete");
+        // ✔ BUTTON TEXT
+        holder.btnAction.setText("Prepare");
 
+        // ✔ BUTTON ACTION (FIXED + SAFE)
         holder.btnAction.setOnClickListener(v -> {
+
+            if (order.getId() == null) {
+                Toast.makeText(v.getContext(),
+                        "Invalid Order ID",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
                     .getReference("orders")
                     .child(order.getId());
 
-            ref.child("completed").setValue(true)
+            ref.child("status").setValue("preparing")
                     .addOnSuccessListener(unused ->
                             Toast.makeText(v.getContext(),
-                                    "Order Completed",
+                                    "Order set to Preparing",
                                     Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->
@@ -103,8 +116,8 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
         ViewHolder(View itemView) {
             super(itemView);
 
-            orderText = itemView.findViewById(R.id.orderText);
-            btnAction = itemView.findViewById(R.id.prepareBtn); // reuse button
+            orderText = itemView.findViewById(R.id.menuText);
+            btnAction = itemView.findViewById(R.id.prepareBtn);
         }
     }
 }

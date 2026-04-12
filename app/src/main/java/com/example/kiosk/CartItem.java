@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import java.util.HashMap;
 import java.util.Map;
 
-// Model class for a cart item
 public class CartItem implements Parcelable {
 
     public String name;
@@ -14,10 +13,15 @@ public class CartItem implements Parcelable {
     public int imageResId;
     public int quantity;
 
-    // Required empty constructor for Firebase
+    // ================= EMPTY CONSTRUCTOR (FIREBASE) =================
     public CartItem() {
+        this.name = "";
+        this.price = 0;
+        this.imageResId = 0;
+        this.quantity = 1;
     }
 
+    // ================= MAIN MERGED CONSTRUCTOR =================
     public CartItem(String name, int price, int imageResId) {
         this.name = name;
         this.price = price;
@@ -25,6 +29,7 @@ public class CartItem implements Parcelable {
         this.quantity = 1;
     }
 
+    // ================= FULL CONSTRUCTOR =================
     public CartItem(String name, int price, int imageResId, int quantity) {
         this.name = name;
         this.price = price;
@@ -32,7 +37,63 @@ public class CartItem implements Parcelable {
         this.quantity = quantity;
     }
 
-    // Parcelable constructor
+    // ================= KEY CONSTRUCTOR (FOR NORMALIZED CART HANDLING) =================
+    public CartItem(String key, String name, int price, int imageResId) {
+        this.name = name;
+        this.price = price;
+        this.imageResId = imageResId;
+        this.quantity = 1;
+    }
+
+    // ================= INCREASE QUANTITY =================
+    public void increaseQuantity() {
+        this.quantity++;
+    }
+
+    // ================= DECREASE QUANTITY =================
+    public void decreaseQuantity() {
+        if (this.quantity > 1) {
+            this.quantity--;
+        }
+    }
+
+    // ================= TOTAL PRICE =================
+    public int getTotalPrice() {
+        return price * quantity;
+    }
+
+    // ================= FIREBASE MAP =================
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("price", price);
+        result.put("imageResId", imageResId);
+        result.put("quantity", quantity);
+        return result;
+    }
+
+    // ================= GETTERS / SETTERS =================
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getImageResId() {
+        return imageResId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = Math.max(1, quantity);
+    }
+
+    // ================= PARCELABLE =================
     protected CartItem(Parcel in) {
         name = in.readString();
         price = in.readInt();
@@ -64,34 +125,4 @@ public class CartItem implements Parcelable {
             return new CartItem[size];
         }
     };
-
-    // Optional helper for Firebase upload
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("name", name);
-        result.put("price", price);
-        result.put("imageResId", imageResId);
-        result.put("quantity", quantity);
-        return result;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }
