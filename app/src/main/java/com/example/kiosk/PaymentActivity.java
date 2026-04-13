@@ -17,11 +17,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PaymentActivity extends AppCompatActivity {
-
-    private LinearLayout paymentContainer;
-    private Button payNowBtn;
 
     // ================= ORDER TYPE =================
     private String orderType;
@@ -31,8 +29,8 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        paymentContainer = findViewById(R.id.paymentContainer);
-        payNowBtn = findViewById(R.id.payNowBtn);
+        LinearLayout paymentContainer = findViewById(R.id.paymentContainer);
+        Button payNowBtn = findViewById(R.id.payNowBtn);
 
         // ================= ORDER TYPE FIX (CLEAN) =================
         Intent intent = getIntent();
@@ -67,7 +65,7 @@ public class PaymentActivity extends AppCompatActivity {
                 itemLayout.setGravity(Gravity.CENTER_VERTICAL);
 
                 TextView itemName = new TextView(this);
-                itemName.setText(item.name + " x" + item.quantity);
+                itemName.setText(getString(R.string.cart_item_quantity, item.name, item.quantity));
                 itemName.setTypeface(manropeMedium);
                 itemName.setTextColor(Color.BLACK);
                 itemName.setLayoutParams(new LinearLayout.LayoutParams(
@@ -77,7 +75,7 @@ public class PaymentActivity extends AppCompatActivity {
                 ));
 
                 TextView itemPrice = new TextView(this);
-                itemPrice.setText("₱" + (item.price * item.quantity));
+                itemPrice.setText(getString(R.string.price_format, item.price * item.quantity));
                 itemPrice.setTypeface(manropeMedium);
                 itemPrice.setTextColor(Color.BLACK);
                 itemPrice.setGravity(Gravity.END);
@@ -93,7 +91,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             TextView totalText = new TextView(this);
-            totalText.setText("Total: ₱" + totalPrice);
+            totalText.setText(getString(R.string.total_price_format, totalPrice));
             totalText.setTypeface(manropeMedium);
             totalText.setTextColor(Color.BLACK);
             totalText.setTextSize(18f);
@@ -109,7 +107,7 @@ public class PaymentActivity extends AppCompatActivity {
             );
 
         } else {
-            Toast.makeText(this, "No items to pay for!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_items_to_pay, Toast.LENGTH_SHORT).show();
             payNowBtn.setEnabled(false);
         }
     }
@@ -133,13 +131,13 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             final int newNumber = currentValue + 1;
-            final String displayId = String.format("%04d", newNumber);
+            final String displayId = String.format(Locale.getDefault(), "%04d", newNumber);
 
             String firebaseKey = ordersRef.push().getKey();
 
             if (firebaseKey == null) {
                 Toast.makeText(this,
-                        "Failed to generate order key",
+                        R.string.failed_generate_key,
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -179,7 +177,7 @@ public class PaymentActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e ->
                             Toast.makeText(this,
-                                    "Order failed: " + e.getMessage(),
+                                    getString(R.string.order_failed, e.getMessage()),
                                     Toast.LENGTH_SHORT).show()
                     );
         });

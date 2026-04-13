@@ -54,7 +54,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
 
         // ================= TITLE =================
         TextView title = new TextView(this);
-        title.setText("RECEIPT");
+        title.setText(R.string.receipt_title);
         title.setTextSize(22f);
         title.setTypeface(bold);
         title.setGravity(Gravity.CENTER);
@@ -63,7 +63,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
 
         // ================= ORDER ID =================
         TextView idText = new TextView(this);
-        idText.setText("ORDER ID: " + displayId);
+        idText.setText(getString(R.string.order_id_format, displayId));
         idText.setTextSize(18f);
         idText.setTypeface(bold);
         idText.setGravity(Gravity.CENTER);
@@ -72,7 +72,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
 
         // ================= ORDER TYPE (NEW) =================
         TextView typeText = new TextView(this);
-        typeText.setText("ORDER TYPE: " + orderType);
+        typeText.setText(getString(R.string.order_type_format, orderType));
         typeText.setTextSize(18f);
         typeText.setTypeface(bold);
         typeText.setGravity(Gravity.CENTER);
@@ -103,7 +103,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
                 row.setPadding(20, 10, 20, 10);
 
                 TextView name = new TextView(this);
-                name.setText(item.name + " x" + item.quantity);
+                name.setText(getString(R.string.cart_item_quantity, item.name, item.quantity));
                 name.setTypeface(medium);
                 name.setTextColor(Color.BLACK);
                 name.setLayoutParams(new LinearLayout.LayoutParams(
@@ -113,7 +113,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
                 ));
 
                 TextView price = new TextView(this);
-                price.setText("₱" + (item.price * item.quantity));
+                price.setText(getString(R.string.price_format, (item.price * item.quantity)));
                 price.setTypeface(medium);
                 price.setTextColor(Color.BLACK);
 
@@ -127,7 +127,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
 
             // ================= TOTAL =================
             TextView totalText = new TextView(this);
-            totalText.setText("TOTAL: ₱" + total);
+            totalText.setText(getString(R.string.total_price_format, total));
             totalText.setTextSize(20f);
             totalText.setTypeface(bold);
             totalText.setGravity(Gravity.END);
@@ -137,18 +137,18 @@ public class OrderReceivedActivity extends AppCompatActivity {
 
         }).addOnFailureListener(e ->
                 Toast.makeText(this,
-                        "Failed to load order: " + e.getMessage(),
+                        getString(R.string.order_failed, e.getMessage()),
                         Toast.LENGTH_LONG).show()
         );
 
         // ================= OK BUTTON =================
         Button okBtn = new Button(this);
-        okBtn.setText("OK");
+        okBtn.setText(R.string.ok_button);
 
         okBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainMenu.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            Intent intentNext = new Intent(this, MainMenu.class);
+            intentNext.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intentNext);
             finish();
         });
 

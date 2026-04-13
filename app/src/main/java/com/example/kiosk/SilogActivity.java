@@ -93,6 +93,7 @@ public class SilogActivity extends AppCompatActivity {
         };
 
         int defaultStock = 10;
+        String category = "Silog";
 
         for (Object[] item : silogs) {
 
@@ -101,7 +102,7 @@ public class SilogActivity extends AppCompatActivity {
             int price = (int) item[2];
             int imageResId = (int) item[3];
 
-            Product product = new Product(name, price, defaultStock, imageResId);
+            Product product = new Product(name, price, defaultStock, imageResId, category);
 
             silogRef.child(key).setValue(product);
             silogList.add(product);
@@ -123,7 +124,7 @@ public class SilogActivity extends AppCompatActivity {
 
         if (totalItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+            cartItemCount.setText(getString(R.string.cart_items_format, totalItems, totalPrice));
         } else {
             floatingCartPanel.setVisibility(android.view.View.GONE);
         }
