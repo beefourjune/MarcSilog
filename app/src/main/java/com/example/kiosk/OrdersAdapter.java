@@ -44,10 +44,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         Order order = orders.get(position);
 
-        // ✅ Order ID display
         String displayId = order.getId() != null ? order.getId() : "UNKNOWN";
-
-        // ✅ Firebase key fallback safety
         String key = order.getFirebaseKey();
         if (key == null || key.isEmpty()) {
             key = displayId;
@@ -55,29 +52,26 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
 
         final String firebaseKey = key;
 
-        // ✅ Build items text
         StringBuilder itemsText = new StringBuilder();
-
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
                 itemsText.append("• ")
                         .append(item.name)
                         .append(" x")
                         .append(item.quantity)
-                        .append(" - ₱")
-                        .append(item.price * item.quantity)
                         .append("\n");
             }
         } else {
             itemsText.append("No items");
         }
 
-        // ✅ Display order details
+        // ✅ ADDED: Display order type (DINE IN / TAKE OUT)
+        String type = order.getOrderType() != null ? order.getOrderType() : "TAKE OUT";
+
         holder.orderText.setText(
-                "Order ID: " + displayId + "\n\nItems:\n" + itemsText
+                "Order ID: " + displayId + " (" + type + ")\n\nItems:\n" + itemsText
         );
 
-        // ✅ BUTTON: Send to Kitchen (PREPARE)
         holder.btnPrepare.setOnClickListener(v -> {
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
@@ -103,7 +97,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         return orders.size();
     }
 
-    // ================= VIEW HOLDER =================
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView orderText;

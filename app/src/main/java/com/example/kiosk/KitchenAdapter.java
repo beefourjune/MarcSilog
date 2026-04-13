@@ -62,7 +62,10 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
             itemsText.append("No items");
         }
 
-        holder.orderText.setText("Order ID: " + orderId + "\n\nItems:\n" + itemsText);
+        // ✅ ADDED: Display order type (DINE IN / TAKE OUT)
+        String type = order.getOrderType() != null ? order.getOrderType() : "TAKE OUT";
+
+        holder.orderText.setText("Order ID: " + orderId + " (" + type + ")\n\nItems:\n" + itemsText);
 
         // ✅ CHANGE BUTTON TO COMPLETE
         holder.btnAction.setText("Complete");

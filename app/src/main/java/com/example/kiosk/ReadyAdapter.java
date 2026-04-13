@@ -53,7 +53,10 @@ public class ReadyAdapter extends RecyclerView.Adapter<ReadyAdapter.ViewHolder> 
             itemsText.append("No items");
         }
 
-        holder.orderText.setText("Order ID: " + displayId + "\n" + itemsText);
+        // ✅ ADDED: Display order type (DINE IN / TAKE OUT)
+        String type = order.getOrderType() != null ? order.getOrderType() : "TAKE OUT";
+
+        holder.orderText.setText("Order ID: " + displayId + " (" + type + ")\n" + itemsText);
 
         // ✅ CHANGE BUTTON TO "SERVE" or "READY" as requested
         // The user mentioned "ready button" but also "Serve" is in the XML.
