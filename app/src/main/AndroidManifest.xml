@@ -28,16 +28,16 @@
             android:name=".CartActivity"
             android:exported="false" />
 
-        <activity android:name=".AddOnsActivity" />
-        <activity android:name=".PaymentActivity" />
-        <activity android:name=".AdminDashboard" />
-        <activity android:name=".SilogActivity" />
-        <activity android:name=".PastilActivity" />
-        <activity android:name=".ShawarmaActivity" />
-        <activity android:name=".SizzlingActivity" />
-        <activity android:name=".SSDActivity" />
-        <activity android:name=".DrinksActivity" />
-        <activity android:name=".OrderReceivedActivity" />
+        <activity android:name=".AddOnsActivity" android:exported="false"/>
+        <activity android:name=".PaymentActivity" android:exported="false"/>
+        <activity android:name=".AdminDashboard" android:exported="false"/>
+        <activity android:name=".SilogActivity" android:exported="false"/>
+        <activity android:name=".PastilActivity" android:exported="false"/>
+        <activity android:name=".ShawarmaActivity" android:exported="false"/>
+        <activity android:name=".SizzlingActivity" android:exported="false"/>
+        <activity android:name=".SSDActivity" android:exported="false"/>
+        <activity android:name=".DrinksActivity" android:exported="false"/>
+        <activity android:name=".OrderReceivedActivity" android:exported="false"/>
 
 
 

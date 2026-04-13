@@ -72,7 +72,7 @@ public class MainMenu extends AppCompatActivity {
 
         refreshCartInfo();
     }
-
+    public static String orderType;
     public void refreshCartUI() {
         refreshCartInfo();
     }

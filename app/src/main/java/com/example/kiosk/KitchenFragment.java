@@ -23,6 +23,8 @@ public class KitchenFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private KitchenAdapter adapter;
+    private List<Order> kitchenList;
+
     private DatabaseReference ordersRef;
 
     public KitchenFragment() {}
@@ -31,12 +33,14 @@ public class KitchenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        // ✅ KEEPING YOUR ORIGINAL LAYOUT
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
         recyclerView = view.findViewById(R.id.menuRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new KitchenAdapter(new ArrayList<>());
+        kitchenList = new ArrayList<>();
+        adapter = new KitchenAdapter(kitchenList);
         recyclerView.setAdapter(adapter);
 
         ordersRef = FirebaseDatabase.getInstance().getReference("orders");
@@ -53,33 +57,40 @@ public class KitchenFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                List<Order> kitchenList = new ArrayList<>();
+                kitchenList.clear(); // ✅ prevents duplicates
 
                 for (DataSnapshot snap : snapshot.getChildren()) {
 
                     Order order = snap.getValue(Order.class);
 
-                    if (order == null) continue;
+                    if (order != null) {
 
-                    // 🔥 IMPORTANT
-                    order.setId(snap.getKey());
+                        // ✅ VERY IMPORTANT (for Complete button later)
+                        order.setFirebaseKey(snap.getKey());
 
-                    if (order.getItems() == null) {
-                        order.setItems(new ArrayList<>());
-                    }
+                        // ✅ Ensure ID exists (for display)
+                        if (order.getId() == null || order.getId().isEmpty()) {
+                            order.setId(snap.getKey());
+                        }
 
-                    // 🔥 FILTER ONLY KITCHEN ORDERS
-                    if (order.isInKitchen() && !order.isCompleted()) {
-                        kitchenList.add(order);
+                        // ✅ Avoid null items crash
+                        if (order.getItems() == null) {
+                            order.setItems(new ArrayList<>());
+                        }
+
+                        // ✅ FILTER: ONLY preparing orders
+                        if ("preparing".equals(order.getStatus())) {
+                            kitchenList.add(order);
+                        }
                     }
                 }
 
-                adapter.setOrders(kitchenList);
+                adapter.notifyDataSetChanged(); // ✅ refresh UI
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // optional: handle error
+                // optional error handling
             }
         });
     }

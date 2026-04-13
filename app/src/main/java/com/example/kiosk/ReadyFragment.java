@@ -15,23 +15,34 @@ public class ReadyFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ReadyAdapter adapter;
-    private ArrayList<String> usersList;
+    private ArrayList<Order> usersList = new ArrayList<>();
 
     public ReadyFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_users, container, false);
 
         recyclerView = view.findViewById(R.id.usersRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Sample users
-        usersList = new ArrayList<>();
-        usersList.add("John Doe - admin");
-        usersList.add("Jane Smith - user");
-        usersList.add("Mark Lee - user");
+        // SAMPLE DATA (for testing only)
+        Order o1 = new Order();
+        o1.setId("0001");
+        o1.setOrderType("DINE IN");
+        o1.setStatus("ready");
+        o1.setItems(new ArrayList<>());
+
+        Order o2 = new Order();
+        o2.setId("0002");
+        o2.setOrderType("TAKE OUT");
+        o2.setStatus("ready");
+        o2.setItems(new ArrayList<>());
+
+        usersList.add(o1);
+        usersList.add(o2);
 
         adapter = new ReadyAdapter(usersList);
         recyclerView.setAdapter(adapter);

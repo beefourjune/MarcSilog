@@ -1,6 +1,16 @@
 <resources>
+
     <string name="app_name">Kiosk</string>
-    <string name="title_activity_start_order">StartOrder_activity</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- CART -->
+    <string name="cart_item_quantity">%1$s x%2$d</string>
+    <string name="price_format">₱%d</string>
+    <string name="total_price_format">Total: ₱%d</string>
+
+    <!-- PAYMENT -->
+    <string name="no_items_to_pay">No items to pay</string>
+    <string name="failed_generate_key">Failed to generate order key</string>
+    <string name="order_failed">Order failed: %1$s</string>
+    <string name="title_activity_start_order">Start Order</string>
+
 </resources>

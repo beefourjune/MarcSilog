@@ -45,34 +45,31 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         Order order = orders.get(position);
 
         String displayId = order.getId() != null ? order.getId() : "UNKNOWN";
-
-        // ✅ FIX: ensure firebase key is FINAL for lambda
         String key = order.getFirebaseKey();
-
         if (key == null || key.isEmpty()) {
-            key = displayId; // fallback
+            key = displayId;
         }
 
-        final String firebaseKey = key; // 🔥 REQUIRED for lambda
+        final String firebaseKey = key;
 
         StringBuilder itemsText = new StringBuilder();
-
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
                 itemsText.append("• ")
                         .append(item.name)
                         .append(" x")
                         .append(item.quantity)
-                        .append(" - ₱")
-                        .append(item.price * item.quantity)
                         .append("\n");
             }
         } else {
             itemsText.append("No items");
         }
 
+        // ✅ ADDED: Display order type (DINE IN / TAKE OUT)
+        String type = order.getOrderType() != null ? order.getOrderType() : "TAKE OUT";
+
         holder.orderText.setText(
-                "Order ID: " + displayId + "\n\nItems:\n" + itemsText
+                "Order ID: " + displayId + " (" + type + ")\n\nItems:\n" + itemsText
         );
 
         holder.btnPrepare.setOnClickListener(v -> {
@@ -81,10 +78,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     .getReference("orders")
                     .child(firebaseKey);
 
-            ref.child("inKitchen").setValue(true)
+            ref.child("status").setValue("preparing")
                     .addOnSuccessListener(unused ->
                             Toast.makeText(v.getContext(),
-                                    "Moved to Kitchen",
+                                    "Sent to Kitchen",
                                     Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->

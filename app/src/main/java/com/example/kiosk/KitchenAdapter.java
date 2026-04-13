@@ -32,23 +32,22 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+        // 🔥 Using item_menu.xml as per your project structure for Kitchen
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_order, parent, false); // reuse same layout
-
+                .inflate(R.layout.item_menu, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Order order = orders.get(position);
 
-        String orderId = (order.getId() != null) ? order.getId() : "UNKNOWN";
+        String orderId = order.getId();
+        if (orderId == null || orderId.isEmpty()) {
+            orderId = "UNKNOWN";
+        }
 
-        // 🔥 BUILD ITEMS TEXT
         StringBuilder itemsText = new StringBuilder();
-
         if (order.getItems() != null && !order.getItems().isEmpty()) {
             for (CartItem item : order.getItems()) {
                 itemsText.append("• ")
@@ -63,29 +62,32 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
             itemsText.append("No items");
         }
 
-        holder.orderText.setText(
-                "Order ID: " + orderId + "\n\nItems:\n" + itemsText.toString()
-        );
+        // ✅ ADDED: Display order type (DINE IN / TAKE OUT)
+        String type = order.getOrderType() != null ? order.getOrderType() : "TAKE OUT";
 
-        // 🔥 CHANGE BUTTON TEXT TO COMPLETE
+        holder.orderText.setText("Order ID: " + orderId + " (" + type + ")\n\nItems:\n" + itemsText);
+
+        // ✅ CHANGE BUTTON TO COMPLETE
         holder.btnAction.setText("Complete");
+        holder.btnAction.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF4CAF50)); // Green
 
         holder.btnAction.setOnClickListener(v -> {
+            String firebaseKey = order.getFirebaseKey();
+            if (firebaseKey == null || firebaseKey.isEmpty()) {
+                Toast.makeText(v.getContext(), "Invalid Firebase Key", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             DatabaseReference ref = FirebaseDatabase.getInstance()
                     .getReference("orders")
-                    .child(order.getId());
+                    .child(firebaseKey);
 
-            ref.child("completed").setValue(true)
+            ref.child("status").setValue("completed")
                     .addOnSuccessListener(unused ->
-                            Toast.makeText(v.getContext(),
-                                    "Order Completed",
-                                    Toast.LENGTH_SHORT).show()
+                            Toast.makeText(v.getContext(), "Order Completed", Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->
-                            Toast.makeText(v.getContext(),
-                                    "Failed: " + e.getMessage(),
-                                    Toast.LENGTH_SHORT).show()
+                            Toast.makeText(v.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                     );
         });
     }
@@ -96,15 +98,14 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView orderText;
         Button btnAction;
 
         ViewHolder(View itemView) {
             super(itemView);
-
-            orderText = itemView.findViewById(R.id.orderText);
-            btnAction = itemView.findViewById(R.id.prepareBtn); // reuse button
+            // 🔥 Match IDs in item_menu.xml
+            orderText = itemView.findViewById(R.id.menuText);
+            btnAction = itemView.findViewById(R.id.prepareBtn);
         }
     }
 }

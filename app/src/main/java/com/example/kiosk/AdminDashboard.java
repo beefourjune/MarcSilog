@@ -64,9 +64,14 @@ public class AdminDashboard extends AppCompatActivity {
         loadOrders();
         loadProducts();
 
+        // ✔ TAB SETUP
         String[] tabs = {"Orders", "Kitchen", "Ready"};
 
-        AdminPagerAdapter adapter = new AdminPagerAdapter(this, tabs.length);
+        viewPager.setOffscreenPageLimit(3);
+
+        AdminPagerAdapter adapter =
+                new AdminPagerAdapter(AdminDashboard.this, tabs.length);
+
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager,
@@ -88,26 +93,31 @@ public class AdminDashboard extends AppCompatActivity {
                 for (DataSnapshot snap : snapshot.getChildren()) {
 
                     Order order = snap.getValue(Order.class);
-
                     if (order == null) continue;
 
-                    // 🔥 IMPORTANT: REAL FIREBASE KEY
                     order.setFirebaseKey(snap.getKey());
 
-                    // display ID fallback (if null)
                     if (order.getId() == null) {
-                        order.setId(snap.getKey().substring(0, Math.min(4, snap.getKey().length())));
+                        order.setId(snap.getKey().substring(0,
+                                Math.min(4, snap.getKey().length())));
                     }
 
-                    // FIX NULL ITEMS
                     if (order.getItems() == null) {
                         order.setItems(new ArrayList<>());
                     }
 
                     orderList.add(order);
 
-                    if (!order.isCompleted()) pending++;
-                    if (order.isInKitchen()) kitchen++;
+                    // ✔ NEW SYSTEM (STATUS-BASED)
+                    String status = order.getStatus();
+
+                    if ("pending".equals(status)) {
+                        pending++;
+                    }
+
+                    if ("preparing".equals(status)) {
+                        kitchen++;
+                    }
                 }
 
                 pendingNumber.setText(String.valueOf(pending));
