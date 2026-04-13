@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -44,40 +42,35 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = sizzlingList.get(position);
-
         holder.sizzlingName.setText(product.getName());
-
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
     private void addToCart(Product product) {
+        boolean found = false;
 
-        CartItem cartItem = new CartItem(
-                product.getName(),
-                product.getPrice(),
-                R.drawable.sisig, // or product image if you have it
-                1
-        );
-
-        MainMenu.cartList.add(cartItem);
-
-        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart");
-        String cartItemKey = cartRef.push().getKey();
-
-        if (cartItemKey != null) {
-            cartRef.child(cartItemKey).setValue(cartItem)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(
-                                context,
-                                product.getName() + " added to cart",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        if (listener != null) {
-                            listener.onCartUpdated();
-                        }
-                    });
+        for (CartItem item : MainMenu.cartList) {
+            if (item.name != null && item.name.equals(product.getName())) {
+                item.quantity++;
+                found = true;
+                break;
+            }
         }
+
+        if (!found) {
+            int imageId = product.getImageResId() != 0 ? product.getImageResId() : R.drawable.sisig;
+            MainMenu.cartList.add(new CartItem(product.getName(), product.getPrice(), imageId));
+        }
+
+        if (listener != null) {
+            listener.onCartUpdated();
+        }
+
+        String message = found ? 
+            product.getName() + " quantity updated" : 
+            product.getName() + " added to cart";
+
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -86,13 +79,11 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView sizzlingName;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             sizzlingName = itemView.findViewById(R.id.sizzlingName);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }

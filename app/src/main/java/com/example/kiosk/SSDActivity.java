@@ -100,26 +100,33 @@ public class SSDActivity extends AppCompatActivity {
         }
     }
 
-    // ================= FLOATING CART (SILOG STYLE FIX) =================
+    // ================= FLOATING CART (FIXED UNIQUE COUNT) =================
     private void updateFloatingCart() {
 
-        int totalItems = 0;
+        int uniqueItems = MainMenu.cartList.size();
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
             totalPrice += item.price * item.quantity;
         }
 
-        if (totalItems > 0) {
+        if (floatingCartPanel == null) return;
+
+        if (uniqueItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+            cartInfoTextUpdate(uniqueItems, totalPrice);
         } else {
             floatingCartPanel.setVisibility(android.view.View.GONE);
         }
     }
 
-    // ================= CATEGORY BUTTONS =================
+    private void cartInfoTextUpdate(int items, int price) {
+        if (cartItemCount != null) {
+             cartItemCount.setText(getString(R.string.cart_items_format, items, price));
+        }
+    }
+
+    // ================= CATEGORY NAVIGATION =================
     private void setupCategoryButtons() {
 
         silogBtn = findViewById(R.id.silogBtn);

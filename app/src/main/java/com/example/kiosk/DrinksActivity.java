@@ -95,24 +95,23 @@ public class DrinksActivity extends AppCompatActivity {
             ssdBtn.setOnClickListener(v -> startActivity(new Intent(this, SSDActivity.class)));
     }
 
-    // ================= FLOATING CART FIX =================
+    // ================= FLOATING CART FIX (UNIQUE COUNT) =================
     private void updateFloatingCart() {
-
-        int totalItems = 0;
-        int totalPrice = 0;
 
         if (MainMenu.cartList == null) return;
 
+        int uniqueItems = MainMenu.cartList.size();
+        int totalPrice = 0;
+
         for (CartItem item : MainMenu.cartList) {
-            totalItems += item.getQuantity(); // FIXED
-            totalPrice += item.getPrice() * item.getQuantity(); // FIXED
+            totalPrice += item.getPrice() * item.getQuantity();
         }
 
         if (floatingCartPanel == null) return;
 
-        if (totalItems > 0) {
+        if (uniqueItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(totalItems + " items - ₱" + totalPrice);
+            cartItemCount.setText(getString(R.string.cart_items_format, uniqueItems, totalPrice));
         } else {
             floatingCartPanel.setVisibility(android.view.View.GONE);
         }

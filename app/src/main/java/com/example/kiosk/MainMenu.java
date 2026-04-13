@@ -41,7 +41,7 @@ public class MainMenu extends AppCompatActivity {
 
     // --- Category buttons ---
     private ImageButton silogBtn, pastilBtn, shawarmaBtn, sizzlingBtn, ssdBtn, drinkBtn;
-    private MaterialButton orderNowBtn, cartBtn, backBtn;
+    private MaterialButton backBtn, cartBtn;
 
     // --- Add to cart ---
     private MaterialButton addBaconBtn, addTapBtn, addTosilogBtn, addBurgerBtn, addShawarmaBtn,
@@ -162,7 +162,8 @@ public class MainMenu extends AppCompatActivity {
                 row.setPadding(20, 20, 20, 20);
 
                 TextView tv = new TextView(MainMenu.this);
-                tv.setText(name + " - ₱" + price);
+                tv.setText(getString(R.string.price_format, price));
+                tv.setText(name + " - " + tv.getText());
                 tv.setLayoutParams(new LinearLayout.LayoutParams(
                         0,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -185,7 +186,7 @@ public class MainMenu extends AppCompatActivity {
 
         if (!found) {
             TextView empty = new TextView(MainMenu.this);
-            empty.setText("No products found");
+            empty.setText(R.string.no_products_found);
             empty.setPadding(20, 20, 20, 20);
             productContainer.addView(empty);
         }
@@ -226,36 +227,40 @@ public class MainMenu extends AppCompatActivity {
     // ================= CART =================
     private void addItemToCart(String name, int price, int imageResId) {
 
+        boolean found = false;
         for (CartItem item : cartList) {
             if (item.name != null && item.name.equals(name)) {
                 item.quantity++;
-                refreshCartInfo();
-                showToast(name + " quantity increased");
-                return;
+                found = true;
+                break;
             }
         }
 
-        cartList.add(new CartItem(name, price, imageResId));
+        if (!found) {
+            cartList.add(new CartItem(name, price, imageResId));
+        }
+
         refreshCartInfo();
-        showToast(name + " added to cart");
+        
+        String message = found ? name + " quantity increased" : name + " added to cart";
+        showToast(message);
     }
 
     private void refreshCartInfo() {
 
-        int totalItems = 0;
+        int uniqueItems = cartList.size(); // Count of unique dishes
         int totalPrice = 0;
 
         for (CartItem item : cartList) {
-            totalItems += item.quantity;
-            totalPrice += item.price * item.quantity;
+            totalPrice += item.price * item.quantity; // Sum of all items with their quantities
         }
 
         if (cartInfo != null) {
-            if (totalItems > 0) {
-                cartInfo.setText(totalItems + " items - ₱" + totalPrice);
+            if (uniqueItems > 0) {
+                cartInfo.setText(getString(R.string.cart_items_format, uniqueItems, totalPrice));
                 cartPanel.setVisibility(View.VISIBLE);
             } else {
-                cartInfo.setText("Cart is empty");
+                cartInfo.setText(R.string.cart_empty);
                 cartPanel.setVisibility(View.GONE);
             }
         }

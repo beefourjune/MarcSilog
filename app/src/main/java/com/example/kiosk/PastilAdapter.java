@@ -22,9 +22,6 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
     private final List<Product> pastils;
     private final CartUpdateListener cartUpdateListener;
 
-    private FragmentManager fragmentManager;
-
-
     public interface CartUpdateListener {
         void onCartUpdated();
     }
@@ -33,9 +30,7 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
         this.context = context;
         this.pastils = pastils;
         this.cartUpdateListener = listener;
-        this.fragmentManager = fragmentManager;
     }
-
 
     @NonNull
     @Override
@@ -50,32 +45,35 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
         holder.pastilName.setText(product.getName());
 
         holder.addToCartBtn.setOnClickListener(v -> {
-
             FlavorFragment flavorFragment = new FlavorFragment();
-
             flavorFragment.setFlavorListener(flavor -> {
+                String fullName = product.getName() + " (" + flavor + ")";
+                boolean found = false;
 
-                MainMenu.cartList.add(
-                        new CartItem(
-                                product.getName() + " (" + flavor + ")",
-                                product.getPrice(),
-                                product.getImageResId()
-                        )
-                );
+                for (CartItem item : MainMenu.cartList) {
+                    if (item.name != null && item.name.equals(fullName)) {
+                        item.quantity++;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    MainMenu.cartList.add(new CartItem(fullName, product.getPrice(), product.getImageResId()));
+                }
 
                 if (cartUpdateListener != null)
                     cartUpdateListener.onCartUpdated();
 
-                Toast.makeText(context,
-                        product.getName() + " - " + flavor + " added to cart",
-                        Toast.LENGTH_SHORT).show();
+                String message = found ? 
+                    fullName + " quantity updated" : 
+                    fullName + " added to cart";
+
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             });
 
             flavorFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), "flavor");
         });
-
-
-
     }
 
     @Override
@@ -93,7 +91,4 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }
-
-
-
 }

@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.ImageView; // ✅ added
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +21,6 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
     private final List<Product> silogs;
     private final CartUpdateListener cartUpdateListener;
 
-    // Listener interface to notify activity when cart changes
     public interface CartUpdateListener {
         void onCartUpdated();
     }
@@ -43,26 +42,40 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = silogs.get(position);
         holder.silogName.setText(product.getName());
-
-
-        // ✅ added (image binding)
         holder.silogImage.setImageResource(product.getImageResId());
-        holder.silogPrice.setText("₱" + product.getPrice());
+        holder.silogPrice.setText(context.getString(R.string.price_format, product.getPrice()));
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
     private void addToCart(Product product) {
-        // Add product to static MainMenu cart list
-        MainMenu.cartList.add(new CartItem(product.getName(), product.getPrice(), product.getImageResId()));
+        boolean found = false;
+        
+        // Check if item already exists in the cart
+        for (CartItem item : MainMenu.cartList) {
+            if (item.name != null && item.name.equals(product.getName())) {
+                item.quantity++; // Increase quantity instead of adding a new entry
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            // Add new product to static MainMenu cart list
+            MainMenu.cartList.add(new CartItem(product.getName(), product.getPrice(), product.getImageResId()));
+        }
 
         // Notify activity to update floating panel
         if (cartUpdateListener != null) {
             cartUpdateListener.onCartUpdated();
         }
 
-        // Toast confirmation
-        Toast.makeText(context, product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+        // Confirmation toast
+        String message = found ? 
+            product.getName() + " quantity updated" : 
+            product.getName() + " added to cart";
+            
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -78,7 +91,7 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             silogName = itemView.findViewById(R.id.silogName);
-            silogPrice = itemView.findViewById(R.id.silogPrice); // ✅ FIXED
+            silogPrice = itemView.findViewById(R.id.silogPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
             silogImage = itemView.findViewById(R.id.silogImage);
         }

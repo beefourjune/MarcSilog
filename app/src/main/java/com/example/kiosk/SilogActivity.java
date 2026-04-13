@@ -112,19 +112,18 @@ public class SilogActivity extends AppCompatActivity {
     // ================= FLOATING CART =================
     private void updateFloatingCart() {
 
-        int totalItems = 0;
+        int uniqueItems = MainMenu.cartList.size();
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems += item.quantity;
             totalPrice += item.price * item.quantity;
         }
 
         if (floatingCartPanel == null) return;
 
-        if (totalItems > 0) {
+        if (uniqueItems > 0) {
             floatingCartPanel.setVisibility(android.view.View.VISIBLE);
-            cartItemCount.setText(getString(R.string.cart_items_format, totalItems, totalPrice));
+            cartItemCount.setText(getString(R.string.cart_items_format, uniqueItems, totalPrice));
         } else {
             floatingCartPanel.setVisibility(android.view.View.GONE);
         }
