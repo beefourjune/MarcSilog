@@ -82,31 +82,13 @@ public class PastilActivity extends AppCompatActivity {
 
     // --- Add Pastil products ---
     private void addPastilProducts() {
-        DatabaseReference pastilRef = FirebaseDatabase.getInstance()
-                .getReference("categories/pastil");
 
-        String[][] pastils = {
-                {"pastil_plain", "Pastil"},
-                {"pastil_rice", "Pastil w/ Rice"},
-                {"pastil_double_rice", "Pastil Double Rice"},
-                {"double_pastil", "Double Pastil"},
-                {"pastilog", "Pastilog"}
-        };
+        pastilList.add(new Product("Pastil", 15, 10, R.drawable.pastil, "Pastil", "Plain Pastil"));
+        pastilList.add(new Product("Pastil w/ Rice", 30, 10, R.drawable.pastilwithrice, "Pastil", "w/ rice"));
+        pastilList.add(new Product("Pastil Double Rice", 40, 10, R.drawable.doublepastil, "Pastil", "Double rice"));
+        pastilList.add(new Product("Double Pastil", 50, 10, R.drawable.doublepastil, "Pastil", "double pastil"));
+        pastilList.add(new Product("Pastilog", 40, 10, R.drawable.pastilog, "Pastil", "w/ egg"));
 
-        int defaultPrice = 100;
-        int defaultStock = 10;
-
-        for (String[] item : pastils) {
-            String key = item[0];
-            String name = item[1];
-            Product product = new Product(name, defaultPrice, defaultStock);
-
-            // Add to Firebase
-            pastilRef.child(key).setValue(product);
-
-            // Add to local list
-            pastilList.add(product);
-        }
     }
 
     // --- Update floating cart panel ---
@@ -116,8 +98,8 @@ public class PastilActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {

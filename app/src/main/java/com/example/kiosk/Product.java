@@ -6,18 +6,21 @@ public class Product {
     private int price;
     private int stock;
     private int imageResId;
+
+    public String description;
     private String category; // ✅ NEW
 
     // Default constructor (REQUIRED for Firebase)
     public Product() {}
 
     // Full constructor (recommended)
-    public Product(String name, int price, int stock, int imageResId, String category) {
+    public Product(String name, int price, int stock, int imageResId, String category, String description) {
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.imageResId = imageResId;
         this.category = category;
+        this.description = description;
     }
 
     // Old constructor (kept for compatibility)
@@ -45,10 +48,16 @@ public class Product {
     public int getImageResId() { return imageResId; }
     public String getCategory() { return category; } // ✅ NEW
 
+    public String getDescription() {
+        return description;
+    }
+
     // --- Setters ---
     public void setName(String name) { this.name = name; }
     public void setPrice(int price) { this.price = price; }
     public void setStock(int stock) { this.stock = stock; }
     public void setImageResId(int imageResId) { this.imageResId = imageResId; }
-    public void setCategory(String category) { this.category = category; } // ✅ NEW
+    public void setCategory(String category) { this.category = category; } //
+    public void setDescription(String description) { this.description = description; }
+    // ✅ NEW
 }

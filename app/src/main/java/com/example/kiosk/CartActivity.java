@@ -53,7 +53,7 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.CartL
 
         orderBtn.setOnClickListener(v -> {
             if (!cartList.isEmpty()) {
-                startActivity(new Intent(CartActivity.this, PaymentActivity.class));
+                startActivity(new Intent(CartActivity.this, AddOnsActivity.class));
             } else {
                 Toast.makeText(this, "Cart is empty!", Toast.LENGTH_SHORT).show();
             }

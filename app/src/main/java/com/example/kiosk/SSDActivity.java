@@ -135,8 +135,8 @@ public class SSDActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {
@@ -148,28 +148,56 @@ public class SSDActivity extends AppCompatActivity {
     }
 
     private void addSSDProducts() {
+
         DatabaseReference ssdRef = FirebaseDatabase.getInstance()
                 .getReference("categories/ssd");
 
-        String[][] items = {
-                {"siomai_rice_4pcs", "Siomai Rice (4 pcs)"},
-                {"big_siomai_rice_3pcs", "Big Siomai Rice (3 pcs)"},
-                {"dumpling_rice_3pcs", "Dumpling Rice (3 pcs)"},
-                {"jumbo_siopao", "Jumbo Siopao"}
-        };
-
-        int defaultPrice = 90;
         int defaultStock = 10;
 
-        for (String[] item : items) {
-            Product product = new Product(
-                    item[1],
-                    defaultPrice,
-                    defaultStock
-            );
+        Product siomaiRice = new Product(
+                "Siomai Rice",
+                25,
+                defaultStock,
+                R.drawable.siomairice,
+                "SSD",
+                "4 pcs"
+        );
 
-            ssdRef.child(item[0]).setValue(product);
-            ssdList.add(product);
-        }
+        Product bigSiomai = new Product(
+                "Big Siomai Rice",
+                40,
+                defaultStock,
+                R.drawable.bigsiomairice,
+                "SSD",
+                "3 pcs"
+        );
+
+        Product dumpling = new Product(
+                "Dumpling Rice",
+                30,
+                defaultStock,
+                R.drawable.dumplingrice,
+                "SSD",
+                "3 pcs"
+        );
+
+        Product siopao = new Product(
+                "Jumbo Siopao",
+                25,
+                defaultStock,
+                R.drawable.jumbosiopao,
+                "SSD",
+                "3 pcs"
+        );
+
+        ssdRef.child("siomai_rice_4pcs").setValue(siomaiRice);
+        ssdRef.child("big_siomai_rice_3pcs").setValue(bigSiomai);
+        ssdRef.child("dumpling_rice_3pcs").setValue(dumpling);
+        ssdRef.child("jumbo_siopao").setValue(siopao);
+
+        ssdList.add(siomaiRice);
+        ssdList.add(bigSiomai);
+        ssdList.add(dumpling);
+        ssdList.add(siopao);
     }
 }

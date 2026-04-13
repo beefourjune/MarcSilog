@@ -98,14 +98,57 @@ public class SilogActivity extends AppCompatActivity {
         int defaultStock = 10;
 
         for (String[] item : silogs) {
+
             String key = item[0];
             String name = item[1];
-            Product product = new Product(name, defaultPrice, defaultStock);
 
-            // Add to Firebase (optional overwrite)
+            int price = 120; // default fallback
+
+            switch (key) {
+                case "hotdog_silog": price = 40; break;
+                case "ham_silog": price = 40; break;
+                case "bologna_silog": price = 45; break;
+                case "longanisa_silog": price = 40; break;
+                case "burger_silog": price = 40; break;
+                case "bbq_silog": price = 50; break;
+                case "chicken_silog": price = 60; break;
+                case "pork_silog": price = 65; break;
+                case "tapa_silog": price = 65; break;
+                case "tocino_silog": price = 60; break;
+                case "sisig_silog": price = 65; break;
+                case "hungarian_silog": price = 55; break;
+            }
+
+            int imageRes;
+
+            switch (key) {
+                case "hotdog_silog": imageRes = R.drawable.hotsilog; break;
+                case "ham_silog": imageRes = R.drawable.hamsilog; break;
+                case "bologna_silog": imageRes = R.drawable.bologna_silog; break;
+                case "longanisa_silog": imageRes = R.drawable.longanisa_silog; break;
+                case "burger_silog": imageRes = R.drawable.burger_silog; break;
+                case "bbq_silog": imageRes = R.drawable.bbq_silog; break;
+                case "chicken_silog": imageRes = R.drawable.chicken_silog; break;
+                case "pork_silog": imageRes = R.drawable.pork_silog; break;
+                case "tapa_silog": imageRes = R.drawable.tapsilog; break;
+                case "tocino_silog": imageRes = R.drawable.tosilog; break;
+                case "sisig_silog": imageRes = R.drawable.sisig; break;
+                case "hungarian_silog": imageRes = R.drawable.hungarian; break;
+
+                default:
+                    imageRes = R.drawable.baconsilog; // fallback
+                    break;
+            } // or your mapping
+
+            String description;
+
+            description = " Unli soup!";
+
+
+
+            Product product = new Product(name, price, defaultStock, imageRes, "Silog", description);
+
             silogRef.child(key).setValue(product);
-
-            // Add to local list
             silogList.add(product);
         }
     }
@@ -117,8 +160,8 @@ public class SilogActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {

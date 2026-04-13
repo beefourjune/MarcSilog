@@ -28,6 +28,7 @@
             android:name=".CartActivity"
             android:exported="false" />
 
+        <activity android:name=".AddOnsActivity" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".AdminDashboard" />
         <activity android:name=".SilogActivity" />

@@ -40,20 +40,7 @@
                 app:iconSize="25dp"
                 app:iconTint="#B73B28"/>
 
-            <EditText
-                android:id="@+id/searchBar"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/rounded_edittext"
-                android:hint="Search food..."
-                android:padding="10dp"
-                android:textSize="15sp"
-                android:elevation="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
 
         </LinearLayout>
 
@@ -61,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:padding="0dp">
+            android:paddingStart="10dp">
 
 
 
@@ -112,7 +99,7 @@
                         android:id="@+id/pastilBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/pastil"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -141,7 +128,7 @@
                         android:layout_width="100dp"
                         android:id="@+id/shawarmaBtn"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/shawarmarice"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -170,7 +157,7 @@
                         android:id="@+id/sizzlingBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/sisig"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -199,7 +186,7 @@
                         android:id="@+id/ssdBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/jumbosiopao"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"
@@ -228,7 +215,7 @@
                         android:id="@+id/drinkBtn"
                         android:layout_width="100dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/baconsilog"
+                        android:src="@drawable/juice"
                         android:backgroundTint="@color/black"
                         android:paddingTop="30dp"
                         android:background="@drawable/rounded_button"

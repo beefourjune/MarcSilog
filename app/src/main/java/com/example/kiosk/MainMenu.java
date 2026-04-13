@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -107,6 +108,7 @@ public class MainMenu extends AppCompatActivity {
     private void searchFirebaseProducts(String query) {
 
         productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -126,31 +128,24 @@ public class MainMenu extends AppCompatActivity {
 
                         found = true;
 
-                        LinearLayout row = new LinearLayout(MainMenu.this);
-                        row.setOrientation(LinearLayout.HORIZONTAL);
-                        row.setPadding(20, 20, 20, 20);
-
-                        TextView tv = new TextView(MainMenu.this);
-                        tv.setText(name + " - ₱" + price);
-                        tv.setLayoutParams(new LinearLayout.LayoutParams(
-                                0,
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                1
-                        ));
-
-                        MaterialButton addBtn = new MaterialButton(MainMenu.this);
-                        addBtn.setText("Add");
-
-                        String finalName = name;
-                        int finalPrice = price;
-                        int finalImage = imageResId;
-
-                        addBtn.setOnClickListener(v ->
-                                addItemToCart(finalName, finalPrice, finalImage)
+                        View row = getLayoutInflater().inflate(
+                                R.layout.item_search_product,
+                                productContainer,
+                                false
                         );
 
-                        row.addView(tv);
-                        row.addView(addBtn);
+                        ImageView img = row.findViewById(R.id.searchImg);
+                        TextView nameTxt = row.findViewById(R.id.searchName);
+                        TextView priceTxt = row.findViewById(R.id.searchPrice);
+                        MaterialButton addBtn = row.findViewById(R.id.searchAddBtn);
+
+                        nameTxt.setText(name);
+                        priceTxt.setText("₱" + price);
+                        img.setImageResource(imageResId);
+
+                        addBtn.setOnClickListener(v ->
+                                addItemToCart(name, price, imageResId)
+                        );
 
                         productContainer.addView(row);
                     }
@@ -178,15 +173,15 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                addProductIfMissing(snapshot, "BaconSilog", 120, 10, R.drawable.baconsilog);
-                addProductIfMissing(snapshot, "TapSilog", 60, 8, R.drawable.tapsilog);
-                addProductIfMissing(snapshot, "ToSilog", 80, 5, R.drawable.tosilog);
-                addProductIfMissing(snapshot, "BurgerSteak", 75, 6, R.drawable.burgersteak);
-                addProductIfMissing(snapshot, "Shawarma", 85, 7, R.drawable.shawarmacute);
-                addProductIfMissing(snapshot, "Siomai", 50, 12, R.drawable.siomairice);
-                addProductIfMissing(snapshot, "BigSiomai", 70, 10, R.drawable.bigsiomairice);
-                addProductIfMissing(snapshot, "Dumpling", 60, 8, R.drawable.dumplingrice);
-                addProductIfMissing(snapshot, "JumboSiopao", 45, 15, R.drawable.jumbosiopao);
+                addProductIfMissing(snapshot, "BaconSilog", 45, 10, R.drawable.baconsilog);
+                addProductIfMissing(snapshot, "TapSilog", 45, 8, R.drawable.tapsilog);
+                addProductIfMissing(snapshot, "ToSilog", 39, 5, R.drawable.tosilog);
+                addProductIfMissing(snapshot, "BurgerSteak", 25, 6, R.drawable.burgersteak);
+                addProductIfMissing(snapshot, "Shawarma", 25, 7, R.drawable.shawarmacute);
+                addProductIfMissing(snapshot, "Siomai", 25, 12, R.drawable.siomairice);
+                addProductIfMissing(snapshot, "BigSiomai", 40, 10, R.drawable.bigsiomairice);
+                addProductIfMissing(snapshot, "Dumpling", 30, 8, R.drawable.dumplingrice);
+                addProductIfMissing(snapshot, "JumboSiopao", 25, 15, R.drawable.jumbosiopao);
             }
 
             @Override
@@ -204,9 +199,22 @@ public class MainMenu extends AppCompatActivity {
     }
 
     // ================= CART =================
-    private void addItemToCart(String name, int price, int imageResId) {
-        cartList.add(new CartItem(name, price, imageResId));
-        if (cartPanel.getVisibility() == View.GONE) cartPanel.setVisibility(View.VISIBLE);
+    public void addItemToCart(String name, int price, int imageResId) {
+
+        boolean found = false;
+
+        for (CartItem item : cartList) {
+            if (item.name.equals(name)) {
+                item.quantity++;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            cartList.add(new CartItem(name, price, imageResId, ""));
+        }
+
         refreshCartInfo();
         showToast(name + " added to cart");
     }
@@ -247,7 +255,6 @@ public class MainMenu extends AppCompatActivity {
 
     private void openCart() {
         Intent intent = new Intent(MainMenu.this, CartActivity.class);
-        intent.putParcelableArrayListExtra("cart_items", new ArrayList<>(cartList));
         startActivity(intent);
     }
 
@@ -280,15 +287,15 @@ public class MainMenu extends AppCompatActivity {
         addDumplingBtn = findViewById(R.id.addDumplingBtn);
         addSiopaoBtn = findViewById(R.id.addSiopaoBtn);
 
-        setAddToCartListener(addBaconBtn, "BaconSilog", 120, R.drawable.baconsilog);
-        setAddToCartListener(addTapBtn, "TapSilog", 60, R.drawable.tapsilog);
-        setAddToCartListener(addTosilogBtn, "ToSilog", 80, R.drawable.tosilog);
-        setAddToCartListener(addBurgerBtn, "BurgerSteak", 75, R.drawable.burgersteak);
-        setAddToCartListener(addShawarmaBtn, "Shawarma", 85, R.drawable.shawarmacute);
-        setAddToCartListener(addSiomaiBtn, "Siomai", 50, R.drawable.siomairice);
-        setAddToCartListener(addBigSiomaiBtn, "BigSiomai", 70, R.drawable.bigsiomairice);
-        setAddToCartListener(addDumplingBtn, "Dumpling", 60, R.drawable.dumplingrice);
-        setAddToCartListener(addSiopaoBtn, "JumboSiopao", 45, R.drawable.jumbosiopao);
+        setAddToCartListener(addBaconBtn, "BaconSilog", 45, R.drawable.baconsilog);
+        setAddToCartListener(addTapBtn, "TapSilog", 45, R.drawable.tapsilog);
+        setAddToCartListener(addTosilogBtn, "ToSilog", 39, R.drawable.tosilog);
+        setAddToCartListener(addBurgerBtn, "BurgerSteak", 25, R.drawable.burgersteak);
+        setAddToCartListener(addShawarmaBtn, "Shawarma", 25, R.drawable.shawarmacute);
+        setAddToCartListener(addSiomaiBtn, "Siomai", 25, R.drawable.siomairice);
+        setAddToCartListener(addBigSiomaiBtn, "BigSiomai", 40, R.drawable.bigsiomairice);
+        setAddToCartListener(addDumplingBtn, "Dumpling", 30, R.drawable.dumplingrice);
+        setAddToCartListener(addSiopaoBtn, "JumboSiopao", 25, R.drawable.jumbosiopao);
     }
 
     private void setAddToCartListener(MaterialButton button, String name, int price, int imageResId) {

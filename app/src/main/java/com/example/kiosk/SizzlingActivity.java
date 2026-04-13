@@ -135,8 +135,8 @@ public class SizzlingActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {
@@ -148,30 +148,90 @@ public class SizzlingActivity extends AppCompatActivity {
     }
 
     private void addSizzlingProducts() {
+
         DatabaseReference sizzlingRef = FirebaseDatabase.getInstance()
                 .getReference("categories/sizzling");
 
-        String[][] items = {
-                {"porkchop", "Porkchop"},
-                {"sisig", "Sisig"},
-                {"chicken", "Chicken"},
-                {"burger_steak", "Burger Steak"},
-                {"kare_kare", "Kare Kare"},
-                {"lechon_kawali", "Lechon Kawali"},
-                {"hungarian", "Hungarian"}
-        };
-
-        int defaultPrice = 180;
         int defaultStock = 10;
+        int defaultPrice = 75;
 
-        for (String[] item : items) {
-            String key = item[0];
-            String name = item[1];
+        Product porkchop = new Product(
+                "Porkchop",
+                defaultPrice,
+                defaultStock,
+                R.drawable.porkchop,
+                "Sizzling",
+                "Unli Gravy!"
+        );
 
-            Product product = new Product(name, defaultPrice, defaultStock);
+        Product sisig = new Product(
+                "Sisig",
+                defaultPrice,
+                defaultStock,
+                R.drawable.sisig,
+                "Sizzling",
+                "Unli Soup"
+        );
 
-            sizzlingRef.child(key).setValue(product);
-            sizzlingList.add(product);
-        }
+        Product chicken = new Product(
+                "Chicken",
+                defaultPrice,
+                defaultStock,
+                R.drawable.chicken,
+                "Sizzling",
+                "Unli Gravy!"
+        );
+
+        Product burgerSteak = new Product(
+                "Burger Steak",
+                defaultPrice,
+                defaultStock,
+                R.drawable.burgersteak,
+                "Sizzling",
+                "Unli Gravy!"
+        );
+
+        Product karekare = new Product(
+                "Kare Kare",
+                defaultPrice,
+                defaultStock,
+                R.drawable.karekare,
+                "Sizzling",
+                "Unli Gravy!"
+        );
+
+        Product lechon = new Product(
+                "Lechon Kawali",
+                defaultPrice,
+                defaultStock,
+                R.drawable.lechonkawali,
+                "Sizzling",
+                "Unli Gravy!"
+        );
+
+        Product hungarian = new Product(
+                "Hungarian",
+                defaultPrice,
+                defaultStock,
+                R.drawable.hungarian,
+                "Sizzling",
+                "Unli Soup!"
+        );
+
+        sizzlingRef.child("porkchop").setValue(porkchop);
+        sizzlingRef.child("sisig").setValue(sisig);
+        sizzlingRef.child("chicken").setValue(chicken);
+        sizzlingRef.child("burger_steak").setValue(burgerSteak);
+        sizzlingRef.child("kare_kare").setValue(karekare);
+        sizzlingRef.child("lechon_kawali").setValue(lechon);
+        sizzlingRef.child("hungarian").setValue(hungarian);
+
+        sizzlingList.add(porkchop);
+        sizzlingList.add(sisig);
+        sizzlingList.add(chicken);
+        sizzlingList.add(burgerSteak);
+        sizzlingList.add(karekare);
+        sizzlingList.add(lechon);
+        sizzlingList.add(hungarian);
     }
 }

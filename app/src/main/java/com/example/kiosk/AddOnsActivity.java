@@ -27,24 +27,25 @@ public class AddOnsActivity extends AppCompatActivity {
 
         // Define your Add-ons (Prices from your image)
         addOnOptions = new ArrayList<>();
-        addOnOptions.add(new CartItem("Rice", 10, R.drawable.rice));
-        addOnOptions.add(new CartItem("Ham", 10, R.drawable.ham));
-        addOnOptions.add(new CartItem("Egg", 10, R.drawable.egg));
-        addOnOptions.add(new CartItem("Hatdog", 15, R.drawable.hotdogs));
-        addOnOptions.add(new CartItem("Skinless", 10, R.drawable.skinless));
-        addOnOptions.add(new CartItem("Burger", 15, R.drawable.burger));
-        addOnOptions.add(new CartItem("BBQ", 20, R.drawable.bbq));
-        addOnOptions.add(new CartItem("Hungarian", 35, R.drawable.hungarian));
-        addOnOptions.add(new CartItem("French Fries", 20, R.drawable.fries));
+        addOnOptions.add(new CartItem("Rice", 10, R.drawable.rice,""));
+        addOnOptions.add(new CartItem("Ham", 10, R.drawable.ham,""));
+        addOnOptions.add(new CartItem("Egg", 10, R.drawable.egg,""));
+        addOnOptions.add(new CartItem("Hatdog", 15, R.drawable.hotdogs,""));
+        addOnOptions.add(new CartItem("Skinless", 10, R.drawable.skinless,""));
+        addOnOptions.add(new CartItem("Burger", 15, R.drawable.burger,""));
+        addOnOptions.add(new CartItem("BBQ", 20, R.drawable.bbq,""));
+        addOnOptions.add(new CartItem("Hungarian", 35, R.drawable.hungarian,""));
+        addOnOptions.add(new CartItem("French Fries", 20, R.drawable.fries,""));
 
         // Use a modified version of your adapter or a specific AddOnAdapter
         AddOnAdapter adapter = new AddOnAdapter(
                 this,
                 addOnOptions,
                 () -> {
-                    // refresh cart badge if needed
+                    Toast.makeText(this, "Cart updated", Toast.LENGTH_SHORT).show();
                 }
         );
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -55,7 +56,7 @@ public class AddOnsActivity extends AppCompatActivity {
                 return;
             }
 
-            startActivity(new Intent(AddOnsActivity.this, CartActivity.class));
+            startActivity(new Intent(AddOnsActivity.this, PaymentActivity.class));
         });
     }
 }

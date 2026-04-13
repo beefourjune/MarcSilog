@@ -31,15 +31,19 @@ public class AddOnAdapter extends RecyclerView.Adapter<AddOnAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
+
+        Button btnAdd, btnMinus;
+        TextView txtQuantity;
         TextView name, price;
-        Button addBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            btnAdd = itemView.findViewById(R.id.btnAdd);
+            btnMinus = itemView.findViewById(R.id.btnMinus);
+            txtQuantity = itemView.findViewById(R.id.txtQuantity);
             img = itemView.findViewById(R.id.imgAddOn);
             name = itemView.findViewById(R.id.txtName);
             price = itemView.findViewById(R.id.txtPrice);
-            addBtn = itemView.findViewById(R.id.btnAdd);
         }
     }
 
@@ -60,33 +64,33 @@ public class AddOnAdapter extends RecyclerView.Adapter<AddOnAdapter.ViewHolder> 
         holder.price.setText("₱" + item.getPrice());
         holder.img.setImageResource(item.getImageResId());
 
-        holder.addBtn.setOnClickListener(v -> {
+        holder.txtQuantity.setText(String.valueOf(item.quantity));
 
-            boolean exists = false;
+        holder.btnAdd.setOnClickListener(v -> {
 
-            for (CartItem c : MainMenu.cartList) {
-                if (c.getName().equals(item.getName())) {
-                    c.setQuantity(c.getQuantity() + 1);
-                    exists = true;
-                    break;
-                }
-            }
+            item.quantity++;
 
-            if (!exists) {
-                MainMenu.cartList.add(new CartItem(
-                        item.getName(),
-                        item.getPrice(),
-                        item.getImageResId(),
-                        1
-                ));
-            }
+            MainMenu.cartList.add(
+                    new CartItem(
+                            item.name,
+                            item.price,
+                            item.imageResId,
+                            item.quantity,
+                            item.description
+                    )
+            );
 
-            if (listener != null) {
-                listener.onCartChanged();
-            }
-
-            Toast.makeText(context, item.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+            holder.txtQuantity.setText(String.valueOf(item.quantity));
         });
+
+        holder.btnMinus.setOnClickListener(v -> {
+
+            if(item.quantity > 0){
+                item.quantity--;
+                holder.txtQuantity.setText(String.valueOf(item.quantity));
+            }
+        });
+
     }
 
     @Override

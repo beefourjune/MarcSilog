@@ -48,6 +48,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
         // ================= TITLE =================
         TextView title = new TextView(this);
         title.setText("RECEIPT");
+        title.setTextColor(Color.BLACK);
         title.setTextSize(22f);
         title.setTypeface(bold);
         title.setGravity(Gravity.CENTER);
@@ -58,6 +59,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
         TextView idText = new TextView(this);
         idText.setText("ORDER ID: " + displayId);
         idText.setTextSize(18f);
+        idText.setTextColor(Color.BLACK);
         idText.setTypeface(bold);
         idText.setGravity(Gravity.CENTER);
         idText.setPadding(20, 10, 20, 20);
@@ -114,6 +116,7 @@ public class OrderReceivedActivity extends AppCompatActivity {
             totalText.setText("TOTAL: ₱" + total);
             totalText.setTextSize(20f);
             totalText.setTypeface(bold);
+            totalText.setTextColor(Color.BLACK);
             totalText.setGravity(Gravity.END);
             totalText.setPadding(20, 30, 20, 30);
 
@@ -128,6 +131,11 @@ public class OrderReceivedActivity extends AppCompatActivity {
         // ================= OK BUTTON =================
         Button okBtn = new Button(this);
         okBtn.setText("OK");
+        okBtn.setTextSize(18f);
+        okBtn.setTypeface(bold);
+        okBtn.setBackgroundColor(Color.parseColor("#6A0DAD"));
+        okBtn.setTextColor(Color.WHITE);
+
 
         okBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainMenu.class);

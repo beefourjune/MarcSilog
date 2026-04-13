@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="18dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
         android:text="Add Ons"
-        android:textSize="22sp"
+        android:fontFamily="@font/inter_extrabold"
+        android:textSize="30sp"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:paddingBottom="10dp"/>
 
@@ -23,8 +26,10 @@
         android:id="@+id/proceedOrderBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Proceed to Payment"
-        android:backgroundTint="#FF5722"
-        android:textColor="#FFFFFF"/>
+        android:layout_marginBottom="19dp"
+        android:text="PROCEED TO PAYMENT"
+        android:fontFamily="@font/inter_bold"
+        android:backgroundTint="#908AE2"
+        android:textColor="#000"/>
 
 </LinearLayout>

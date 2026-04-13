@@ -49,6 +49,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
         <com.google.android.material.card.MaterialCardView
@@ -57,6 +58,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
+            android:background="@color/white"
             app:cardCornerRadius="16dp">
 
             <TextView
@@ -78,6 +80,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
+            android:background="@color/white"
             app:cardCornerRadius="16dp">
 
             <TextView
@@ -99,6 +102,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
+            android:background="@color/white"
             app:cardCornerRadius="16dp">
 
             <TextView
@@ -121,6 +125,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_margin="6dp"
+            android:background="@color/white"
             app:cardCornerRadius="16dp">
 
             <TextView
@@ -137,15 +142,5 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/doneBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Done"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/black"
-        android:fontFamily="@font/manrope_extrabold"
-        android:layout_gravity="end"
-        android:layout_marginTop="20dp"/>
 
 </LinearLayout>

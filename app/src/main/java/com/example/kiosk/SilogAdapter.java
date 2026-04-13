@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,21 +43,44 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = silogs.get(position);
         holder.silogName.setText(product.getName());
+        holder.silogDesc.setText(product.getDescription());
+        holder.silogImage.setImageResource(product.getImageResId());
+        holder.silogPrice.setText("₱" + product.getPrice());
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
     private void addToCart(Product product) {
-        // Add product to static MainMenu cart list
-        MainMenu.cartList.add(new CartItem(product.getName(), product.getPrice(), product.getImageResId()));
 
-        // Notify activity to update floating panel
+        boolean found = false;
+
+        for (CartItem item : MainMenu.cartList) {
+            if (item.name.equals(product.getName())) {
+                item.quantity++;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            MainMenu.cartList.add(
+                    new CartItem(
+                            product.getName(),
+                            product.getPrice(),
+                            product.getImageResId(),
+                            product.getDescription()
+                    )
+            );
+        }
+
         if (cartUpdateListener != null) {
             cartUpdateListener.onCartUpdated();
         }
 
-        // Toast confirmation
-        Toast.makeText(context, product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,
+                found ? product.getName() + " quantity increased"
+                        : product.getName() + " added to cart",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -65,13 +89,21 @@ public class SilogAdapter extends RecyclerView.Adapter<SilogAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView silogName;
+        TextView silogName, silogDesc;
+
+        ImageView silogImage;
+        TextView silogPrice;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            silogDesc = itemView.findViewById(R.id.silogDesc);
             silogName = itemView.findViewById(R.id.silogName);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            silogImage = itemView.findViewById(R.id.silogImage);
+            silogPrice = itemView.findViewById(R.id.silogPrice);
+
         }
     }
 }

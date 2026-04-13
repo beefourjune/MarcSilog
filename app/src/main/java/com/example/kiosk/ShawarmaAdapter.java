@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -41,50 +40,33 @@ public class ShawarmaAdapter extends RecyclerView.Adapter<ShawarmaAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Product product = shawarmas.get(position);
+        holder.shawarmaDesc.setText(product.getDescription());
         holder.shawarmaName.setText(product.getName());
+        holder.shawarmaPrice.setText("₱" + product.getPrice());
+        holder.shawarmaImage.setImageResource(product.getImageResId());
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
     private void addToCart(Product product) {
 
-        // Convert Product into CartItem
-        CartItem cartItem = new CartItem(
-                product.getName(),
-                product.getPrice(),
-                R.drawable.shawarmacute, // or product image if you have it
-                1
-        );
-
-        MainMenu.cartList.add(cartItem);
-
-        // Add to Firebase cart
-        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("cart");
-        String cartItemKey = cartRef.push().getKey();
-
-        if (cartItemKey != null) {
-            cartRef.child(cartItemKey).setValue(cartItem)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(
-                                context,
-                                product.getName() + " added to cart",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        // Update floating cart panel
-                        if (listener != null) {
-                            listener.onCartUpdated();
-                        }
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(
-                                    context,
-                                    "Failed to add to cart",
-                                    Toast.LENGTH_SHORT
-                            ).show()
-                    );
+        if (context instanceof MainMenu) {
+            ((MainMenu) context).addItemToCart(
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageResId()
+            );
         }
+
+        if (listener != null) {
+            listener.onCartUpdated();
+        }
+
+        Toast.makeText(context,
+                product.getName() + " added to cart",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -94,13 +76,19 @@ public class ShawarmaAdapter extends RecyclerView.Adapter<ShawarmaAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView shawarmaName;
+        ImageView shawarmaImage;
+        TextView shawarmaName, shawarmaDesc;
+        TextView shawarmaPrice;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+
+            shawarmaDesc = itemView.findViewById(R.id.shawarmaDesc);
+            shawarmaImage = itemView.findViewById(R.id.shawarmaImage);
             shawarmaName = itemView.findViewById(R.id.shawarmaName);
+            shawarmaPrice = itemView.findViewById(R.id.shawarmaPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

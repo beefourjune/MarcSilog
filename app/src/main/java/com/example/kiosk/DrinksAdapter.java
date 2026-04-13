@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,8 +45,11 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = drinksList.get(position);
-
+        holder.drinkDesc.setText(product.getDescription());
         holder.drinkName.setText(product.getName());
+        holder.drinkPrice.setText("₱" + product.getPrice());
+        holder.drinkImage.setImageResource(product.getImageResId());
+
 
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
@@ -56,7 +60,8 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
                 product.getName(),
                 product.getPrice(),
                 R.drawable.water, // or product image if you have it
-                1
+                1,
+                product.getDescription()
         );
 
         MainMenu.cartList.add(cartItem);
@@ -94,13 +99,17 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView drinkName;
+        TextView drinkName, drinkPrice, drinkDesc;
+
+        ImageView drinkImage;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            drinkDesc = itemView.findViewById(R.id.drinkDesc);
+            drinkPrice = itemView.findViewById(R.id.drinkPrice);
             drinkName = itemView.findViewById(R.id.drinkName);
+            drinkImage = itemView.findViewById(R.id.drinkImage);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
         }
     }

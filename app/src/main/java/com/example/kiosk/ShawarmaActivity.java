@@ -137,8 +137,8 @@ public class ShawarmaActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {
@@ -150,31 +150,72 @@ public class ShawarmaActivity extends AppCompatActivity {
     }
 
     private void addShawarmaProducts() {
+
         DatabaseReference shawarmaRef = FirebaseDatabase.getInstance()
                 .getReference("categories/shawarma");
 
-        String[][] shawarmas = {
-                {"shawarma_rice", "Shawarma Rice"},
-                {"shawarma_double_rice", "Shawarma Double Rice"},
-                {"shawarma_burger", "Shawarma Burger"},
-                {"shawarma_burger_fries", "Shawarma Burger w/ Fries"},
-                {"shawarma_pita", "Shawarma Pita"}
-        };
-
-        int defaultPrice = 150;
         int defaultStock = 10;
+        String defaultdesc = "Unli gravy!";
 
-        for (String[] item : shawarmas) {
-            String key = item[0];
-            String name = item[1];
+        // ✅ EACH PRODUCT HAS ITS OWN PRICE
 
-            Product product = new Product(name, defaultPrice, defaultStock);
+        Product shawarmaRice = new Product(
+                "Shawarma Rice",
+                39,
+                defaultStock,
+                R.drawable.shawarmarice,
+                "Shawarma",
+                defaultdesc
+        );
 
-            // Save to Firebase
-            shawarmaRef.child(key).setValue(product);
+        Product shawarmaDoubleRice = new Product(
+                "Shawarma Double Rice",
+                49,
+                defaultStock,
+                R.drawable.shawarmarice,
+                "Shawarma",
+                defaultdesc
+        );
 
-            // Add locally for RecyclerView
-            shawarmaList.add(product);
-        }
+        Product shawarmaBurger = new Product(
+                "Shawarma Burger",
+                35,
+                defaultStock,
+                R.drawable.shawarmaburger,
+                "Shawarma",
+                defaultdesc
+        );
+
+        Product shawarmaBurgerFries = new Product(
+                "Shawarma Burger w/ Fries",
+                55,
+                defaultStock,
+                R.drawable.shawarmaburger,
+                "Shawarma",
+                defaultdesc
+        );
+
+        Product shawarmaPita = new Product(
+                "Shawarma Pita",
+                35,
+                defaultStock,
+                R.drawable.shawarmapita,
+                "Shawarma",
+                defaultdesc
+        );
+
+        // Save to Firebase
+        shawarmaRef.child("shawarma_rice").setValue(shawarmaRice);
+        shawarmaRef.child("shawarma_double_rice").setValue(shawarmaDoubleRice);
+        shawarmaRef.child("shawarma_burger").setValue(shawarmaBurger);
+        shawarmaRef.child("shawarma_burger_fries").setValue(shawarmaBurgerFries);
+        shawarmaRef.child("shawarma_pita").setValue(shawarmaPita);
+
+        // Add to list
+        shawarmaList.add(shawarmaRice);
+        shawarmaList.add(shawarmaDoubleRice);
+        shawarmaList.add(shawarmaBurger);
+        shawarmaList.add(shawarmaBurgerFries);
+        shawarmaList.add(shawarmaPita);
     }
 }

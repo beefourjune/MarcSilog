@@ -12,10 +12,22 @@ public class CartItem implements Parcelable {
     public String name;
     public int price;
     public int imageResId;
+    public String description;
+
     public int quantity;
+
+    public String key;
 
     // Required empty constructor for Firebase
     public CartItem() {
+    }
+
+    public CartItem(String name, int price, int imageResId, String description) {
+        this.name = name;
+        this.price = price;
+        this.imageResId = imageResId;
+        this.description = description;
+        this.quantity = 1;
     }
 
     public CartItem(String name, int price, int imageResId) {
@@ -23,13 +35,15 @@ public class CartItem implements Parcelable {
         this.price = price;
         this.imageResId = imageResId;
         this.quantity = 1;
+        this.description = "";
     }
 
-    public CartItem(String name, int price, int imageResId, int quantity) {
+    public CartItem(String name, int price, int imageResId, int quantity, String description) {
         this.name = name;
         this.price = price;
         this.imageResId = imageResId;
         this.quantity = quantity;
+        this.description = description;
     }
 
     // Parcelable constructor
@@ -38,6 +52,7 @@ public class CartItem implements Parcelable {
         price = in.readInt();
         imageResId = in.readInt();
         quantity = in.readInt();
+        description = in.readString();
     }
 
     @Override
@@ -46,6 +61,7 @@ public class CartItem implements Parcelable {
         dest.writeInt(price);
         dest.writeInt(imageResId);
         dest.writeInt(quantity);
+        dest.writeString(description);
     }
 
     @Override
@@ -72,12 +88,14 @@ public class CartItem implements Parcelable {
         result.put("price", price);
         result.put("imageResId", imageResId);
         result.put("quantity", quantity);
+        result.put("description", description);
         return result;
     }
 
     public String getName() {
         return name;
     }
+
 
     public int getPrice() {
         return price;

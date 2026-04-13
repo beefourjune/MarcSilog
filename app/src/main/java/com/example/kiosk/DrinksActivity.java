@@ -132,8 +132,8 @@ public class DrinksActivity extends AppCompatActivity {
         int totalPrice = 0;
 
         for (CartItem item : MainMenu.cartList) {
-            totalItems++;
-            totalPrice += item.price;
+            totalItems += item.quantity;
+            totalPrice += item.price * item.quantity;
         }
 
         if (totalItems > 0) {
@@ -145,31 +145,89 @@ public class DrinksActivity extends AppCompatActivity {
     }
 
     private void addDrinksProducts() {
+
         DatabaseReference drinksRef = FirebaseDatabase.getInstance()
                 .getReference("categories/drinks");
 
-        String[][] items = {
-                {"mineral_1l", "Mineral 1L"},
-                {"mineral_500ml", "Mineral 500ML"},
-                {"mismo", "Mismo"},
-                {"mountain_dew", "Mountain Dew"},
-                {"sting_red", "Sting Red"},
-                {"cobra", "Cobra"},
-                {"juice_1_5l", "1.5 Juice"}
-        };
-
-        int defaultPrice = 50;
         int defaultStock = 20;
 
-        for (String[] item : items) {
-            Product product = new Product(
-                    item[1],
-                    defaultPrice,
-                    defaultStock
-            );
+        Product mineral1L = new Product(
+                "Mineral",
+                20,
+                defaultStock,
+                R.drawable.glasswater,
+                "Drinks",
+                "1L"
+        );
 
-            drinksRef.child(item[0]).setValue(product);
-            drinksList.add(product);
-        }
+        Product mineral500ml = new Product(
+                "Mineral",
+                15,
+                defaultStock,
+                R.drawable.water,
+                "Drinks",
+                "500ml"
+        );
+
+        Product mismo = new Product(
+                "Mismo",
+                25,
+                defaultStock,
+                R.drawable.coke,
+                "Drinks",
+                "Coke"
+        );
+
+        Product mountainDew = new Product(
+                "Mountain Dew",
+                25,
+                defaultStock,
+                R.drawable.mountaindew,
+                "Drinks",
+                ""
+        );
+
+        Product stingRed = new Product(
+                "Sting Red",
+                25,
+                defaultStock,
+                R.drawable.sting,
+                "Drinks",
+                ""
+        );
+
+        Product cobra = new Product(
+                "Cobra",
+                35,
+                defaultStock,
+                R.drawable.cobra,
+                "Drinks",
+                ""
+        );
+
+        Product juice15L = new Product(
+                "Juice",
+                39,
+                defaultStock,
+                R.drawable.juice,
+                "Drinks",
+                "1.5"
+        );
+
+        drinksRef.child("mineral_1l").setValue(mineral1L);
+        drinksRef.child("mineral_500ml").setValue(mineral500ml);
+        drinksRef.child("mismo").setValue(mismo);
+        drinksRef.child("mountain_dew").setValue(mountainDew);
+        drinksRef.child("sting_red").setValue(stingRed);
+        drinksRef.child("cobra").setValue(cobra);
+        drinksRef.child("juice_1_5l").setValue(juice15L);
+
+        drinksList.add(mineral1L);
+        drinksList.add(mineral500ml);
+        drinksList.add(mismo);
+        drinksList.add(mountainDew);
+        drinksList.add(stingRed);
+        drinksList.add(cobra);
+        drinksList.add(juice15L);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,9 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
         Product product = sizzlingList.get(position);
 
         holder.sizzlingName.setText(product.getName());
-
+        holder.sizzlingPrice.setText("₱" + product.getPrice());
+        holder.sizzlingImage.setImageResource(product.getImageResId());
+        holder.sizzlingDesc.setText(product.getDescription());
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
@@ -56,7 +59,8 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
                 product.getName(),
                 product.getPrice(),
                 R.drawable.sisig, // or product image if you have it
-                1
+                1,
+                ""
         );
 
         MainMenu.cartList.add(cartItem);
@@ -87,14 +91,18 @@ public class SizzlingAdapter extends RecyclerView.Adapter<SizzlingAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView sizzlingName;
+        TextView sizzlingName, sizzlingPrice, sizzlingDesc;
+
+        ImageView sizzlingImage;
         MaterialButton addToCartBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            sizzlingPrice = itemView.findViewById(R.id.sizzlingPrice);
             sizzlingName = itemView.findViewById(R.id.sizzlingName);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            sizzlingImage = itemView.findViewById(R.id.sizzlingImage);
+            sizzlingDesc = itemView.findViewById(R.id.sizzlingDesc);
         }
     }
 }
