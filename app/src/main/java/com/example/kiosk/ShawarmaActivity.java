@@ -47,7 +47,7 @@ public class ShawarmaActivity extends AppCompatActivity {
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v ->
-                startActivity(new Intent(this, CartActivity.class))
+                startActivity(new Intent(this, AddOnsActivity.class))
         );
 
         // ================= LIST =================

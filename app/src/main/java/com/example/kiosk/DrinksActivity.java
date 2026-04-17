@@ -48,7 +48,7 @@ public class DrinksActivity extends AppCompatActivity {
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(DrinksActivity.this, CartActivity.class);
+            Intent intent = new Intent(DrinksActivity.this, AddOnsActivity.class);
             startActivity(intent);
         });
 

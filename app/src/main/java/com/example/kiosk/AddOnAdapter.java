@@ -31,8 +31,8 @@ public class AddOnAdapter extends RecyclerView.Adapter<AddOnAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
-        TextView name, price;
-        Button addBtn;
+        TextView name, price, quantityText;
+        Button addBtn, minusBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -40,6 +40,8 @@ public class AddOnAdapter extends RecyclerView.Adapter<AddOnAdapter.ViewHolder> 
             name = itemView.findViewById(R.id.txtName);
             price = itemView.findViewById(R.id.txtPrice);
             addBtn = itemView.findViewById(R.id.btnAdd);
+            minusBtn = itemView.findViewById(R.id.btnMinus);
+            quantityText = itemView.findViewById(R.id.txtQuantity);
         }
     }
 
@@ -53,39 +55,56 @@ public class AddOnAdapter extends RecyclerView.Adapter<AddOnAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         CartItem item = list.get(position);
 
         holder.name.setText(item.getName());
-        holder.price.setText("₱" + item.getPrice());
+        holder.price.setText(context.getString(R.string.price_format, item.getPrice()));
         holder.img.setImageResource(item.getImageResId());
 
+        // Find matching item in global cart to show current quantity
+        CartItem cartItem = null;
+        for (CartItem c : MainMenu.cartList) {
+            if (c.getName().equals(item.getName())) {
+                cartItem = c;
+                break;
+            }
+        }
+        
+        int currentQty = (cartItem != null) ? cartItem.getQuantity() : 0;
+        holder.quantityText.setText(String.valueOf(currentQty));
+
         holder.addBtn.setOnClickListener(v -> {
-
-            boolean exists = false;
-
+            boolean found = false;
             for (CartItem c : MainMenu.cartList) {
                 if (c.getName().equals(item.getName())) {
                     c.setQuantity(c.getQuantity() + 1);
-                    exists = true;
+                    found = true;
                     break;
                 }
             }
 
-            if (!exists) {
-                MainMenu.cartList.add(new CartItem(
-                        item.getName(),
-                        item.getPrice(),
-                        item.getImageResId(),
-                        1
-                ));
+            if (!found) {
+                MainMenu.cartList.add(new CartItem(item.getName(), item.getPrice(), item.getImageResId(), 1));
             }
 
-            if (listener != null) {
-                listener.onCartChanged();
-            }
+            notifyItemChanged(position);
+            if (listener != null) listener.onCartChanged();
+        });
 
-            Toast.makeText(context, item.getName() + " added to cart", Toast.LENGTH_SHORT).show();
+        holder.minusBtn.setOnClickListener(v -> {
+            for (int i = 0; i < MainMenu.cartList.size(); i++) {
+                CartItem c = MainMenu.cartList.get(i);
+                if (c.getName().equals(item.getName())) {
+                    if (c.getQuantity() > 1) {
+                        c.setQuantity(c.getQuantity() - 1);
+                    } else {
+                        MainMenu.cartList.remove(i);
+                    }
+                    break;
+                }
+            }
+            notifyItemChanged(position);
+            if (listener != null) listener.onCartChanged();
         });
     }
 

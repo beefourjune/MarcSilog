@@ -26,7 +26,7 @@ public class AdminDashboard extends AppCompatActivity {
 
     private MaterialButton backToStartBtn;
     private EditText searchBar;
-    private TextView pendingNumber, kitchenNumber;
+    private TextView pendingNumber, kitchenNumber, readyNumber;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
 
@@ -48,6 +48,7 @@ public class AdminDashboard extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         pendingNumber = findViewById(R.id.pendingNumber);
         kitchenNumber = findViewById(R.id.kitchenNumber);
+        readyNumber = findViewById(R.id.readyNumber);
 
         rootRef = FirebaseDatabase.getInstance().getReference();
         ordersRef = rootRef.child("orders");
@@ -89,6 +90,7 @@ public class AdminDashboard extends AppCompatActivity {
                 List<Order> orderList = new ArrayList<>();
                 int pending = 0;
                 int kitchen = 0;
+                int ready = 0;
 
                 for (DataSnapshot snap : snapshot.getChildren()) {
 
@@ -118,10 +120,15 @@ public class AdminDashboard extends AppCompatActivity {
                     if ("preparing".equals(status)) {
                         kitchen++;
                     }
+
+                    if ("ready".equals(status)) {
+                        ready++;
+                    }
                 }
 
                 pendingNumber.setText(String.valueOf(pending));
                 kitchenNumber.setText(String.valueOf(kitchen));
+                readyNumber.setText(String.valueOf(ready));
 
                 ordersAdapter.setOrders(orderList);
             }

@@ -6,149 +6,197 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Top Bar / Title -->
-    <TextView
-        android:id="@+id/adminTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="20dp"
-        android:fontFamily="@font/inter_extrabold"
-        android:text="Admin Dashboard"
-        android:textColor="#000"
-        android:textSize="26sp"
+    <!-- Top Bar Area -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backtostartbtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="10dp"
+        app:backgroundTint="@android:color/transparent"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/baseline_arrow_back_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="25dp"
+        app:iconTint="#B73B28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/topBar"
+    <TextView
+        android:id="@+id/adminTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="10dp"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/adminTitle"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/inter_extrabold"
+        android:text="Admin Dashboard"
+        android:textColor="#000"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@id/backtostartbtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/backtostartbtn"
+        app:layout_constraintTop_toTopOf="@id/backtostartbtn" />
+
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_edittext"
+        android:hint="Search orders..."
+        android:paddingHorizontal="16dp"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/backtostartbtn"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginEnd="8dp"
-            android:elevation="8dp"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:padding="10dp"
-            app:backgroundTint="@android:color/transparent"
-            app:cornerRadius="20dp"
-            app:icon="@drawable/baseline_arrow_back_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="23dp"
-            app:iconTint="#B73B28"/>
-
-        <EditText
-            android:id="@+id/searchBar"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_edittext"
-            android:hint="Search orders..."
-            android:padding="10dp"
-            android:textSize="15sp"/>
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/backtostartbtn" />
 
     <!-- Stats Section -->
     <LinearLayout
         android:id="@+id/dashboardSection"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="12dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
-        android:weightSum="2"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
+        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <!-- Pending -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/pendingCard"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#F77A33"
-            android:gravity="center"
-            android:elevation="4dp"
-            android:layout_marginEnd="6dp">
+            app:cardBackgroundColor="#F77A33"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginEnd="4dp">
 
-            <TextView
-                android:id="@+id/pendingNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="28sp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/manrope_bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pending"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/manrope_medium"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/pendingNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_bold"/>
 
-        <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Orders"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_medium"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Kitchen -->
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/kitchenCard"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="#FFCD93"
-            android:gravity="center"
-            android:elevation="4dp"
-            android:layout_marginStart="6dp">
+            app:cardBackgroundColor="#FFC107"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginHorizontal="2dp">
 
-            <TextView
-                android:id="@+id/kitchenNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textSize="28sp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/manrope_bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Kitchen"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/manrope_medium"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/kitchenNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kitchen"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_medium"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Ready -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/readyCard"
+            android:layout_width="0dp"
+            android:layout_height="75dp"
+            android:layout_weight="1"
+            app:cardBackgroundColor="#4CAF50"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            android:layout_marginStart="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/readyNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ready"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/manrope_medium"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <!-- Tabs and Content -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:tabIndicatorColor="#FFC107"
         app:tabSelectedTextColor="#000"
         app:tabTextColor="#777"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dashboardSection"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

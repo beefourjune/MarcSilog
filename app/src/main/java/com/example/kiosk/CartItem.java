@@ -12,6 +12,7 @@ public class CartItem implements Parcelable {
     public int price;
     public int imageResId;
     public int quantity;
+    private int stability;
 
     // ================= EMPTY CONSTRUCTOR (FIREBASE) =================
     public CartItem() {
@@ -19,6 +20,7 @@ public class CartItem implements Parcelable {
         this.price = 0;
         this.imageResId = 0;
         this.quantity = 1;
+        this.stability = 0;
     }
 
     // ================= MAIN MERGED CONSTRUCTOR =================
@@ -27,6 +29,7 @@ public class CartItem implements Parcelable {
         this.price = price;
         this.imageResId = imageResId;
         this.quantity = 1;
+        this.stability = 0;
     }
 
     // ================= FULL CONSTRUCTOR =================
@@ -35,6 +38,7 @@ public class CartItem implements Parcelable {
         this.price = price;
         this.imageResId = imageResId;
         this.quantity = quantity;
+        this.stability = 0;
     }
 
     // ================= KEY CONSTRUCTOR (FOR NORMALIZED CART HANDLING) =================
@@ -43,6 +47,7 @@ public class CartItem implements Parcelable {
         this.price = price;
         this.imageResId = imageResId;
         this.quantity = 1;
+        this.stability = 0;
     }
 
     // ================= INCREASE QUANTITY =================
@@ -93,12 +98,21 @@ public class CartItem implements Parcelable {
         this.quantity = Math.max(1, quantity);
     }
 
+    public int getStability() {
+        return stability;
+    }
+
+    public void setStability(int stability) {
+        this.stability = stability;
+    }
+
     // ================= PARCELABLE =================
     protected CartItem(Parcel in) {
         name = in.readString();
         price = in.readInt();
         imageResId = in.readInt();
         quantity = in.readInt();
+        stability = in.readInt();
     }
 
     @Override
@@ -107,6 +121,7 @@ public class CartItem implements Parcelable {
         dest.writeInt(price);
         dest.writeInt(imageResId);
         dest.writeInt(quantity);
+        dest.writeInt(stability);
     }
 
     @Override

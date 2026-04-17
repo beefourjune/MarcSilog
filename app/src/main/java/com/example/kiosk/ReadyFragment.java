@@ -70,8 +70,8 @@ public class ReadyFragment extends Fragment {
                         order.setId(orderSnap.getKey());
                     }
 
-                    // FILTER: ONLY completed orders move to Ready tab
-                    if ("completed".equals(order.getStatus())) {
+                    // FILTER: ONLY ready orders move to Ready tab
+                    if ("ready".equals(order.getStatus())) {
                         readyList.add(order);
                     }
                 }

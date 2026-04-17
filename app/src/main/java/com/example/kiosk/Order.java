@@ -13,9 +13,17 @@ public class Order {
 
     private long timestamp;
     private ArrayList<CartItem> items;
+    private int total;
+    private int totalPrice; // Support both names found in Firebase/Logs
+    private boolean completed;
+    private boolean inKitchen;
+    private int stability;
 
     public Order() {
         this.status = "pending";
+        this.completed = false;
+        this.inKitchen = false;
+        this.stability = 0;
     }
 
     public Order(String id,
@@ -29,6 +37,17 @@ public class Order {
         this.status = status;
         this.timestamp = timestamp;
         this.items = items;
+        this.completed = false;
+        this.inKitchen = false;
+        this.stability = 0;
+
+        // Calculate total
+        this.total = 0;
+        if (items != null) {
+            for (CartItem item : items) {
+                this.total += item.getPrice() * item.getQuantity();
+            }
+        }
     }
 
     // ================= GETTERS =================
@@ -57,6 +76,26 @@ public class Order {
         return items;
     }
 
+    public int getTotal() {
+        return total;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public boolean isInKitchen() {
+        return inKitchen;
+    }
+
+    public int getStability() {
+        return stability;
+    }
+
     // ================= SETTERS =================
 
     public void setId(String id) {
@@ -81,5 +120,25 @@ public class Order {
 
     public void setItems(ArrayList<CartItem> items) {
         this.items = items;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public void setInKitchen(boolean inKitchen) {
+        this.inKitchen = inKitchen;
+    }
+
+    public void setStability(int stability) {
+        this.stability = stability;
     }
 }

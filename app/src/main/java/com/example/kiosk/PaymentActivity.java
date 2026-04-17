@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,6 +32,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         LinearLayout paymentContainer = findViewById(R.id.paymentContainer);
         Button payNowBtn = findViewById(R.id.payNowBtn);
+        MaterialButton backBtn = findViewById(R.id.backBtn);
+
+        backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(PaymentActivity.this, CartActivity.class));
+            finish();
+        });
 
         // ================= ORDER TYPE FIX (CLEAN) =================
         Intent intent = getIntent();

@@ -49,7 +49,7 @@ public class SizzlingActivity extends AppCompatActivity {
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v -> {
-            startActivity(new Intent(SizzlingActivity.this, CartActivity.class));
+            startActivity(new Intent(SizzlingActivity.this, AddOnsActivity.class));
         });
 
         // Product list

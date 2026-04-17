@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
         void onCartUpdated();
     }
 
-    public PastilAdapter(Context context, List<Product> pastils, CartUpdateListener listener, FragmentManager fragmentManager) {
+    public PastilAdapter(Context context, List<Product> pastils, CartUpdateListener listener) {
         this.context = context;
         this.pastils = pastils;
         this.cartUpdateListener = listener;
@@ -43,6 +44,8 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = pastils.get(position);
         holder.pastilName.setText(product.getName());
+        holder.pastilImage.setImageResource(product.getImageResId());
+        holder.pastilPrice.setText(context.getString(R.string.price_format, product.getPrice()));
 
         holder.addToCartBtn.setOnClickListener(v -> {
             FlavorFragment flavorFragment = new FlavorFragment();
@@ -82,13 +85,16 @@ public class PastilAdapter extends RecyclerView.Adapter<PastilAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView pastilName;
+        TextView pastilName, pastilPrice;
         MaterialButton addToCartBtn;
+        ImageView pastilImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             pastilName = itemView.findViewById(R.id.pastilName);
+            pastilPrice = itemView.findViewById(R.id.pastilPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            pastilImage = itemView.findViewById(R.id.pastilImage);
         }
     }
 }

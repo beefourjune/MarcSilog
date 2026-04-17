@@ -82,9 +82,9 @@ public class KitchenAdapter extends RecyclerView.Adapter<KitchenAdapter.ViewHold
                     .getReference("orders")
                     .child(firebaseKey);
 
-            ref.child("status").setValue("completed")
+            ref.child("status").setValue("ready")
                     .addOnSuccessListener(unused ->
-                            Toast.makeText(v.getContext(), "Order Completed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(v.getContext(), "Order Marked as Ready", Toast.LENGTH_SHORT).show()
                     )
                     .addOnFailureListener(e ->
                             Toast.makeText(v.getContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()

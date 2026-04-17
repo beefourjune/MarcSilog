@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,8 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = drinksList.get(position);
         holder.drinkName.setText(product.getName());
+        holder.drinkImage.setImageResource(product.getImageResId());
+        holder.drinkPrice.setText(context.getString(R.string.price_format, product.getPrice()));
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
@@ -77,13 +80,16 @@ public class DrinksAdapter extends RecyclerView.Adapter<DrinksAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView drinkName;
+        TextView drinkName, drinkPrice;
         MaterialButton addToCartBtn;
+        ImageView drinkImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             drinkName = itemView.findViewById(R.id.drinkName);
+            drinkPrice = itemView.findViewById(R.id.drinkPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            drinkImage = itemView.findViewById(R.id.drinkImage);
         }
     }
 }

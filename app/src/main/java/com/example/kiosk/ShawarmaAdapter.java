@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,8 @@ public class ShawarmaAdapter extends RecyclerView.Adapter<ShawarmaAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = shawarmas.get(position);
         holder.shawarmaName.setText(product.getName());
+        holder.shawarmaImage.setImageResource(product.getImageResId() != 0 ? product.getImageResId() : R.drawable.shawarmacute);
+        holder.shawarmaPrice.setText(context.getString(R.string.price_format, product.getPrice()));
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
@@ -79,13 +82,16 @@ public class ShawarmaAdapter extends RecyclerView.Adapter<ShawarmaAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView shawarmaName;
+        TextView shawarmaName, shawarmaPrice;
         MaterialButton addToCartBtn;
+        ImageView shawarmaImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             shawarmaName = itemView.findViewById(R.id.shawarmaName);
+            shawarmaPrice = itemView.findViewById(R.id.shawarmaPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            shawarmaImage = itemView.findViewById(R.id.shawarmaImage);
         }
     }
 }

@@ -281,7 +281,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void openCart() {
-        Intent intent = new Intent(MainMenu.this, CartActivity.class);
+        Intent intent = new Intent(MainMenu.this, AddOnsActivity.class);
         intent.putExtra("order_type", orderType); // FIXED SAFE PASSING
         startActivity(intent);
     }

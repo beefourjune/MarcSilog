@@ -52,7 +52,7 @@ public class SilogActivity extends AppCompatActivity {
 
         if (goToCartBtn != null) {
             goToCartBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(SilogActivity.this, CartActivity.class);
+                Intent intent = new Intent(SilogActivity.this, AddOnsActivity.class);
                 startActivity(intent);
             });
         }

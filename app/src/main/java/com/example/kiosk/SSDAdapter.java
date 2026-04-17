@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,8 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = ssdList.get(position);
         holder.ssdName.setText(product.getName());
+        holder.ssdImage.setImageResource(product.getImageResId() != 0 ? product.getImageResId() : R.drawable.jumbosiopao);
+        holder.ssdPrice.setText(context.getString(R.string.price_format, product.getPrice()));
         holder.addToCartBtn.setOnClickListener(v -> addToCart(product));
     }
 
@@ -80,13 +83,16 @@ public class SSDAdapter extends RecyclerView.Adapter<SSDAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView ssdName;
+        TextView ssdName, ssdPrice;
         MaterialButton addToCartBtn;
+        ImageView ssdImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ssdName = itemView.findViewById(R.id.ssdName);
+            ssdPrice = itemView.findViewById(R.id.ssdPrice);
             addToCartBtn = itemView.findViewById(R.id.addToCartBtn);
+            ssdImage = itemView.findViewById(R.id.ssdImage);
         }
     }
 }

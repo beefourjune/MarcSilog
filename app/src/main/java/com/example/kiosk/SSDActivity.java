@@ -49,7 +49,7 @@ public class SSDActivity extends AppCompatActivity {
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v ->
-                startActivity(new Intent(SSDActivity.this, CartActivity.class))
+                startActivity(new Intent(SSDActivity.this, AddOnsActivity.class))
         );
 
         // Product list

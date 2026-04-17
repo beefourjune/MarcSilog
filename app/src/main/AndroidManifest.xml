@@ -37,6 +37,7 @@
         <activity android:name=".SSDActivity" />
         <activity android:name=".DrinksActivity" />
         <activity android:name=".OrderReceivedActivity" />
+        <activity android:name=".AddOnsActivity" />
 
 
 

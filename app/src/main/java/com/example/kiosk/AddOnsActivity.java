@@ -14,7 +14,7 @@ import java.util.List;
 public class AddOnsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Button proceedOrderBtn;
+    private Button proceedOrderBtn, backBtn;
     private List<CartItem> addOnOptions;
 
     @Override
@@ -24,9 +24,11 @@ public class AddOnsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewAddOns);
         proceedOrderBtn = findViewById(R.id.proceedOrderBtn);
+        backBtn = findViewById(R.id.backBtn);
 
         // Define your Add-ons (Prices from your image)
         addOnOptions = new ArrayList<>();
+        // ... (rest of the add-ons list)
         addOnOptions.add(new CartItem("Rice", 10, R.drawable.rice));
         addOnOptions.add(new CartItem("Ham", 10, R.drawable.ham));
         addOnOptions.add(new CartItem("Egg", 10, R.drawable.egg));
@@ -47,6 +49,11 @@ public class AddOnsActivity extends AppCompatActivity {
         );
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(AddOnsActivity.this, CartActivity.class));
+            finish();
+        });
 
         proceedOrderBtn.setOnClickListener(v -> {
 

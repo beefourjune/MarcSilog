@@ -53,7 +53,7 @@ public class PastilActivity extends AppCompatActivity {
         goToCartBtn = findViewById(R.id.goToCartBtn);
 
         goToCartBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(PastilActivity.this, CartActivity.class);
+            Intent intent = new Intent(PastilActivity.this, AddOnsActivity.class);
             startActivity(intent);
         });
 
@@ -68,8 +68,7 @@ public class PastilActivity extends AppCompatActivity {
         adapter = new PastilAdapter(
                 this,
                 pastilList,
-                this::updateFloatingCart,
-                getSupportFragmentManager()
+                this::updateFloatingCart
         );
 
         recyclerView.setAdapter(adapter);
